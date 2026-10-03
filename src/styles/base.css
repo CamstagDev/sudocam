@@ -1,0 +1,197 @@
+/* ============================================================
+   SudoCam — estilos base
+   Layout de la app, barra superior, tarjetas y botones. Tamaños con
+   clamp()/vw para que se vea bien igual en el teléfono que en PC.
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Barra superior ---------- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  /* env(safe-area-inset-top): deja libre la zona de la cámara/notch en Android. */
+  padding: calc(clamp(14px, 3vw, 22px) + env(safe-area-inset-top, 0px)) var(--gutter) clamp(14px, 3vw, 22px);
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 24px);
+  min-width: 0;
+}
+
+.navbar-logo {
+  font-weight: 700;
+  font-size: clamp(18px, 4.5vw, 20px);
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.navbar-logo span {
+  color: var(--logo-color);
+}
+
+.navbar-title {
+  min-width: 0;
+}
+
+.navbar-titulo {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(14px, 3.8vw, 16px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.navbar-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover {
+  background: var(--surface-strong);
+  border-color: var(--border-strong);
+}
+
+/* ---------- Contenido ---------- */
+
+.app-content {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 32px) var(--gutter) calc(clamp(40px, 8vw, 80px) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vw, 22px);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(20px, 5vw, 22px);
+  font-weight: 700;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: clamp(16px, 4vw, 22px);
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Botones ---------- */
+
+.btn {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 11px 18px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-strong);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-strong);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

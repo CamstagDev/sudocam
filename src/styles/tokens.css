@@ -1,0 +1,49 @@
+/* ============================================================
+   SudoCam — variables de tema
+   Colores, radios y tipografía compartidos por todas las pantallas.
+   Los colores personalizables (Personalización) sobrescriben estas
+   mismas variables en tiempo de ejecución.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+  --bg: #0d0e13;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #f1f2f6;
+  --text-muted: #94959f;
+  --accent: #8b7cf6;
+  --accent-strong: #a898ff;
+  --accent-contrast: #13101f;
+  --logo-color: #a898ff;
+  /* "acierto": números correctos / partida resuelta */
+  --success: #4fd18a;
+  --success-bg: rgba(79, 209, 138, 0.12);
+  --success-border: rgba(79, 209, 138, 0.35);
+  /* "error": números en conflicto con la fila/columna/caja */
+  --error: #ff6b6b;
+  --error-bg: rgba(255, 107, 107, 0.12);
+  --error-border: rgba(255, 107, 107, 0.35);
+  /* "pista": celdas fijas, dadas al generar el tablero */
+  --neutral: #7ca8ff;
+  --neutral-bg: rgba(124, 168, 255, 0.12);
+  --neutral-border: rgba(124, 168, 255, 0.35);
+  /* "jefe": lo que hace un jefe en el tablero, distinto del morado de
+     selección del jugador para no confundir quién está mirando qué. */
+  --boss: #f5a623;
+  --boss-bg: rgba(245, 166, 35, 0.16);
+  --boss-border: rgba(245, 166, 35, 0.4);
+  /* Paneles sólidos (no translúcidos): barra superior, menús, modales. */
+  --surface-solid: #17181f;
+  --surface-solid-strong: #1b1c24;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.45);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+
+  /* Márgenes laterales fluidos: estrechos en el teléfono, amplios en PC. */
+  --gutter: clamp(16px, 4vw, 48px);
+}

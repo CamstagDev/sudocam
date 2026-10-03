@@ -1,3 +1,10 @@
-import { VERSION_APP } from './version.js';
+import './styles/tokens.css';
+import './styles/base.css';
+import { RUTA_INICIO, iniciarRouter, registrarPantalla } from './router.js';
+import { crearShell } from './ui/shell.js';
+import { pantallaEnConstruccion } from './screens/en-construccion.js';
 
-document.getElementById('app').textContent = `SudoCam v${VERSION_APP}`;
+registrarPantalla(RUTA_INICIO, pantallaEnConstruccion('Menú', '🔢'));
+
+const shell = crearShell(document.getElementById('app'));
+iniciarRouter((ruta, pantalla) => shell.mostrarPantalla(ruta, pantalla));
