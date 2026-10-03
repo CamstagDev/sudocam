@@ -1,7 +1,9 @@
 // Pantalla del sudoku 9x9 clásico.
 //
-// Recibe la dificultad por la ruta: #/sudoku?dificultad=medio, o para el
-// modo personalizado #/sudoku?dificultad=personalizado&pistas=30&politicaErrores=boton
+// Qué partida jugar llega por la ruta:
+//   #/sudoku?dificultad=medio                                     partida nueva
+//   #/sudoku?dificultad=personalizado&pistas=30&politicaErrores=boton
+//   #/sudoku?partida=<id>                                         retomar una en pausa
 //
 // La lógica de la partida vive en game/sudoku/partida.js; esta pantalla
 // solo arma el HTML, traduce clics y teclas en jugadas y redibuja.
@@ -10,6 +12,13 @@ import { RUTA_INICIO, navegar } from '../router.js';
 import { DIFICULTADES, POLITICAS_ERRORES, limitarPistasPersonalizado } from '../game/sudoku/dificultades.js';
 import { generarPuzzle } from '../game/sudoku/generador.js';
 import { PartidaSudoku } from '../game/sudoku/partida.js';
+import {
+  eliminarPartidaEnPausa,
+  obtenerPartidaEnPausa,
+  partidaDesdeGuardada,
+  pausarPartida,
+  registrarSudokuCompletado,
+} from '../game/sudoku/partidas-en-pausa.js';
 import { DIGITOS, TAMANO, columnaDe, estaCompleto, filaDe, indiceDe } from '../game/sudoku/tablero.js';
 import { crearVistaTablero } from '../ui/vista-tablero.js';
 import { crearTecladoNumerico } from '../ui/teclado-numerico.js';
@@ -36,16 +45,43 @@ function crearPartidaNueva({ dificultad, pistas, politicaErrores }) {
   return new PartidaSudoku({ dificultad, politicaErrores, tableroInicial: puzzle, solucion });
 }
 
+// La partida a jugar según la ruta: la que estaba en pausa, o una nueva.
+// `idEnPausa` es null si la partida todavía no se guardó nunca.
+function cargarPartida(params) {
+  const guardada = params.has('partida') ? obtenerPartidaEnPausa(params.get('partida')) : null;
+  if (guardada) {
+    return { partida: partidaDesdeGuardada(guardada), idEnPausa: guardada.id, noEncontrada: false };
+  }
+  return {
+    partida: crearPartidaNueva(leerConfiguracion(params)),
+    idEnPausa: null,
+    noEncontrada: params.has('partida'),
+  };
+}
+
+// Los parámetros para empezar otra partida igual a `partida`.
+function configuracionParaRepetir(partida) {
+  if (partida.dificultad !== 'personalizado') return { dificultad: partida.dificultad };
+  return { dificultad: 'personalizado', pistas: partida.cantidadPistas, politicaErrores: partida.politicaErrores };
+}
+
+function nombreDificultad(params) {
+  const guardada = params.has('partida') ? obtenerPartidaEnPausa(params.get('partida')) : null;
+  const dificultad = guardada ? guardada.dificultad : leerConfiguracion(params).dificultad;
+  return DIFICULTADES[dificultad].nombre;
+}
+
 // Lo que hay que limpiar al salir de la pantalla (ver destruir()).
 let limpiarPantalla = () => {};
 
 export const pantallaSudoku = {
   titulo: 'Sudoku 9x9',
-  subtitulo: (params) => `Dificultad: ${DIFICULTADES[leerConfiguracion(params).dificultad].nombre}`,
+  subtitulo: (params) => `Dificultad: ${nombreDificultad(params)}`,
 
   render(contenedor, params) {
-    const configuracion = leerConfiguracion(params);
-    const partida = crearPartidaNueva(configuracion);
+    const cargada = cargarPartida(params);
+    const { partida } = cargada;
+    let idEnPausa = cargada.idEnPausa;
     const preferencias = leerPreferencias();
 
     let seleccionada = null;
@@ -71,7 +107,10 @@ export const pantallaSudoku = {
             <span class="badge negativo" id="badge-errores"></span>
             <span class="cronometro" id="cronometro"></span>
           </div>
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-comprobar">Comprobar</button>
+          <div class="barra-juego-acciones">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-comprobar">Comprobar</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-pausar">⏸ Pausar y guardar</button>
+          </div>
         </div>
         <div class="tablero-contenedor" id="tablero-contenedor"></div>
         <div id="teclado-contenedor"></div>
@@ -193,15 +232,33 @@ export const pantallaSudoku = {
       }
     }
 
+    /* ---------- Pausa ---------- */
+
+    async function pausarYGuardar() {
+      cronometro.detener();
+      try {
+        idEnPausa = await pausarPartida(partida, idEnPausa);
+        navegar(RUTA_INICIO);
+      } catch (error) {
+        mostrarMensaje(error.message, 'error');
+        cronometro.iniciar();
+      }
+    }
+
     /* ---------- Victoria ---------- */
 
-    function ganar() {
+    async function ganar() {
       cronometro.detener();
       seleccionada = null;
       dibujar();
       contenedor.querySelector('#victoria-tiempo').textContent = `Lo lograste en ${formatearSegundos(cronometro.segundos)}`;
+      contenedor.querySelector('#btn-pausar').classList.add('hidden');
       victoria.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Una partida ganada ya no tiene sentido en pausa: libera el lugar.
+      if (idEnPausa) await eliminarPartidaEnPausa(idEnPausa);
+      await registrarSudokuCompletado(partida.dificultad);
     }
 
     /* ---------- Dibujo ---------- */
@@ -226,7 +283,8 @@ export const pantallaSudoku = {
     /* ---------- Arranque ---------- */
 
     btnComprobar.addEventListener('click', comprobar);
-    contenedor.querySelector('#btn-otra-vez').addEventListener('click', () => navegar('sudoku', Object.fromEntries(params)));
+    contenedor.querySelector('#btn-pausar').addEventListener('click', pausarYGuardar);
+    contenedor.querySelector('#btn-otra-vez').addEventListener('click', () => navegar('sudoku', configuracionParaRepetir(partida)));
     contenedor.querySelector('#btn-menu').addEventListener('click', () => navegar(RUTA_INICIO));
     document.addEventListener('keydown', alPresionarTecla);
 
@@ -235,6 +293,9 @@ export const pantallaSudoku = {
       document.removeEventListener('keydown', alPresionarTecla);
     };
 
+    if (cargada.noEncontrada) {
+      mostrarMensaje('No se encontró esa partida en pausa, así que empezó una nueva.', 'error');
+    }
     dibujar();
     cronometro.iniciar();
   },

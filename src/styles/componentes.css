@@ -232,3 +232,37 @@ input[type="range"] {
 .btn-peligro:hover {
   background: color-mix(in srgb, var(--error) 20%, transparent);
 }
+
+/* ---------- Listas (partidas en pausa...) ---------- */
+
+.fila-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.fila-lista + .fila-lista {
+  margin-top: 8px;
+}
+
+.fila-lista-nombre {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fila-lista-detalle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.fila-lista-acciones {
+  display: flex;
+  gap: 8px;
+}

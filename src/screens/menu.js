@@ -1,10 +1,10 @@
 import { navegar } from '../router.js';
 import { VERSION_APP } from '../version.js';
 import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
+import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 
 // Jefes en el orden en que se desbloquean. Por ahora todos aparecen
-// bloqueados: el desbloqueo real llega con el sistema de guardado y los
-// logros (pasos 7 y 12 del plan).
+// bloqueados: el desbloqueo real llega con los logros (paso 12 del plan).
 const JEFES = [
   { id: 'uriel', pista: 'Completa un sudoku fácil para desbloquear a este jefe' },
   { id: 'hecate', pista: 'Vence a Uriel y completa un sudoku medio para desbloquear a esta jefa' },
@@ -63,8 +63,8 @@ export const pantallaMenu = {
 
       <section class="card">
         <h2 class="section-title">Partidas guardadas</h2>
-        <p class="campo-ayuda tarjeta-ayuda">Puedes tener hasta 3 partidas de sudoku en pausa a la vez.</p>
-        <div class="empty-state">Todavía no tienes partidas en pausa.</div>
+        <p class="campo-ayuda tarjeta-ayuda">${TEXTO_LIMITE_PARTIDAS}</p>
+        <div id="partidas-en-pausa"></div>
       </section>
 
       <p class="version-app">SudoCam v${VERSION_APP}</p>
@@ -73,5 +73,7 @@ export const pantallaMenu = {
     contenedor.querySelectorAll('[data-ruta]').forEach((boton) => {
       boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
     });
+
+    dibujarPartidasEnPausa(contenedor.querySelector('#partidas-en-pausa'));
   },
 };

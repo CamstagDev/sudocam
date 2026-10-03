@@ -7,8 +7,20 @@ import { celdasIncorrectas, estaCompleto, vecesDelDigito } from './tablero.js';
 
 export class PartidaSudoku {
   // tableroInicial y solucion son arreglos de 81 números (ver tablero.js).
-  // tableroActual, segundos y errores permiten retomar una partida en pausa.
-  constructor({ dificultad, politicaErrores, tableroInicial, solucion, tableroActual, segundos = 0, errores = 0 }) {
+  // El resto de campos (tableroActual, notas, segundos, errores,
+  // yaContadas) solo hacen falta para retomar una partida en pausa; ver
+  // partidas-en-pausa.js.
+  constructor({
+    dificultad,
+    politicaErrores,
+    tableroInicial,
+    solucion,
+    tableroActual,
+    notas,
+    segundos = 0,
+    errores = 0,
+    yaContadas = [],
+  }) {
     this.dificultad = dificultad;
     this.politicaErrores = politicaErrores;
     this.tableroInicial = [...tableroInicial];
@@ -18,7 +30,7 @@ export class PartidaSudoku {
 
     // Candidatos anotados a lápiz en cada celda (conjuntos de dígitos).
     // Nunca cuentan como jugada ni generan errores.
-    this.notas = Array.from({ length: this.tablero.length }, () => new Set());
+    this.notas = this.tablero.map((_, indice) => new Set(notas?.[indice] ?? []));
 
     // Lo que el tablero muestra en rojo ahora mismo. Según la política
     // puede estar vacío aunque haya errores reales (todavía no tocaba
@@ -34,7 +46,7 @@ export class PartidaSudoku {
     // ya sumó. Si la celda cambia, sale de ahí y su próximo error vuelve
     // a contar.
     this.errores = errores;
-    this.yaContadas = new Set();
+    this.yaContadas = new Set(yaContadas);
 
     this.actualizarErroresVisibles();
   }
