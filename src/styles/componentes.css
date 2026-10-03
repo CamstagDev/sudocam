@@ -215,3 +215,20 @@ input[type="range"] {
   color: var(--success);
   border: 1px solid var(--success-border);
 }
+
+.modal-texto {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.btn-peligro {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.btn-peligro:hover {
+  background: color-mix(in srgb, var(--error) 20%, transparent);
+}

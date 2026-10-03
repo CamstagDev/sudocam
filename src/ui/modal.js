@@ -39,3 +39,44 @@ export function abrirModal({ titulo, contenido, alCerrar = () => {} }) {
   document.body.appendChild(fondo);
   return { cerrar, panel };
 }
+
+// Modal de solo lectura con un mensaje y un botón "Entendido".
+export function mostrarAviso(titulo, mensaje) {
+  const contenido = document.createElement('div');
+  contenido.innerHTML = `
+    <p class="modal-texto"></p>
+    <div class="fila-acciones">
+      <button type="button" class="btn btn-primary">Entendido</button>
+    </div>
+  `;
+  contenido.querySelector('.modal-texto').textContent = mensaje;
+  const modal = abrirModal({ titulo, contenido });
+  contenido.querySelector('button').addEventListener('click', modal.cerrar);
+}
+
+// Pregunta sí/no. Resuelve true solo si el jugador confirma.
+//
+//   if (await confirmar({ titulo: 'Eliminar partida', mensaje: '¿Seguro?', textoConfirmar: 'Eliminar' })) ...
+export function confirmar({ titulo, mensaje, textoConfirmar = 'Aceptar', peligroso = false }) {
+  return new Promise((resolver) => {
+    let respuesta = false;
+    const contenido = document.createElement('div');
+    contenido.innerHTML = `
+      <p class="modal-texto"></p>
+      <div class="fila-acciones">
+        <button type="button" class="btn btn-secondary" data-respuesta="no">Cancelar</button>
+        <button type="button" class="btn ${peligroso ? 'btn-peligro' : 'btn-primary'}" data-respuesta="si"></button>
+      </div>
+    `;
+    contenido.querySelector('.modal-texto').textContent = mensaje;
+    contenido.querySelector('[data-respuesta="si"]').textContent = textoConfirmar;
+
+    const modal = abrirModal({ titulo, contenido, alCerrar: () => resolver(respuesta) });
+    contenido.querySelectorAll('[data-respuesta]').forEach((boton) => {
+      boton.addEventListener('click', () => {
+        respuesta = boton.dataset.respuesta === 'si';
+        modal.cerrar();
+      });
+    });
+  });
+}
