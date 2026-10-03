@@ -13,6 +13,9 @@
 //    Si el principal se corrompe, se recupera desde aquí.
 //  - 'antes-de-migrar-vN': el guardado tal como estaba antes de convertirlo
 //    desde la versión N.
+//  - 'antes-de-importar' / 'antes-de-borrar': el progreso que había antes
+//    de reemplazarlo desde la pantalla "Datos de guardado".
+//  - 'danado': un guardado que no se pudo leer, apartado tal cual.
 
 import { VERSION_APP } from '../version.js';
 import { crearGuardadoNuevo, normalizarGuardado } from './formato.js';
@@ -103,9 +106,18 @@ export async function modificarGuardado(cambio) {
   return resultado;
 }
 
-// Reemplaza todo el guardado (lo usará "Importar guardado").
+// Reemplaza todo el guardado ("Importar guardado"), dejando aparte una
+// copia del que había.
 export async function reemplazarGuardado(nuevo) {
   await almacen.escribir('antes-de-importar', JSON.stringify(obtenerGuardado()));
   guardado = nuevo;
+  await persistir();
+}
+
+// Empieza un guardado nuevo desde cero, dejando aparte una copia del que
+// había por si el jugador se arrepiente.
+export async function borrarProgreso() {
+  await almacen.escribir('antes-de-borrar', JSON.stringify(obtenerGuardado()));
+  guardado = crearGuardadoNuevo();
   await persistir();
 }

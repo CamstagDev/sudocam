@@ -218,6 +218,7 @@ input[type="range"] {
 
 .modal-texto {
   margin: 0 0 18px;
+  white-space: pre-line; /* respeta los saltos de línea del mensaje */
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-muted);
@@ -265,4 +266,32 @@ input[type="range"] {
 .fila-lista-acciones {
   display: flex;
   gap: 8px;
+}
+
+.fila-acciones-izquierda {
+  justify-content: flex-start;
+}
+
+/* ---------- Pantalla "Datos de guardado" ---------- */
+
+.resumen-guardado {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.resumen-guardado dt {
+  color: var(--text-muted);
+}
+
+.resumen-guardado dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.zona-peligro {
+  border-color: var(--error-border);
 }

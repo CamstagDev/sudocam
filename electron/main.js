@@ -10,7 +10,7 @@
 //   npm run escritorio:dev    abre la ventana contra el servidor de Vite
 //                             (npm run dev), con recarga al guardar
 
-import { app, BrowserWindow, Menu, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, Menu, dialog, ipcMain, shell } from 'electron';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -52,6 +52,36 @@ async function escribirGuardado(nombre, texto) {
 
 ipcMain.handle('guardado:leer', (_evento, nombre) => leerGuardado(nombre));
 ipcMain.handle('guardado:escribir', (_evento, nombre, texto) => escribirGuardado(nombre, texto));
+
+/* ---------- Exportar / importar (diálogos del sistema) ---------- */
+
+const FILTRO_JSON = [{ name: 'Guardado de SudoCam', extensions: ['json'] }];
+
+// Devuelve true si se guardó, false si el jugador canceló.
+ipcMain.handle('guardado:exportar', async (evento, nombreSugerido, texto) => {
+  const ventana = BrowserWindow.fromWebContents(evento.sender);
+  const { canceled, filePath } = await dialog.showSaveDialog(ventana, {
+    title: 'Exportar guardado',
+    defaultPath: path.join(app.getPath('documents'), nombreSugerido),
+    filters: FILTRO_JSON,
+  });
+  if (canceled || !filePath) return false;
+  await writeFile(filePath, texto, 'utf8');
+  return true;
+});
+
+// Devuelve el texto del archivo elegido, o null si el jugador canceló.
+ipcMain.handle('guardado:importar', async (evento) => {
+  const ventana = BrowserWindow.fromWebContents(evento.sender);
+  const { canceled, filePaths } = await dialog.showOpenDialog(ventana, {
+    title: 'Importar guardado',
+    defaultPath: app.getPath('documents'),
+    filters: FILTRO_JSON,
+    properties: ['openFile'],
+  });
+  if (canceled || filePaths.length === 0) return null;
+  return readFile(filePaths[0], 'utf8');
+});
 
 /* ---------- Ventana ---------- */
 

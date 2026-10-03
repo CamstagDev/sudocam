@@ -11,6 +11,7 @@ import { pantallaMenu } from './screens/menu.js';
 import { pantallaSudoku } from './screens/sudoku.js';
 import { pantallaPersonalizacion } from './screens/personalizacion.js';
 import { pantallaLogros } from './screens/logros.js';
+import { pantallaGuardado } from './screens/guardado.js';
 import { pantallaEnConstruccion } from './screens/en-construccion.js';
 import { iniciarGuardado } from './save/guardado.js';
 import { almacenNavegador } from './save/almacen-navegador.js';
@@ -23,7 +24,7 @@ registrarPantalla('sudoku', pantallaSudoku);
 registrarPantalla('multisudoku', pantallaEnConstruccion('Multi Sudoku', '🧬'));
 registrarPantalla('logros', pantallaLogros);
 registrarPantalla('personalizacion', pantallaPersonalizacion);
-registrarPantalla('guardado', pantallaEnConstruccion('Datos de guardado', '💾'));
+registrarPantalla('guardado', pantallaGuardado);
 
 // Dónde vive el guardado según dónde corre el juego.
 function elegirAlmacen() {
