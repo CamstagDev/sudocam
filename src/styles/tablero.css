@@ -91,6 +91,17 @@
   color: var(--error);
 }
 
+.celda.acierto {
+  color: var(--success);
+}
+
+/* Celda que puso un jefe. */
+.celda.jefe {
+  background: var(--boss-bg);
+  color: var(--boss);
+  font-weight: 700;
+}
+
 .celda.relacionada {
   background: var(--surface-strong);
 }
