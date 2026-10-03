@@ -1,0 +1,103 @@
+/* ---------- Menú principal ---------- */
+
+.menu-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.game-grid {
+  display: grid;
+  /* En el teléfono caben 2 por fila; en PC se reparten solas. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, clamp(140px, 40vw, 190px)), 1fr));
+  gap: clamp(10px, 2.5vw, 16px);
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: clamp(16px, 4vw, 22px);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font);
+  color: var(--text);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.game-card:hover {
+  border-color: var(--accent);
+  background: var(--surface-strong);
+}
+
+.game-card.bloqueada {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.game-card.bloqueada:hover {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.game-card-icon {
+  font-size: clamp(26px, 7vw, 30px);
+}
+
+.game-card-title {
+  font-weight: 700;
+  font-size: clamp(14px, 3.8vw, 16px);
+}
+
+.game-card-desc {
+  font-size: clamp(12px, 3.2vw, 13px);
+  color: var(--text-muted);
+}
+
+.field-hint {
+  margin: 8px 0 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.opciones-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: clamp(10px, 2.5vw, 12px);
+}
+
+.opcion-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.opcion-menu:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-strong);
+}
+
+.opcion-menu-icono {
+  font-size: 18px;
+}
+
+.version-app {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
