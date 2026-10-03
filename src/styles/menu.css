@@ -64,37 +64,6 @@
   color: var(--text-muted);
 }
 
-.opciones-menu {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-  gap: clamp(10px, 2.5vw, 12px);
-}
-
-.opcion-menu {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.opcion-menu:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-strong);
-}
-
-.opcion-menu-icono {
-  font-size: 18px;
-}
-
 .version-app {
   margin: 0;
   text-align: center;

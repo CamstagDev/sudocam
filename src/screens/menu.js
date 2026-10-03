@@ -17,12 +17,6 @@ const JUEGOS = [
   { ruta: 'multisudoku', icono: '🧬', titulo: 'Multi Sudoku', desc: 'Varios tableros de 9x9 entrelazados por sus cajas de las esquinas' },
 ];
 
-const OPCIONES = [
-  { ruta: 'logros', icono: '🏆', titulo: 'Logros' },
-  { ruta: 'personalizacion', icono: '🎨', titulo: 'Personalización' },
-  { ruta: 'guardado', icono: '💾', titulo: 'Datos de guardado' },
-];
-
 function cartaJuego({ ruta, icono, titulo, desc }) {
   return `
     <button type="button" class="game-card" data-ruta="${ruta}">
@@ -43,18 +37,7 @@ function cartaJefeBloqueado({ id, pista }) {
   `;
 }
 
-function botonOpcion({ ruta, icono, titulo }) {
-  return `
-    <button type="button" class="opcion-menu" data-ruta="${ruta}">
-      <span class="opcion-menu-icono">${icono}</span>
-      <span>${titulo}</span>
-    </button>
-  `;
-}
-
 export const pantallaMenu = {
-  titulo: 'Menú',
-  subtitulo: 'Elige a qué jugar',
   render(contenedor) {
     contenedor.innerHTML = `
       <section class="menu-seccion">
@@ -72,8 +55,6 @@ export const pantallaMenu = {
         <p class="field-hint">Puedes tener hasta 3 partidas de sudoku en pausa a la vez.</p>
         <div class="empty-state">Todavía no tienes partidas en pausa.</div>
       </section>
-
-      <nav class="opciones-menu" aria-label="Opciones">${OPCIONES.map(botonOpcion).join('')}</nav>
 
       <p class="version-app">SudoCam v${VERSION_APP}</p>
     `;

@@ -195,3 +195,73 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.icon-btn.activo {
+  border-color: var(--accent);
+  background: var(--surface-strong);
+}
+
+/* ---------- Menú desplegable (☰ en el teléfono) ---------- */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 210px;
+  background: var(--surface-solid-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 20;
+}
+
+.dropdown-menu.visible {
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item.activo {
+  background: var(--surface-strong);
+}
+
+.dropdown-item-icon {
+  font-size: 16px;
+}
+
+/* Iconos sueltos en PC, agrupados en ☰ en el teléfono. */
+.solo-movil {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .solo-pc {
+    display: none;
+  }
+
+  .solo-movil {
+    display: block;
+  }
+}
