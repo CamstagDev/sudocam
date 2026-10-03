@@ -1,25 +1,67 @@
 // Colores personalizables del juego.
 //
-// El jugador elige unos pocos colores base (Personalización) y de cada uno
-// se derivan las variables CSS que usa el resto de la app (ver
-// styles/tokens.css): versiones más claras para los paneles, fondos
-// translúcidos para los estados del tablero, etc.
+// El jugador elige unos pocos colores base (Personalización), a mano o con
+// un tema predefinido, y de ellos se derivan las variables CSS que usa el
+// resto de la app (ver styles/tokens.css): paneles, bordes, texto
+// secundario, fondos translúcidos para los estados del tablero...
 //
-// En el guardado, perfil.tema es null (colores por defecto) o un objeto
-// con algunos de estos campos en formato #rrggbb.
+// En el guardado, perfil.tema es null (tema SudoCam) o un objeto con estos
+// campos en formato #rrggbb. Qué tema predefinido está "en uso" no se
+// guarda: se deduce comparando los colores (ver temaEnUso).
 
 import { modificarGuardado, obtenerGuardado } from './save/guardado.js';
 
 export const CAMPOS_TEMA = [
-  { id: 'fondo', nombre: 'Color principal (fondo)', porDefecto: '#0d0e13' },
-  { id: 'acento', nombre: 'Botones y selección', porDefecto: '#8b7cf6' },
-  { id: 'logo', nombre: 'Logo', porDefecto: '#a898ff' },
-  { id: 'pista', nombre: 'Números fijos (pistas)', porDefecto: '#7ca8ff' },
-  { id: 'acierto', nombre: 'Aciertos', porDefecto: '#4fd18a' },
-  { id: 'error', nombre: 'Errores', porDefecto: '#ff6b6b' },
-  { id: 'jefe', nombre: 'Jugadas de los jefes', porDefecto: '#f5a623' },
+  { id: 'fondo', nombre: 'Fondo' },
+  { id: 'texto', nombre: 'Texto' },
+  { id: 'acento', nombre: 'Botones y selección' },
+  { id: 'logo', nombre: 'Logo' },
+  { id: 'pista', nombre: 'Números fijos (pistas)' },
+  { id: 'acierto', nombre: 'Aciertos' },
+  { id: 'error', nombre: 'Errores' },
+  { id: 'jefe', nombre: 'Jugadas de los jefes' },
 ];
 
+// Temas listos para elegir. El primero es el de por defecto.
+export const TEMAS = [
+  {
+    id: 'sudocam',
+    nombre: 'SudoCam',
+    colores: { fondo: '#0d0e13', texto: '#f1f2f6', acento: '#8b7cf6', logo: '#a898ff', pista: '#7ca8ff', acierto: '#4fd18a', error: '#ff6b6b', jefe: '#f5a623' },
+  },
+  {
+    id: 'medianoche',
+    nombre: 'Medianoche',
+    colores: { fondo: '#0b1220', texto: '#e6edf7', acento: '#3b82f6', logo: '#60a5fa', pista: '#7dd3fc', acierto: '#34d399', error: '#f87171', jefe: '#fbbf24' },
+  },
+  {
+    id: 'bosque',
+    nombre: 'Bosque',
+    colores: { fondo: '#0f1a14', texto: '#e7f2ea', acento: '#22c55e', logo: '#86efac', pista: '#fde68a', acierto: '#4ade80', error: '#f87171', jefe: '#fb923c' },
+  },
+  {
+    id: 'atardecer',
+    nombre: 'Atardecer',
+    colores: { fondo: '#1c1017', texto: '#f8e9ee', acento: '#f472b6', logo: '#fb7185', pista: '#c4b5fd', acierto: '#6ee7b7', error: '#ef4444', jefe: '#fbbf24' },
+  },
+  {
+    id: 'sakura',
+    nombre: 'Sakura',
+    colores: { fondo: '#fbe4ec', texto: '#3a1d2b', acento: '#d6457a', logo: '#b8325f', pista: '#6b4fa3', acierto: '#1f8f5a', error: '#d42a2a', jefe: '#c2610f' },
+  },
+  {
+    id: 'papel',
+    nombre: 'Papel',
+    colores: { fondo: '#f5f1e8', texto: '#2b2a27', acento: '#8a5a2b', logo: '#6b4423', pista: '#2f5d8a', acierto: '#2e7d32', error: '#c62828', jefe: '#b8590e' },
+  },
+  {
+    id: 'alto-contraste',
+    nombre: 'Alto contraste',
+    colores: { fondo: '#000000', texto: '#ffffff', acento: '#ffd400', logo: '#ffd400', pista: '#00e5ff', acierto: '#00ff6a', error: '#ff3b3b', jefe: '#ff9100' },
+  },
+];
+
+const COLORES_POR_DEFECTO = TEMAS[0].colores;
 const COLOR_HEX = /^#[0-9a-f]{6}$/i;
 
 /* ---------- Utilidades de color ---------- */
@@ -37,13 +79,14 @@ function aHex({ r, g, b }) {
   return `#${parte(r)}${parte(g)}${parte(b)}`;
 }
 
-// Mezcla el color hacia blanco: proporcion 0 = igual, 1 = blanco.
-function aclarar(hex, proporcion) {
-  const { r, g, b } = aRgb(hex);
+// Mezcla dos colores: proporcion 0 = todo `a`, 1 = todo `b`.
+function mezclar(a, b, proporcion) {
+  const ca = aRgb(a);
+  const cb = aRgb(b);
   return aHex({
-    r: r + (255 - r) * proporcion,
-    g: g + (255 - g) * proporcion,
-    b: b + (255 - b) * proporcion,
+    r: ca.r + (cb.r - ca.r) * proporcion,
+    g: ca.g + (cb.g - ca.g) * proporcion,
+    b: ca.b + (cb.b - ca.b) * proporcion,
   });
 }
 
@@ -52,68 +95,84 @@ function translucido(hex, opacidad) {
   return `rgba(${r}, ${g}, ${b}, ${opacidad})`;
 }
 
+function esClaro(hex) {
+  const { r, g, b } = aRgb(hex);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 140;
+}
+
 // Texto oscuro sobre colores claros y claro sobre oscuros.
 function textoLegibleSobre(hex) {
-  const { r, g, b } = aRgb(hex);
-  const luminancia = 0.299 * r + 0.587 * g + 0.114 * b;
-  return luminancia > 140 ? '#0b0d12' : '#f2f3f5';
+  return esClaro(hex) ? '#0b0d12' : '#f2f3f5';
 }
 
 /* ---------- Tema ---------- */
 
-// Qué variables CSS sale de cada color base.
-function variablesDe(campo, color) {
-  switch (campo) {
-    case 'fondo':
-      return {
-        '--bg': color,
-        '--surface-solid': aclarar(color, 0.03),
-        '--surface-solid-strong': aclarar(color, 0.06),
-      };
-    case 'acento':
-      return {
-        '--accent': color,
-        '--accent-strong': aclarar(color, 0.2),
-        '--accent-contrast': textoLegibleSobre(color),
-      };
-    case 'logo':
-      return { '--logo-color': color };
-    case 'pista':
-      return { '--neutral': color, '--neutral-bg': translucido(color, 0.12), '--neutral-border': translucido(color, 0.35) };
-    case 'acierto':
-      return { '--success': color, '--success-bg': translucido(color, 0.12), '--success-border': translucido(color, 0.35) };
-    case 'error':
-      return { '--error': color, '--error-bg': translucido(color, 0.12), '--error-border': translucido(color, 0.35) };
-    case 'jefe':
-      return { '--boss': color, '--boss-bg': translucido(color, 0.16), '--boss-border': translucido(color, 0.4) };
-    default:
-      return {};
-  }
+// Todas las variables CSS que salen de los colores base. Los paneles y
+// bordes se tiñen con el color del texto (no con blanco fijo), así siguen
+// viéndose igual de bien sobre un fondo claro que sobre uno oscuro.
+function variablesDelTema({ fondo, texto, acento, logo, pista, acierto, error, jefe }) {
+  return {
+    '--bg': fondo,
+    '--text': texto,
+    '--text-muted': mezclar(texto, fondo, 0.4),
+    '--surface': translucido(texto, 0.04),
+    '--surface-strong': translucido(texto, 0.07),
+    '--border': translucido(texto, 0.09),
+    '--border-strong': translucido(texto, 0.16),
+    '--surface-solid': mezclar(fondo, texto, 0.04),
+    '--surface-solid-strong': mezclar(fondo, texto, 0.06),
+
+    '--accent': acento,
+    '--accent-strong': esClaro(fondo) ? mezclar(acento, texto, 0.2) : mezclar(acento, '#ffffff', 0.2),
+    '--accent-contrast': textoLegibleSobre(acento),
+    '--logo-color': logo,
+
+    '--neutral': pista,
+    '--neutral-bg': translucido(pista, 0.12),
+    '--neutral-border': translucido(pista, 0.35),
+    '--success': acierto,
+    '--success-bg': translucido(acierto, 0.12),
+    '--success-border': translucido(acierto, 0.35),
+    '--error': error,
+    '--error-bg': translucido(error, 0.12),
+    '--error-border': translucido(error, 0.35),
+    '--boss': jefe,
+    '--boss-bg': translucido(jefe, 0.16),
+    '--boss-border': translucido(jefe, 0.4),
+  };
 }
 
 // El tema completo: lo guardado encima de los colores por defecto,
 // ignorando cualquier valor que no sea un color válido.
 export function temaCompleto(tema) {
   const resultado = {};
-  for (const { id, porDefecto } of CAMPOS_TEMA) {
+  for (const { id } of CAMPOS_TEMA) {
     const color = tema?.[id];
-    resultado[id] = COLOR_HEX.test(color ?? '') ? color.toLowerCase() : porDefecto;
+    resultado[id] = COLOR_HEX.test(color ?? '') ? color.toLowerCase() : COLORES_POR_DEFECTO[id];
   }
   return resultado;
 }
 
-// Pinta la app con `tema` (puede ser null = colores por defecto).
-export function aplicarTema(tema) {
-  const raiz = document.documentElement.style;
+// Id del tema predefinido que coincide con estos colores, o
+// 'personalizado' si el jugador cambió alguno.
+export function temaEnUso(tema) {
   const completo = temaCompleto(tema);
+  const coincide = TEMAS.find(({ colores }) => CAMPOS_TEMA.every(({ id }) => colores[id] === completo[id]));
+  return coincide ? coincide.id : 'personalizado';
+}
 
-  for (const [campo, color] of Object.entries(completo)) {
-    for (const [variable, valor] of Object.entries(variablesDe(campo, color))) {
-      raiz.setProperty(variable, valor);
-    }
+// Pinta la app con `tema` (puede ser null = tema SudoCam).
+export function aplicarTema(tema) {
+  const completo = temaCompleto(tema);
+  const raiz = document.documentElement;
+
+  for (const [variable, valor] of Object.entries(variablesDelTema(completo))) {
+    raiz.style.setProperty(variable, valor);
   }
 
-  // El color de la barra del sistema en Android sigue al fondo.
+  // Barras de desplazamiento y controles nativos claros u oscuros según
+  // el fondo, y la barra del sistema en Android del color del fondo.
+  raiz.style.colorScheme = esClaro(completo.fondo) ? 'light' : 'dark';
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', completo.fondo);
 }
 

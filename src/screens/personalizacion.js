@@ -1,8 +1,19 @@
-// Pantalla de Personalización: colores del juego y preferencias.
+// Pantalla de Personalización: tema de colores y preferencias de juego.
 // Todo se guarda solo, en cuanto el jugador cambia algo; no hay botón
 // "Guardar".
+//
+// Elegir un tema predefinido pone sus colores en los selectores; cambiar
+// cualquier color a mano pasa a "Personalizado" (ver temaEnUso en tema.js).
 
-import { CAMPOS_TEMA, aplicarTema, guardarTema, restablecerTema, temaCompleto } from '../tema.js';
+import {
+  CAMPOS_TEMA,
+  TEMAS,
+  aplicarTema,
+  guardarTema,
+  restablecerTema,
+  temaCompleto,
+  temaEnUso,
+} from '../tema.js';
 import {
   CAMPOS_PREFERENCIAS,
   guardarPreferencia,
@@ -19,6 +30,28 @@ function campoColor({ id, nombre }) {
     </label>
   `;
 }
+
+// Botón de un tema: se pinta con sus propios colores, como vista previa.
+function botonTema({ id, nombre, colores }) {
+  return `
+    <button type="button" class="opcion-tema" data-tema="${id}"
+      style="background: ${colores.fondo}; color: ${colores.texto}">
+      <span class="opcion-tema-puntos">
+        <span style="background: ${colores.acento}"></span>
+        <span style="background: ${colores.pista}"></span>
+        <span style="background: ${colores.error}"></span>
+      </span>
+      ${nombre}
+    </button>
+  `;
+}
+
+const BOTON_PERSONALIZADO = `
+  <span class="opcion-tema personalizado" data-tema="personalizado">
+    <span class="opcion-tema-puntos"><span></span><span></span><span></span></span>
+    Personalizado
+  </span>
+`;
 
 function filaPreferencia({ id, nombre, descripcion }) {
   return `
@@ -56,11 +89,12 @@ export const pantallaPersonalizacion = {
           <h2 class="section-title">Colores</h2>
           <button type="button" class="btn btn-secondary btn-sm" id="restablecer-colores">Restaurar</button>
         </div>
-        <p class="campo-ayuda tarjeta-ayuda">
-          El color principal define el fondo; los paneles usan versiones más claras de él.
-          Los demás colorean el tablero según lo que pase en cada celda.
-        </p>
+        <div class="grilla-temas">${TEMAS.map(botonTema).join('')}${BOTON_PERSONALIZADO}</div>
         ${MUESTRA_TABLERO}
+        <p class="campo-ayuda tarjeta-ayuda">
+          Los paneles y bordes se calculan a partir del fondo y el texto. Cambiar cualquier
+          color pasa tu tema a "Personalizado".
+        </p>
         <div class="grilla-colores">${CAMPOS_TEMA.map(campoColor).join('')}</div>
       </section>
 
@@ -75,9 +109,15 @@ export const pantallaPersonalizacion = {
 
     const entradasColor = [...contenedor.querySelectorAll('[data-color]')];
     const interruptores = [...contenedor.querySelectorAll('[data-preferencia]')];
+    const opcionesTema = [...contenedor.querySelectorAll('[data-tema]')];
 
     function leerColoresElegidos() {
       return Object.fromEntries(entradasColor.map((entrada) => [entrada.dataset.color, entrada.value]));
+    }
+
+    function marcarTemaEnUso(colores) {
+      const enUso = temaEnUso(colores);
+      opcionesTema.forEach((opcion) => opcion.classList.toggle('activo', opcion.dataset.tema === enUso));
     }
 
     function mostrarValoresGuardados() {
@@ -85,6 +125,7 @@ export const pantallaPersonalizacion = {
       entradasColor.forEach((entrada) => {
         entrada.value = tema[entrada.dataset.color];
       });
+      marcarTemaEnUso(tema);
       const preferencias = leerPreferencias();
       interruptores.forEach((interruptor) => {
         interruptor.checked = preferencias[interruptor.dataset.preferencia];
@@ -94,8 +135,21 @@ export const pantallaPersonalizacion = {
     // "input" llega mientras se arrastra en el selector (vista previa en
     // vivo); "change" cuando el jugador lo suelta (ahí se guarda).
     entradasColor.forEach((entrada) => {
-      entrada.addEventListener('input', () => aplicarTema(leerColoresElegidos()));
+      entrada.addEventListener('input', () => {
+        aplicarTema(leerColoresElegidos());
+        marcarTemaEnUso(leerColoresElegidos());
+      });
       entrada.addEventListener('change', () => guardarTema(leerColoresElegidos()));
+    });
+
+    opcionesTema.forEach((opcion) => {
+      const tema = TEMAS.find(({ id }) => id === opcion.dataset.tema);
+      if (!tema) return; // "Personalizado" solo indica, no se elige
+      opcion.addEventListener('click', async () => {
+        aplicarTema(tema.colores);
+        await guardarTema(tema.colores);
+        mostrarValoresGuardados();
+      });
     });
 
     interruptores.forEach((interruptor) => {

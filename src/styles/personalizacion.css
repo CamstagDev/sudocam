@@ -136,3 +136,60 @@
   transform: translateX(18px);
   background: var(--accent-contrast);
 }
+
+/* ---------- Temas predefinidos ---------- */
+
+.grilla-temas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr));
+  gap: 10px;
+  margin: 14px 0 16px;
+}
+
+/* Cada botón se pinta con los colores de su propio tema (en línea). */
+.opcion-tema {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.opcion-tema.activo {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.opcion-tema-puntos {
+  display: flex;
+  gap: 4px;
+}
+
+.opcion-tema-puntos span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+/* "Personalizado" no se elige: se marca solo cuando cambias un color. */
+.opcion-tema.personalizado {
+  background: var(--surface);
+  color: var(--text-muted);
+  border-style: dashed;
+  cursor: default;
+}
+
+.opcion-tema.personalizado .opcion-tema-puntos span {
+  background: conic-gradient(#ff6b6b, #f5a623, #4fd18a, #7ca8ff, #8b7cf6, #ff6b6b);
+}
+
+.opcion-tema.personalizado.activo {
+  color: var(--text);
+}

@@ -1,13 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { crearAlmacenEnMemoria } from '../src/save/almacen-navegador.js';
 import { iniciarGuardado, obtenerGuardado } from '../src/save/guardado.js';
-import { CAMPOS_TEMA, temaCompleto } from '../src/tema.js';
+import { TEMAS, temaCompleto, temaEnUso } from '../src/tema.js';
 import { guardarPreferencia, leerPreferencias, restablecerPreferencias } from '../src/preferencias.js';
 
 describe('temaCompleto', () => {
-  it('sin tema guardado usa todos los colores por defecto', () => {
-    const tema = temaCompleto(null);
-    for (const { id, porDefecto } of CAMPOS_TEMA) expect(tema[id]).toBe(porDefecto);
+  it('sin tema guardado usa los colores del tema SudoCam', () => {
+    expect(temaCompleto(null)).toEqual(TEMAS[0].colores);
   });
 
   it('usa los colores guardados válidos e ignora los que no lo son', () => {
@@ -15,6 +14,21 @@ describe('temaCompleto', () => {
     expect(tema.fondo).toBe('#112233');
     expect(tema.acento).toBe('#8b7cf6');
     expect(tema.error).toBe('#ffaa00');
+  });
+});
+
+describe('temaEnUso', () => {
+  it('reconoce cada tema predefinido por sus colores', () => {
+    for (const tema of TEMAS) expect(temaEnUso(tema.colores)).toBe(tema.id);
+    expect(temaEnUso(null)).toBe('sudocam');
+  });
+
+  it('si se cambia un color, pasa a personalizado', () => {
+    expect(temaEnUso({ ...TEMAS[4].colores, texto: '#123456' })).toBe('personalizado');
+  });
+
+  it('todos los temas traen todos los colores', () => {
+    for (const tema of TEMAS) expect(temaCompleto(tema.colores)).toEqual(tema.colores);
   });
 });
 
