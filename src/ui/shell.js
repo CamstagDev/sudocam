@@ -72,12 +72,13 @@ export function crearShell(raiz) {
   });
 
   return {
-    mostrarPantalla(ruta, pantalla) {
+    mostrarPantalla(ruta, pantalla, params) {
       // El menú no lleva título: el logo ya dice dónde estás.
       bloqueTitulo.classList.toggle('hidden', !pantalla.titulo);
       titulo.textContent = pantalla.titulo ?? '';
-      subtitulo.textContent = pantalla.subtitulo ?? '';
-      subtitulo.classList.toggle('hidden', !pantalla.subtitulo);
+      const textoSubtitulo = typeof pantalla.subtitulo === 'function' ? pantalla.subtitulo(params) : pantalla.subtitulo;
+      subtitulo.textContent = textoSubtitulo ?? '';
+      subtitulo.classList.toggle('hidden', !textoSubtitulo);
       btnVolver.classList.toggle('hidden', ruta === RUTA_INICIO);
       raiz.querySelectorAll('.navbar [data-ruta]').forEach((boton) => {
         boton.classList.toggle('activo', boton.dataset.ruta === ruta);
@@ -85,7 +86,7 @@ export function crearShell(raiz) {
       document.title = pantalla.titulo ? `SudoCam · ${pantalla.titulo}` : 'SudoCam';
       cerrarMenuMovil();
       contenido.replaceChildren();
-      pantalla.render(contenido);
+      pantalla.render(contenido, params);
       window.scrollTo(0, 0);
     },
   };

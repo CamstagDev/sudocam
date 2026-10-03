@@ -1,0 +1,195 @@
+/* ============================================================
+   SudoCam — tablero, teclado numérico y pantalla de juego
+   ============================================================ */
+
+/* ---------- Barra de la partida ---------- */
+
+.juego {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 18px);
+}
+
+.barra-juego {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.barra-juego-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cronometro {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* ---------- Tablero ---------- */
+
+.tablero-contenedor {
+  display: flex;
+  justify-content: center;
+}
+
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 1px;
+  width: min(100%, 480px);
+  aspect-ratio: 1 / 1;
+  background: var(--border-strong);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.celda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: var(--surface-solid);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: clamp(16px, 5vw, 22px);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation; /* sin el retraso de doble toque en el teléfono */
+}
+
+/* Líneas gruesas entre las cajas de 3x3: después de la columna 3 y 6, y
+   debajo de las filas 3 y 6. */
+.tablero .celda:nth-child(9n + 3),
+.tablero .celda:nth-child(9n + 6) {
+  border-right: 3px solid var(--accent);
+}
+
+.tablero .celda:nth-child(n + 19):nth-child(-n + 27),
+.tablero .celda:nth-child(n + 46):nth-child(-n + 54) {
+  border-bottom: 3px solid var(--accent);
+}
+
+/* Estados de la celda. El orden importa: los de más abajo ganan. */
+
+.celda.fija {
+  color: var(--neutral);
+  font-weight: 700;
+  cursor: default;
+}
+
+.celda.error {
+  color: var(--error);
+}
+
+.celda.relacionada {
+  background: var(--surface-strong);
+}
+
+.celda.mismo-numero {
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface-solid));
+}
+
+.celda.seleccionada {
+  background: color-mix(in srgb, var(--accent) 32%, var(--surface-solid));
+}
+
+/* ---------- Notas (candidatos a lápiz, en 3x3 como una caja) ---------- */
+
+.celda-notas {
+  display: none;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.celda.con-notas .celda-notas {
+  display: grid;
+}
+
+.celda.con-notas .celda-valor {
+  display: none;
+}
+
+.nota {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(8px, 2.4vw, 11px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+/* ---------- Teclado numérico ---------- */
+
+.teclado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.teclado-digitos {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: clamp(4px, 1.5vw, 8px);
+  width: min(100%, 480px);
+}
+
+.tecla {
+  aspect-ratio: 1 / 1;
+  max-height: 52px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: clamp(16px, 4.5vw, 19px);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tecla:hover {
+  background: var(--surface-strong);
+  border-color: var(--border-strong);
+}
+
+/* Las 9 apariciones de ese dígito ya están en el tablero. */
+.tecla.completo {
+  opacity: 0.2;
+}
+
+.teclado-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+/* ---------- Victoria ---------- */
+
+.victoria {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.victoria h2 {
+  margin: 0;
+}
+
+.victoria-icono {
+  font-size: 40px;
+}

@@ -1,5 +1,6 @@
 import { navegar } from '../router.js';
 import { VERSION_APP } from '../version.js';
+import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
 
 // Jefes en el orden en que se desbloquean. Por ahora todos aparecen
 // bloqueados: el desbloqueo real llega con el sistema de guardado y los
@@ -37,6 +38,16 @@ function cartaJefeBloqueado({ id, pista }) {
   `;
 }
 
+// El sudoku pide la dificultad antes de empezar; el resto abre directo.
+async function abrirJuego(ruta) {
+  if (ruta !== 'sudoku') {
+    navegar(ruta);
+    return;
+  }
+  const eleccion = await elegirDificultadSudoku();
+  if (eleccion) navegar('sudoku', eleccion);
+}
+
 export const pantallaMenu = {
   render(contenedor) {
     contenedor.innerHTML = `
@@ -52,7 +63,7 @@ export const pantallaMenu = {
 
       <section class="card">
         <h2 class="section-title">Partidas guardadas</h2>
-        <p class="field-hint">Puedes tener hasta 3 partidas de sudoku en pausa a la vez.</p>
+        <p class="campo-ayuda tarjeta-ayuda">Puedes tener hasta 3 partidas de sudoku en pausa a la vez.</p>
         <div class="empty-state">Todavía no tienes partidas en pausa.</div>
       </section>
 
@@ -60,7 +71,7 @@ export const pantallaMenu = {
     `;
 
     contenedor.querySelectorAll('[data-ruta]').forEach((boton) => {
-      boton.addEventListener('click', () => navegar(boton.dataset.ruta));
+      boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
     });
   },
 };

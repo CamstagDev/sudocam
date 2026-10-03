@@ -1,10 +1,17 @@
-// Navegación entre pantallas por hash (#/menu, #/sudoku, ...). Es una sola
-// página: el guardado se carga una vez y vive en memoria entre pantallas,
-// y funciona igual dentro de Electron y Capacitor que en el navegador.
+// Navegación entre pantallas por hash: #/menu, #/sudoku?dificultad=medio...
+// Es una sola página: el guardado se carga una vez y vive en memoria entre
+// pantallas, y funciona igual dentro de Electron y Capacitor que en el
+// navegador.
 //
-// Cada pantalla es un objeto { titulo, subtitulo?, render(contenedor), destruir?() }.
-// `render` dibuja dentro de <main>; `destruir` (opcional) limpia timers o
-// listeners globales antes de cambiar de pantalla.
+// Cada pantalla es un objeto:
+//   {
+//     titulo,                     texto de la barra superior (opcional)
+//     subtitulo,                  texto o función (params) => texto (opcional)
+//     render(contenedor, params), dibuja la pantalla dentro de <main>
+//     destruir(),                 limpia timers y listeners (opcional)
+//   }
+// `params` son los parámetros que vienen después del "?" en el hash, como
+// URLSearchParams.
 
 const pantallas = new Map();
 let pantallaActual = null;
@@ -16,24 +23,36 @@ export function registrarPantalla(ruta, pantalla) {
   pantallas.set(ruta, pantalla);
 }
 
-export function rutaActual() {
-  const ruta = window.location.hash.replace(/^#\/?/, '');
-  return pantallas.has(ruta) ? ruta : RUTA_INICIO;
-}
-
-export function navegar(ruta) {
-  window.location.hash = `#/${ruta}`;
+function leerHash() {
+  const [ruta, consulta = ''] = window.location.hash.replace(/^#\/?/, '').split('?');
+  return {
+    ruta: pantallas.has(ruta) ? ruta : RUTA_INICIO,
+    params: new URLSearchParams(consulta),
+  };
 }
 
 function mostrar() {
   if (pantallaActual?.destruir) pantallaActual.destruir();
-  const ruta = rutaActual();
+  const { ruta, params } = leerHash();
   pantallaActual = pantallas.get(ruta);
-  alCambiar(ruta, pantallaActual);
+  alCambiar(ruta, pantallaActual, params);
 }
 
-// `cuandoCambie(ruta, pantalla)` lo llama el cascarón de la app (main.js)
-// para redibujar la barra superior y el contenido.
+// navegar('sudoku', { dificultad: 'medio' }) -> #/sudoku?dificultad=medio
+// Si el destino es el mismo hash en el que ya estamos (p. ej. "Jugar otra
+// vez"), la pantalla se vuelve a dibujar igual.
+export function navegar(ruta, params = {}) {
+  const consulta = new URLSearchParams(params).toString();
+  const hash = `#/${ruta}${consulta ? `?${consulta}` : ''}`;
+  if (window.location.hash === hash) {
+    mostrar();
+  } else {
+    window.location.hash = hash;
+  }
+}
+
+// `cuandoCambie(ruta, pantalla, params)` lo pasa el cascarón de la app
+// (main.js) para redibujar la barra superior y el contenido.
 export function iniciarRouter(cuandoCambie) {
   alCambiar = cuandoCambie;
   window.addEventListener('hashchange', mostrar);
