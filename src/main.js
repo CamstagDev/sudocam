@@ -9,6 +9,7 @@ import { RUTA_INICIO, iniciarRouter, registrarPantalla } from './router.js';
 import { crearShell } from './ui/shell.js';
 import { pantallaMenu } from './screens/menu.js';
 import { pantallaSudoku } from './screens/sudoku.js';
+import { pantallaMultiSudoku } from './screens/multisudoku.js';
 import { pantallaPersonalizacion } from './screens/personalizacion.js';
 import { pantallaLogros } from './screens/logros.js';
 import { pantallaGuardado } from './screens/guardado.js';
@@ -21,7 +22,7 @@ import { aplicarTemaGuardado } from './tema.js';
 
 registrarPantalla(RUTA_INICIO, pantallaMenu);
 registrarPantalla('sudoku', pantallaSudoku);
-registrarPantalla('multisudoku', pantallaEnConstruccion('Multi Sudoku', '🧬'));
+registrarPantalla('multisudoku', pantallaMultiSudoku);
 registrarPantalla('logros', pantallaLogros);
 registrarPantalla('personalizacion', pantallaPersonalizacion);
 registrarPantalla('guardado', pantallaGuardado);

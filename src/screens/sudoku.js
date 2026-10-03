@@ -5,8 +5,9 @@
 //   #/sudoku?dificultad=personalizado&pistas=30&politicaErrores=boton
 //   #/sudoku?partida=<id>                                         retomar una en pausa
 //
-// La lógica de la partida vive en game/sudoku/partida.js; esta pantalla
-// solo arma el HTML, traduce clics y teclas en jugadas y redibuja.
+// El juego en sí (tablero, teclado, notas...) es ui/juego-sudoku.js; esta
+// pantalla agrega lo propio del 9x9: elegir la partida, pausar y guardar,
+// y qué pasa al ganar.
 
 import { RUTA_INICIO, navegar } from '../router.js';
 import { DIFICULTADES, POLITICAS_ERRORES, limitarPistasPersonalizado } from '../game/sudoku/dificultades.js';
@@ -17,15 +18,11 @@ import {
   obtenerPartidaEnPausa,
   partidaDesdeGuardada,
   pausarPartida,
-  registrarSudokuCompletado,
 } from '../game/sudoku/partidas-en-pausa.js';
-import { DIGITOS, TAMANO, columnaDe, estaCompleto, filaDe, indiceDe } from '../game/sudoku/tablero.js';
-import { crearVistaTablero } from '../ui/vista-tablero.js';
-import { crearTecladoNumerico } from '../ui/teclado-numerico.js';
-import { crearCronometro, formatearSegundos } from '../ui/cronometro.js';
+import { registrarSudokuGanado } from '../game/progreso.js';
 import { leerPreferencias } from '../preferencias.js';
-import { desbloquearLogros, logrosPorSudokus } from '../game/logros/logros.js';
-import { obtenerGuardado } from '../save/guardado.js';
+import { crearJuegoSudoku } from '../ui/juego-sudoku.js';
+import { crearTarjetaVictoria } from '../ui/tarjeta-victoria.js';
 import { mostrarLogrosNuevos } from '../ui/aviso-logro.js';
 
 // Traduce los parámetros de la ruta a una configuración válida, sin
@@ -74,8 +71,7 @@ function nombreDificultad(params) {
   return DIFICULTADES[dificultad].nombre;
 }
 
-// Lo que hay que limpiar al salir de la pantalla (ver destruir()).
-let limpiarPantalla = () => {};
+let juego = null;
 
 export const pantallaSudoku = {
   titulo: 'Sudoku 9x9',
@@ -85,228 +81,45 @@ export const pantallaSudoku = {
     const cargada = cargarPartida(params);
     const { partida } = cargada;
     let idEnPausa = cargada.idEnPausa;
-    const preferencias = leerPreferencias();
-
-    let seleccionada = null;
-    let modoNotas = false;
-
-    contenedor.innerHTML = `
-      <div class="banner" id="banner"></div>
-
-      <section class="card victoria hidden" id="victoria">
-        <span class="victoria-icono">🎉</span>
-        <h2>¡Sudoku resuelto!</h2>
-        <p class="campo-ayuda" id="victoria-tiempo"></p>
-        <div class="fila-acciones">
-          <button type="button" class="btn btn-primary" id="btn-otra-vez">Jugar otra vez</button>
-          <button type="button" class="btn btn-secondary" id="btn-menu">Volver al menú</button>
-        </div>
-      </section>
-
-      <section class="card juego">
-        <div class="barra-juego">
-          <div class="barra-juego-info">
-            <span class="badge acento">${DIFICULTADES[partida.dificultad].nombre}</span>
-            <span class="badge negativo" id="badge-errores"></span>
-            <span class="cronometro" id="cronometro"></span>
-          </div>
-          <div class="barra-juego-acciones">
-            <button type="button" class="btn btn-secondary btn-sm" id="btn-comprobar">Comprobar</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btn-pausar">⏸ Pausar y guardar</button>
-          </div>
-        </div>
-        <div class="tablero-contenedor" id="tablero-contenedor"></div>
-        <div id="teclado-contenedor"></div>
-      </section>
-    `;
-
-    const banner = contenedor.querySelector('#banner');
-    const badgeErrores = contenedor.querySelector('#badge-errores');
-    const cronometroEl = contenedor.querySelector('#cronometro');
-    const btnComprobar = contenedor.querySelector('#btn-comprobar');
-    const victoria = contenedor.querySelector('#victoria');
-
-    // Con "boton" hace falta el botón Comprobar; con "final" no hay errores
-    // que contar hasta el final, así que el contador solo confundiría.
-    btnComprobar.classList.toggle('hidden', partida.politicaErrores !== 'boton');
-    badgeErrores.classList.toggle('hidden', partida.politicaErrores === 'final');
-    cronometroEl.classList.toggle('hidden', !preferencias.mostrarCronometro);
-
-    /* ---------- Componentes ---------- */
-
-    const vista = crearVistaTablero(contenedor.querySelector('#tablero-contenedor'), {
-      alTocarCelda: (indice) => {
-        seleccionada = indice;
-        dibujar();
-      },
-    });
-
-    const teclado = crearTecladoNumerico(contenedor.querySelector('#teclado-contenedor'), {
-      alElegirDigito: escribir,
-      alBorrar: borrar,
-      alAlternarNotas: alternarModoNotas,
-    });
-
-    const cronometro = crearCronometro({
-      segundosIniciales: partida.segundos,
-      alCambiar: (segundos) => {
-        partida.segundos = segundos;
-        cronometroEl.textContent = formatearSegundos(segundos);
-      },
-    });
-
-    /* ---------- Mensajes ---------- */
-
-    function mostrarMensaje(texto, tipo) {
-      banner.textContent = texto;
-      banner.className = `banner visible ${tipo}`;
-    }
-
-    function ocultarMensaje() {
-      banner.className = 'banner';
-    }
-
-    /* ---------- Jugadas ---------- */
-
-    function escribir(digito) {
-      if (seleccionada === null) return;
-      const cambio = modoNotas ? partida.alternarNota(seleccionada, digito) : partida.colocar(seleccionada, digito);
-      if (!cambio) return;
-
-      ocultarMensaje();
-      if (!modoNotas && partida.politicaErrores === 'final' && estaCompleto(partida.tablero) && !partida.resuelta) {
-        mostrarMensaje('El tablero está completo pero hay errores', 'error');
-      }
-      dibujar();
-      if (partida.resuelta) ganar();
-    }
-
-    function borrar() {
-      if (seleccionada === null || !partida.borrar(seleccionada)) return;
-      ocultarMensaje();
-      dibujar();
-    }
-
-    function alternarModoNotas() {
-      modoNotas = !modoNotas;
-      dibujar();
-    }
-
-    function comprobar() {
-      partida.comprobar();
-      if (partida.erroresVisibles.size > 0) {
-        mostrarMensaje('Hay números que no van ahí', 'error');
-      } else if (!partida.resuelta) {
-        mostrarMensaje('Vas bien: no hay errores por ahora', 'exito');
-      }
-      dibujar();
-    }
-
-    // Flechas: mover la selección sin salirse del tablero.
-    function moverSeleccion(tecla) {
-      if (seleccionada === null) {
-        seleccionada = 0;
-        return;
-      }
-      const limitar = (n) => Math.min(TAMANO - 1, Math.max(0, n));
-      let fila = filaDe(seleccionada);
-      let columna = columnaDe(seleccionada);
-      if (tecla === 'ArrowUp') fila = limitar(fila - 1);
-      if (tecla === 'ArrowDown') fila = limitar(fila + 1);
-      if (tecla === 'ArrowLeft') columna = limitar(columna - 1);
-      if (tecla === 'ArrowRight') columna = limitar(columna + 1);
-      seleccionada = indiceDe(fila, columna);
-    }
-
-    function alPresionarTecla(evento) {
-      if (document.querySelector('.modal-fondo')) return; // hay un modal abierto encima
-      const tecla = evento.key;
-
-      if (tecla === 'n' || tecla === 'N') {
-        alternarModoNotas();
-      } else if (tecla >= '1' && tecla <= '9') {
-        escribir(Number(tecla));
-      } else if (tecla === 'Backspace' || tecla === 'Delete' || tecla === '0') {
-        borrar();
-      } else if (tecla.startsWith('Arrow')) {
-        evento.preventDefault();
-        moverSeleccion(tecla);
-        dibujar();
-      }
-    }
-
-    /* ---------- Pausa ---------- */
 
     async function pausarYGuardar() {
-      cronometro.detener();
+      juego.detenerCronometro();
       try {
         idEnPausa = await pausarPartida(partida, idEnPausa);
         navegar(RUTA_INICIO);
       } catch (error) {
-        mostrarMensaje(error.message, 'error');
-        cronometro.iniciar();
+        juego.mostrarMensaje(error.message, 'error');
+        juego.reanudarCronometro();
       }
     }
 
-    /* ---------- Victoria ---------- */
-
-    async function ganar() {
-      cronometro.detener();
-      seleccionada = null;
-      dibujar();
-      contenedor.querySelector('#victoria-tiempo').textContent = `Lo lograste en ${formatearSegundos(cronometro.segundos)}`;
-      contenedor.querySelector('#btn-pausar').classList.add('hidden');
-      victoria.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
+    async function alGanar(segundos) {
+      victoria.mostrar(segundos);
       // Una partida ganada ya no tiene sentido en pausa: libera el lugar.
       if (idEnPausa) await eliminarPartidaEnPausa(idEnPausa);
-      await registrarSudokuCompletado(partida.dificultad);
-      const nuevos = await desbloquearLogros(logrosPorSudokus(obtenerGuardado(), partida.dificultad));
-      mostrarLogrosNuevos(nuevos);
+      mostrarLogrosNuevos(await registrarSudokuGanado(partida.dificultad));
     }
 
-    /* ---------- Dibujo ---------- */
+    juego = crearJuegoSudoku(contenedor, {
+      partida,
+      preferencias: leerPreferencias(),
+      insignias: [DIFICULTADES[partida.dificultad].nombre],
+      accionesExtra: [{ texto: '⏸ Pausar y guardar', alTocar: pausarYGuardar }],
+      alGanar,
+    });
 
-    function dibujar() {
-      vista.dibujar({
-        tablero: partida.tablero,
-        fijas: partida.tableroInicial.map((valor) => valor !== 0),
-        notas: partida.notas,
-        errores: partida.erroresVisibles,
-        seleccionada,
-        resaltarRelacionadas: preferencias.resaltarRelacionadas,
-        resaltarIguales: preferencias.resaltarIguales,
-      });
-      teclado.dibujar({
-        digitosCompletos: new Set(DIGITOS.filter((digito) => partida.digitoCompleto(digito))),
-        modoNotas,
-      });
-      badgeErrores.textContent = `Errores: ${partida.errores}`;
-    }
-
-    /* ---------- Arranque ---------- */
-
-    btnComprobar.addEventListener('click', comprobar);
-    contenedor.querySelector('#btn-pausar').addEventListener('click', pausarYGuardar);
-    contenedor.querySelector('#btn-otra-vez').addEventListener('click', () => navegar('sudoku', configuracionParaRepetir(partida)));
-    contenedor.querySelector('#btn-menu').addEventListener('click', () => navegar(RUTA_INICIO));
-    document.addEventListener('keydown', alPresionarTecla);
-
-    limpiarPantalla = () => {
-      cronometro.detener();
-      document.removeEventListener('keydown', alPresionarTecla);
-    };
+    const victoria = crearTarjetaVictoria(contenedor, {
+      titulo: '¡Sudoku resuelto!',
+      alJugarOtraVez: () => navegar('sudoku', configuracionParaRepetir(partida)),
+    });
 
     if (cargada.noEncontrada) {
-      mostrarMensaje('No se encontró esa partida en pausa, así que empezó una nueva.', 'error');
+      juego.mostrarMensaje('No se encontró esa partida en pausa, así que empezó una nueva.', 'error');
     }
-    dibujar();
-    cronometro.iniciar();
   },
 
   destruir() {
-    limpiarPantalla();
-    limpiarPantalla = () => {};
+    juego?.destruir();
+    juego = null;
   },
 };

@@ -1,12 +1,15 @@
-// Estado de una partida de sudoku 9x9, sin nada de pantalla: qué celdas
-// son fijas, qué escribió el jugador, sus notas y qué errores se le
-// muestran según la política de la dificultad. La pantalla (screens/sudoku.js)
-// solo lee este estado y lo dibuja.
+// Estado de una partida de sudoku, sin nada de pantalla: qué celdas son
+// fijas, qué escribió el jugador, sus notas y qué errores se le muestran
+// según la política de la dificultad. Sirve igual para un 9x9 que para un
+// multi sudoku: la forma la da el lienzo (ver lienzo.js). Las pantallas
+// solo leen este estado y lo dibujan.
 
+import { LIENZO_9X9 } from './lienzo.js';
 import { celdasIncorrectas, estaCompleto, vecesDelDigito } from './tablero.js';
 
 export class PartidaSudoku {
-  // tableroInicial y solucion son arreglos de 81 números (ver tablero.js).
+  // tableroInicial y solucion son tableros del tamaño del lienzo (ver
+  // tablero.js).
   // El resto de campos (tableroActual, notas, segundos, errores,
   // yaContadas) solo hacen falta para retomar una partida en pausa; ver
   // partidas-en-pausa.js.
@@ -15,6 +18,7 @@ export class PartidaSudoku {
     politicaErrores,
     tableroInicial,
     solucion,
+    lienzo = LIENZO_9X9,
     tableroActual,
     notas,
     segundos = 0,
@@ -23,6 +27,7 @@ export class PartidaSudoku {
   }) {
     this.dificultad = dificultad;
     this.politicaErrores = politicaErrores;
+    this.lienzo = lienzo;
     this.tableroInicial = [...tableroInicial];
     this.solucion = [...solucion];
     this.tablero = [...(tableroActual ?? tableroInicial)];
@@ -56,16 +61,21 @@ export class PartidaSudoku {
   }
 
   get resuelta() {
-    return estaCompleto(this.tablero) && celdasIncorrectas(this.tablero, this.solucion).size === 0;
+    return this.estaLleno && celdasIncorrectas(this.tablero, this.solucion, this.lienzo).size === 0;
+  }
+
+  get estaLleno() {
+    return estaCompleto(this.tablero, this.lienzo);
   }
 
   get cantidadPistas() {
     return this.tableroInicial.filter((valor) => valor !== 0).length;
   }
 
-  // ¿Ya están puestas las 9 apariciones de este dígito?
+  // ¿Ya están puestas todas las apariciones de este dígito? (9 en un
+  // 9x9; más en un multi sudoku)
   digitoCompleto(digito) {
-    return vecesDelDigito(this.tablero, digito) >= 9;
+    return vecesDelDigito(this.tablero, digito) >= vecesDelDigito(this.solucion, digito);
   }
 
   /* ---------- Jugadas ---------- */
@@ -109,7 +119,7 @@ export class PartidaSudoku {
   // primera vez. La usa el botón "Comprobar" y, según la política, cada
   // jugada (ver actualizarErroresVisibles).
   comprobar() {
-    this.erroresVisibles = celdasIncorrectas(this.tablero, this.solucion);
+    this.erroresVisibles = celdasIncorrectas(this.tablero, this.solucion, this.lienzo);
     this.erroresRevisados = true;
 
     for (const indice of this.erroresVisibles) {
@@ -126,7 +136,7 @@ export class PartidaSudoku {
   //  - final: ocultos hasta que el tablero se llena; ahí se revisa solo.
   actualizarErroresVisibles() {
     const revisarAhora = this.politicaErrores === 'instantaneo'
-      || (this.politicaErrores === 'final' && estaCompleto(this.tablero));
+      || (this.politicaErrores === 'final' && this.estaLleno);
 
     if (revisarAhora) {
       this.comprobar();

@@ -39,13 +39,12 @@
   justify-content: center;
 }
 
+/* Las filas, columnas y proporción las pone vista-tablero.js según el
+   lienzo (9x9, o más grande con huecos en un multi sudoku). */
 .tablero {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(9, 1fr);
   gap: 1px;
   width: min(100%, 480px);
-  aspect-ratio: 1 / 1;
   background: var(--border-strong);
   border: 2px solid var(--border-strong);
   border-radius: var(--radius-sm);
@@ -67,16 +66,38 @@
   touch-action: manipulation; /* sin el retraso de doble toque en el teléfono */
 }
 
-/* Líneas gruesas entre las cajas de 3x3: después de la columna 3 y 6, y
-   debajo de las filas 3 y 6. */
-.tablero .celda:nth-child(9n + 3),
-.tablero .celda:nth-child(9n + 6) {
+/* Líneas gruesas entre las cajas de 3x3 (las clases las calcula
+   vista-tablero.js). */
+.celda.borde-caja-derecha {
   border-right: 3px solid var(--accent);
 }
 
-.tablero .celda:nth-child(n + 19):nth-child(-n + 27),
-.tablero .celda:nth-child(n + 46):nth-child(-n + 54) {
+.celda.borde-caja-abajo {
   border-bottom: 3px solid var(--accent);
+}
+
+/* ---------- Multi sudoku: más celdas, tablero más ancho ---------- */
+
+.tablero-multi {
+  width: min(100%, 760px);
+  /* Los huecos entre grillas se ven como fondo, no como borde. */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.tablero-multi .celda {
+  font-size: clamp(9px, 2.4vw, 17px);
+  outline: 1px solid var(--border-strong);
+}
+
+.tablero-multi .nota {
+  font-size: clamp(5px, 1.1vw, 9px);
+}
+
+/* Celda que pertenece a dos grillas a la vez (la caja donde se unen). */
+.celda.compartida {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-solid));
 }
 
 /* Estados de la celda. El orden importa: los de más abajo ganan. */
@@ -209,4 +230,52 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+/* ---------- Multi sudoku: aviso mientras se genera y miniaturas ---------- */
+
+.generando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  color: var(--text-muted);
+}
+
+.generando-icono {
+  font-size: 36px;
+  animation: generando-latido 1.2s ease-in-out infinite;
+}
+
+@keyframes generando-latido {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.6; }
+}
+
+/* Dibujito de una forma: un cuadrado por grilla (ver selector-multisudoku.js). */
+.miniatura-forma {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+}
+
+.miniatura-forma span {
+  position: absolute;
+  border: 1.5px solid var(--accent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* En el teléfono cada píxel cuenta: el multi sudoku usa casi todo el ancho
+   de la tarjeta. */
+@media (max-width: 640px) {
+  .juego:has(.tablero-multi) {
+    padding-inline: 4px;
+  }
+
+  .juego:has(.tablero-multi) .barra-juego,
+  .juego:has(.tablero-multi) .banner {
+    margin-inline: 12px;
+  }
 }

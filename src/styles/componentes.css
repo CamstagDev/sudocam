@@ -87,12 +87,27 @@
   background: var(--surface-strong);
 }
 
+.opcion-fila.activo {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+/* Opción con un dibujito a la izquierda (formas del multi sudoku). */
+.opcion-fila:has(.miniatura-forma) {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+
 .opcion-fila-titulo {
+  display: block;
   font-weight: 700;
   font-size: 14px;
 }
 
 .opcion-fila-desc {
+  display: block;
+  margin-top: 3px;
   font-size: 12px;
   color: var(--text-muted);
 }
@@ -131,6 +146,10 @@ input[type="range"] {
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.btn-ancho {
+  width: 100%;
 }
 
 .btn-sm {

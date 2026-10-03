@@ -1,6 +1,7 @@
 import { navegar } from '../router.js';
 import { VERSION_APP } from '../version.js';
 import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
+import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { ultimosLogros } from '../game/logros/logros.js';
 
@@ -56,14 +57,20 @@ function vitrinaDeLogros() {
   `;
 }
 
-// El sudoku pide la dificultad antes de empezar; el resto abre directo.
+// Los juegos piden sus opciones antes de empezar; el resto abre directo.
+const SELECTORES = {
+  sudoku: elegirDificultadSudoku,
+  multisudoku: elegirMultiSudoku,
+};
+
 async function abrirJuego(ruta) {
-  if (ruta !== 'sudoku') {
+  const elegirOpciones = SELECTORES[ruta];
+  if (!elegirOpciones) {
     navegar(ruta);
     return;
   }
-  const eleccion = await elegirDificultadSudoku();
-  if (eleccion) navegar('sudoku', eleccion);
+  const eleccion = await elegirOpciones();
+  if (eleccion) navegar(ruta, eleccion);
 }
 
 export const pantallaMenu = {

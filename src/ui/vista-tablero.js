@@ -1,35 +1,54 @@
-// Dibuja un tablero de sudoku 9x9 y avisa cuando el jugador toca una celda.
-// No sabe nada de reglas ni de partidas: recibe en cada `dibujar` todo lo
-// que tiene que mostrar. La van a reusar el sudoku normal y los jefes.
+// Dibuja un tablero (un 9x9 o un multi sudoku, según el lienzo) y avisa
+// cuando el jugador toca una celda. No sabe nada de reglas ni de partidas:
+// recibe en cada `dibujar` todo lo que tiene que mostrar. La usan el
+// sudoku normal, el multi sudoku y los jefes.
 //
-//   const vista = crearVistaTablero(contenedor, { alTocarCelda: (indice) => ... });
+//   const vista = crearVistaTablero(contenedor, { lienzo, alTocarCelda: (indice) => ... });
 //   vista.dibujar({ tablero, fijas, notas, errores, seleccionada, resaltarRelacionadas, resaltarIguales });
 
-import { TOTAL_CELDAS, estanRelacionadas } from '../game/sudoku/tablero.js';
+import { TAMANO_CAJA, TAMANO_GRILLA } from '../game/sudoku/lienzo.js';
 
-function crearCelda(indice) {
+// Líneas gruesas entre cajas de 3x3: a la derecha de las columnas locales
+// 2 y 5, y debajo de las filas 2 y 5 (nunca en el borde de la grilla).
+// Una celda compartida por dos grillas lleva la línea si cualquiera de las
+// dos la pide.
+function esFinDeCaja(posicionLocal) {
+  return posicionLocal % TAMANO_CAJA === TAMANO_CAJA - 1 && posicionLocal < TAMANO_GRILLA - 1;
+}
+
+function crearCelda(indice, lienzo) {
+  const lugares = lienzo.ubicaciones[indice];
   const celda = document.createElement('button');
   celda.type = 'button';
   celda.className = 'celda';
-  celda.dataset.indice = String(indice);
+  celda.style.gridRow = String(Math.floor(indice / lienzo.ancho) + 1);
+  celda.style.gridColumn = String((indice % lienzo.ancho) + 1);
+  celda.classList.toggle('borde-caja-derecha', lugares.some((lugar) => esFinDeCaja(lugar.columna)));
+  celda.classList.toggle('borde-caja-abajo', lugares.some((lugar) => esFinDeCaja(lugar.fila)));
+  celda.classList.toggle('compartida', lugares.length > 1);
   celda.innerHTML = `
     <span class="celda-valor"></span>
     <span class="celda-notas">
-      ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => '<span class="nota"></span>').join('')}
+      ${'<span class="nota"></span>'.repeat(9)}
     </span>
   `;
   return celda;
 }
 
-export function crearVistaTablero(contenedor, { alTocarCelda }) {
+export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
   const tableroEl = document.createElement('div');
-  tableroEl.className = 'tablero';
+  tableroEl.className = lienzo.cantidadGrillas > 1 ? 'tablero tablero-multi' : 'tablero';
+  tableroEl.style.gridTemplateColumns = `repeat(${lienzo.ancho}, 1fr)`;
+  tableroEl.style.gridTemplateRows = `repeat(${lienzo.alto}, 1fr)`;
+  tableroEl.style.aspectRatio = `${lienzo.ancho} / ${lienzo.alto}`;
 
-  const celdas = [];
-  for (let indice = 0; indice < TOTAL_CELDAS; indice++) {
-    const celda = crearCelda(indice);
+  // Solo se crean las celdas activas: los huecos de un multi sudoku quedan
+  // vacíos en la grilla CSS.
+  const celdas = new Map();
+  for (const indice of lienzo.celdas) {
+    const celda = crearCelda(indice, lienzo);
     celda.addEventListener('click', () => alTocarCelda(indice));
-    celdas.push(celda);
+    celdas.set(indice, celda);
     tableroEl.appendChild(celda);
   }
   contenedor.appendChild(tableroEl);
@@ -44,8 +63,9 @@ export function crearVistaTablero(contenedor, { alTocarCelda }) {
     resaltarIguales = true,
   }) {
     const valorSeleccionado = seleccionada === null ? 0 : tablero[seleccionada];
+    const relacionadas = new Set(resaltarRelacionadas && seleccionada !== null ? lienzo.vecinos[seleccionada] : []);
 
-    celdas.forEach((celda, indice) => {
+    for (const [indice, celda] of celdas) {
       const valor = tablero[indice];
       const notasCelda = notas[indice];
       const conNotas = valor === 0 && notasCelda.size > 0;
@@ -61,11 +81,10 @@ export function crearVistaTablero(contenedor, { alTocarCelda }) {
       celda.classList.toggle('fija', fijas[indice]);
       celda.classList.toggle('error', errores.has(indice));
       celda.classList.toggle('seleccionada', indice === seleccionada);
-      celda.classList.toggle('relacionada',
-        resaltarRelacionadas && seleccionada !== null && estanRelacionadas(indice, seleccionada));
+      celda.classList.toggle('relacionada', relacionadas.has(indice));
       celda.classList.toggle('mismo-numero',
         resaltarIguales && valorSeleccionado !== 0 && indice !== seleccionada && valor === valorSeleccionado);
-    });
+    }
   }
 
   return { dibujar, elemento: tableroEl };

@@ -10,7 +10,7 @@ import {
   eliminarPartidaEnPausa,
   listarPartidasEnPausa,
 } from '../game/sudoku/partidas-en-pausa.js';
-import { TOTAL_CELDAS } from '../game/sudoku/tablero.js';
+import { LIENZO_9X9 } from '../game/sudoku/lienzo.js';
 import { formatearSegundos } from './cronometro.js';
 import { confirmar } from './modal.js';
 
@@ -29,7 +29,7 @@ function filaPartida(guardada) {
     <div>
       <span class="fila-lista-nombre">${DIFICULTADES[guardada.dificultad]?.nombre ?? guardada.dificultad}</span>
       <p class="fila-lista-detalle">
-        ${celdasLlenas(guardada.tableroActual)}/${TOTAL_CELDAS} celdas ·
+        ${celdasLlenas(guardada.tableroActual)}/${LIENZO_9X9.celdas.length} celdas ·
         ${formatearSegundos(guardada.segundos)} ·
         ${formatearFecha(guardada.actualizada)}
       </p>
