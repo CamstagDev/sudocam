@@ -11,9 +11,15 @@
 //     preferencias,                              ver preferencias.js
 //     insignias: ['Fácil', '2 tableros'],
 //     accionesExtra: [{ texto: '⏸ Pausar y guardar', alTocar: () => ... }],
-//     alGanar: (segundos) => ...,
+//     alGanar: (segundos) => ...,          tablero completo y correcto
+//
+//     Opcionales, para los jefes:
+//     mostrarErrores: false,               sin el contador de errores
+//     marcas: () => ({ clase: Set }),      clases extra por celda (ver vista-tablero.js)
+//     alJugar: ({ indice, valor, correcto }) => ...,   después de cada número escrito
 //   });
 //   juego.mostrarMensaje('Texto', 'error' | 'exito');
+//   juego.dibujar();    redibujar si la partida cambió desde afuera (p. ej. jugó el jefe)
 //   juego.detenerCronometro(); juego.reanudarCronometro();
 //   juego.destruir();   al salir de la pantalla
 
@@ -23,7 +29,16 @@ import { crearVistaTablero } from './vista-tablero.js';
 import { crearTecladoNumerico } from './teclado-numerico.js';
 import { crearCronometro, formatearSegundos } from './cronometro.js';
 
-export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias = [], accionesExtra = [], alGanar = () => {} }) {
+export function crearJuegoSudoku(contenedor, {
+  partida,
+  preferencias,
+  insignias = [],
+  accionesExtra = [],
+  alGanar = () => {},
+  mostrarErrores = true,
+  marcas = () => ({}),
+  alJugar = () => {},
+}) {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card juego';
   tarjeta.innerHTML = `
@@ -52,7 +67,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
   // Con "boton" hace falta Comprobar; con "final" no hay errores que
   // contar hasta el final, así que el contador solo confundiría.
   btnComprobar.classList.toggle('hidden', partida.politicaErrores !== 'boton');
-  badgeErrores.classList.toggle('hidden', partida.politicaErrores === 'final');
+  badgeErrores.classList.toggle('hidden', !mostrarErrores || partida.politicaErrores === 'final');
   cronometroEl.classList.toggle('hidden', !preferencias.mostrarCronometro);
 
   const botonesExtra = accionesExtra.map(({ texto, alTocar }) => {
@@ -67,6 +82,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
 
   let seleccionada = null;
   let modoNotas = false;
+  let terminado = false;
 
   /* ---------- Piezas ---------- */
 
@@ -81,7 +97,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
   const teclado = crearTecladoNumerico(tarjeta, {
     alElegirDigito: escribir,
     alBorrar: borrar,
-    alAlternarNotas: alternarModoNotas,
+    alAlternarNotas: partida.permitirNotas === false ? null : alternarModoNotas,
   });
 
   const cronometro = crearCronometro({
@@ -115,6 +131,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
       mostrarMensaje('El tablero está completo pero hay errores', 'error');
     }
     dibujar();
+    if (!modoNotas) alJugar({ indice: seleccionada, valor: digito, correcto: digito === partida.solucion[seleccionada] });
     if (partida.resuelta) ganar();
   }
 
@@ -125,6 +142,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
   }
 
   function alternarModoNotas() {
+    if (partida.permitirNotas === false) return;
     modoNotas = !modoNotas;
     dibujar();
   }
@@ -140,6 +158,8 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
   }
 
   function ganar() {
+    if (terminado) return;
+    terminado = true;
     cronometro.detener();
     seleccionada = null;
     botonesExtra.forEach((boton) => boton.classList.add('hidden'));
@@ -179,6 +199,7 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
       seleccionada,
       resaltarRelacionadas: preferencias.resaltarRelacionadas,
       resaltarIguales: preferencias.resaltarIguales,
+      marcas: marcas(),
     });
     teclado.dibujar({
       digitosCompletos: new Set(DIGITOS.filter((digito) => partida.digitoCompleto(digito))),
@@ -194,8 +215,19 @@ export function crearJuegoSudoku(contenedor, { partida, preferencias, insignias 
   dibujar();
   cronometro.iniciar();
 
+  // Si la partida termina por algo de afuera (p. ej. el jefe puso el
+  // último número), avisar igual.
+  function revisarFin() {
+    dibujar();
+    if (partida.resuelta) ganar();
+  }
+
   return {
     mostrarMensaje,
+    dibujar: revisarFin,
+    get seleccionada() {
+      return seleccionada;
+    },
     detenerCronometro: () => cronometro.detener(),
     reanudarCronometro: () => cronometro.iniciar(),
     destruir() {

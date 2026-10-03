@@ -4,16 +4,8 @@ import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
 import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { ultimosLogros } from '../game/logros/logros.js';
-
-// Jefes en el orden en que se desbloquean. Por ahora todos aparecen
-// bloqueados: el desbloqueo real llega con los logros (paso 12 del plan).
-const JEFES = [
-  { id: 'uriel', pista: 'Completa un sudoku fácil para desbloquear a este jefe' },
-  { id: 'hecate', pista: 'Vence a Uriel y completa un sudoku medio para desbloquear a esta jefa' },
-  { id: 'jormungandr', pista: 'Vence a Hecate y completa un sudoku difícil para desbloquear a este jefe' },
-  { id: 'babel', pista: 'Vence a Jörmungandr para desbloquear a este jefe' },
-  { id: 'typhon', pista: 'Vence a Jörmungandr para desbloquear a este jefe' },
-];
+import { ORDEN_JEFES } from '../game/jefes/catalogo.js';
+import { crearCartaJefe } from '../ui/carta-jefe.js';
 
 const JUEGOS = [
   { ruta: 'sudoku', icono: '🔢', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
@@ -27,16 +19,6 @@ function cartaJuego({ ruta, icono, titulo, desc }) {
       <span class="game-card-title">${titulo}</span>
       <span class="game-card-desc">${desc}</span>
     </button>
-  `;
-}
-
-function cartaJefeBloqueado({ id, pista }) {
-  return `
-    <div class="game-card bloqueada" data-jefe="${id}">
-      <span class="game-card-icon">🔒</span>
-      <span class="game-card-title">???</span>
-      <span class="game-card-desc">${pista}</span>
-    </div>
   `;
 }
 
@@ -83,7 +65,7 @@ export const pantallaMenu = {
 
       <section class="menu-seccion">
         <h2 class="section-title">Jefes</h2>
-        <div class="game-grid">${JEFES.map(cartaJefeBloqueado).join('')}</div>
+        <div class="game-grid" id="jefes"></div>
       </section>
 
       ${vitrinaDeLogros()}
@@ -100,6 +82,9 @@ export const pantallaMenu = {
     contenedor.querySelectorAll('[data-ruta]').forEach((boton) => {
       boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
     });
+
+    const grillaJefes = contenedor.querySelector('#jefes');
+    ORDEN_JEFES.forEach((id) => grillaJefes.appendChild(crearCartaJefe(id)));
 
     dibujarPartidasEnPausa(contenedor.querySelector('#partidas-en-pausa'));
   },

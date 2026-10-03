@@ -4,7 +4,10 @@
 // sudoku normal, el multi sudoku y los jefes.
 //
 //   const vista = crearVistaTablero(contenedor, { lienzo, alTocarCelda: (indice) => ... });
-//   vista.dibujar({ tablero, fijas, notas, errores, seleccionada, resaltarRelacionadas, resaltarIguales });
+//   vista.dibujar({ tablero, fijas, notas, errores, seleccionada, resaltarRelacionadas, resaltarIguales, marcas });
+//
+// `marcas` (opcional) pone clases extra en algunas celdas, por ejemplo
+// para los jefes: { jefe: Set de índices, 'jefe-buscando': Set... }
 
 import { TAMANO_CAJA, TAMANO_GRILLA } from '../game/sudoku/lienzo.js';
 
@@ -53,6 +56,10 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
   }
   contenedor.appendChild(tableroEl);
 
+  // Clases de `marcas` que se usaron alguna vez, para poder quitarlas
+  // cuando dejan de venir.
+  const clasesDeMarcas = new Set();
+
   function dibujar({
     tablero,
     fijas,
@@ -61,7 +68,9 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
     seleccionada,
     resaltarRelacionadas = true,
     resaltarIguales = true,
+    marcas = {},
   }) {
+    Object.keys(marcas).forEach((clase) => clasesDeMarcas.add(clase));
     const valorSeleccionado = seleccionada === null ? 0 : tablero[seleccionada];
     const relacionadas = new Set(resaltarRelacionadas && seleccionada !== null ? lienzo.vecinos[seleccionada] : []);
 
@@ -84,6 +93,9 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
       celda.classList.toggle('relacionada', relacionadas.has(indice));
       celda.classList.toggle('mismo-numero',
         resaltarIguales && valorSeleccionado !== 0 && indice !== seleccionada && valor === valorSeleccionado);
+      for (const clase of clasesDeMarcas) {
+        celda.classList.toggle(clase, Boolean(marcas[clase]?.has(indice)));
+      }
     }
   }
 

@@ -1,0 +1,347 @@
+/* ============================================================
+   SudoCam — jefes: cartas del menú, pelea e información
+   ============================================================ */
+
+/* ---------- Cartas del menú ---------- */
+
+.carta-jefe {
+  position: relative;
+  display: flex;
+}
+
+.carta-jefe .game-card {
+  flex: 1;
+}
+
+.carta-boton-chico {
+  position: absolute;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.carta-boton-info {
+  right: 10px;
+}
+
+.carta-boton-uber {
+  left: 10px;
+}
+
+/* ---------- Retrato ---------- */
+
+.retrato-jefe {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--error-border);
+  border-radius: 50%;
+  background: var(--error-bg);
+  font-size: 26px;
+}
+
+button.retrato-jefe {
+  cursor: pointer;
+}
+
+.retrato-jefe.retrato-grande {
+  width: 72px;
+  height: 72px;
+  font-size: 34px;
+}
+
+.retrato-jefe img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Cabecera de la pelea ---------- */
+
+.cabecera-jefe {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cabecera-jefe-fila {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cabecera-jefe-texto {
+  min-width: 0;
+}
+
+.cabecera-jefe-nombre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: clamp(17px, 4.5vw, 20px);
+  font-weight: 700;
+}
+
+.cabecera-jefe-texto .campo-ayuda {
+  margin-top: 4px;
+}
+
+.badge:not(.acento):not(.negativo) {
+  background: var(--surface-strong);
+  color: var(--text-muted);
+}
+
+/* ---------- Iconos de habilidades ---------- */
+
+.habilidades {
+  display: flex;
+  gap: 10px;
+}
+
+.icono-habilidad {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-solid);
+  font-size: 18px;
+}
+
+.icono-habilidad-anillo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* empieza arriba y avanza como un reloj */
+}
+
+.icono-habilidad-fondo {
+  fill: none;
+  stroke: var(--surface-strong);
+  stroke-width: 3;
+}
+
+.icono-habilidad-carga {
+  fill: none;
+  stroke: var(--boss);
+  stroke-width: 3;
+}
+
+.icono-habilidad span {
+  position: relative;
+  opacity: 0.8;
+}
+
+.icono-habilidad.disparada {
+  animation: habilidad-disparada 0.6s ease;
+}
+
+@keyframes habilidad-disparada {
+  35% { box-shadow: 0 0 0 8px var(--boss); transform: scale(1.15); }
+}
+
+/* ---------- Marcador (tira y afloja) ---------- */
+
+.marcador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.marcador-lado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 48px;
+}
+
+.marcador-lado small {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.marcador-lado strong {
+  font-size: 20px;
+}
+
+.marcador-lado.jugador strong {
+  color: var(--success);
+}
+
+.marcador-lado.jefe strong {
+  color: var(--boss);
+}
+
+/* Cada lado crece desde su extremo hacia el centro. */
+.marcador-barra {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+}
+
+.marcador-relleno {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  transition: width 0.25s;
+}
+
+.marcador-relleno.jugador {
+  left: 0;
+  background: var(--success);
+}
+
+.marcador-relleno.jefe {
+  right: 0;
+  background: var(--boss);
+}
+
+/* ---------- Tablero y registro ---------- */
+
+/* Registro al lado del tablero en pantallas anchas, debajo en el teléfono. */
+.pelea-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .pelea-cuerpo {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .pelea-cuerpo .juego {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pelea-cuerpo .registro-eventos {
+    flex: 0 0 260px;
+  }
+}
+
+.registro-eventos {
+  max-height: 420px;
+  margin: 0;
+  padding: 12px 14px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.registro-eventos li + li {
+  margin-top: 6px;
+}
+
+.registro-eventos time {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+.registro-jefe span {
+  color: var(--boss);
+}
+
+.registro-jugador span {
+  color: var(--success);
+}
+
+.registro-vacio {
+  font-style: italic;
+}
+
+/* ---------- Celdas en una pelea ---------- */
+
+/* (Las casillas de cada lado, .celda.jugador y .celda.jefe, están en
+   tablero.css, antes de .seleccionada, para que la selección se vea.) */
+
+/* Animación de búsqueda del jefe: la caja que revisa, la celda que mira
+   y su fila/columna/caja. Van después de .seleccionada para ganarle. */
+.celda.jefe-mirando {
+  box-shadow: inset 0 0 0 2px var(--boss-border);
+}
+
+.celda.jefe-relacionada {
+  background: var(--boss-bg);
+}
+
+.celda.jefe-buscando {
+  background: var(--boss);
+  color: var(--accent-contrast);
+}
+
+/* ---------- Resultado ---------- */
+
+.resultado-pelea {
+  text-align: center;
+}
+
+.resultado-pelea-icono {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 42px;
+}
+
+/* ---------- Información del jefe ---------- */
+
+.estadisticas-jefe {
+  margin-top: 14px;
+}
+
+.seccion-jefe p {
+  margin: 10px 0 0;
+  line-height: 1.55;
+}
+
+/* Barras "tachadas", como un documento censurado. */
+.texto-tachado {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 12px 0 4px;
+}
+
+.texto-tachado span {
+  height: 14px;
+  border-radius: 4px;
+  background: var(--text);
+  opacity: 0.85;
+}
+
+.texto-tachado span:nth-child(2) {
+  width: 88%;
+}
+
+.texto-tachado span:nth-child(3) {
+  width: 64%;
+}
+
+.pista-seccion {
+  font-style: italic;
+}

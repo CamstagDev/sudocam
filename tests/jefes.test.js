@@ -1,0 +1,150 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+import { crearAlmacenEnMemoria } from '../src/save/almacen-navegador.js';
+import { iniciarGuardado, modificarGuardado, obtenerGuardado } from '../src/save/guardado.js';
+import {
+  CAJAS,
+  PeleaUriel,
+  buscarJugadaFacil,
+  buscarJugadaPorDescarte,
+} from '../src/game/jefes/uriel.js';
+import {
+  estadisticasDeJefe,
+  estaCompletamenteInvestigado,
+  jefeDesbloqueado,
+  registrarVictoriaDeJefe,
+} from '../src/game/jefes/registro.js';
+
+const SOLUCION = [
+  5, 3, 4, 6, 7, 8, 9, 1, 2,
+  6, 7, 2, 1, 9, 5, 3, 4, 8,
+  1, 9, 8, 3, 4, 2, 5, 6, 7,
+  8, 5, 9, 7, 6, 1, 4, 2, 3,
+  4, 2, 6, 8, 5, 3, 7, 9, 1,
+  7, 1, 3, 9, 2, 4, 8, 5, 6,
+  9, 6, 1, 5, 3, 7, 2, 8, 4,
+  2, 8, 7, 4, 1, 9, 6, 3, 5,
+  3, 4, 5, 2, 8, 6, 1, 7, 9,
+];
+
+function vaciar(indices) {
+  return SOLUCION.map((valor, indice) => (indices.includes(indice) ? 0 : valor));
+}
+
+describe('búsquedas de Uriel', () => {
+  it('fácil: completa la celda que es la única vacía de su fila', () => {
+    const tablero = vaciar([0, 10, 20, 30]); // la fila 0 solo tiene vacía la celda 0
+    expect(buscarJugadaFacil(tablero, SOLUCION, CAJAS[0])).toEqual({ indice: 0, valor: 5 });
+  });
+
+  it('fácil: no ve nada si toda la caja y sus líneas tienen varios huecos', () => {
+    const caja = CAJAS[0];
+    const vacias = [...caja, 3, 4, 27, 36]; // vacía la caja y además rompe fila 0/1 y columna 0
+    const tablero = vaciar([...vacias, 12, 13, 21, 22, 28, 37, 46, 55, 64, 73, 29, 38, 47, 56, 65, 74, 23, 14, 5]);
+    expect(buscarJugadaFacil(tablero, SOLUCION, caja)).toBeNull();
+  });
+
+  it('un número equivocado del jugador no le sirve de pista, pero lo puede corregir', () => {
+    const tablero = vaciar([1]);
+    tablero[1] = 9; // equivocado: va un 3
+    expect(buscarJugadaFacil(tablero, SOLUCION, CAJAS[0])).toEqual({ indice: 1, valor: 3 });
+  });
+
+  it('descarte: encuentra el único hueco posible para un número', () => {
+    // Caja 0 con 3 huecos (0, 1, 2) en la misma fila. Faltan el 3, el 4 y
+    // el 5; el 3 ya está más abajo en las columnas 0 y 2, así que solo
+    // cabe en la celda 1 (el primero que encuentra, porque prueba del 1 al 9).
+    const tablero = vaciar([0, 1, 2]);
+    expect(buscarJugadaPorDescarte(tablero, SOLUCION, CAJAS[0])).toEqual({ indice: 1, valor: 3 });
+  });
+});
+
+describe('PeleaUriel', () => {
+  function pelea(vacias = [0, 1, 2, 9, 10]) {
+    return new PeleaUriel({ tableroInicial: vaciar(vacias), solucion: SOLUCION });
+  }
+
+  it('cuenta puntos de cada lado y las casillas de Uriel no se pueden tocar', () => {
+    const p = pelea();
+    p.colocar(0, 5);
+    p.jugadaDelJefe({ indice: 1, valor: 3 });
+
+    expect(p.puntos).toEqual({ jugador: 1, jefe: 1 });
+    expect(p.colocar(1, 4)).toBe(false);
+    expect(p.borrar(1)).toBe(false);
+  });
+
+  it('un número equivocado no suma punto pero cuenta como error', () => {
+    const p = pelea();
+    p.colocar(0, 9);
+    expect(p.puntos.jugador).toBe(0);
+    expect(p.errores).toBe(1);
+  });
+
+  it('pasa a fase 2 al llenar la mitad, o con el truco del retrato', () => {
+    const p = pelea([0, 1, 2, 9]);
+    expect(p.fase).toBe(1);
+    p.colocar(0, 5);
+    p.colocar(1, 1); // equivocado, pero "llenada" igual
+    expect(p.fase).toBe(2);
+
+    const otra = pelea();
+    otra.faseForzada = true;
+    expect(otra.fase).toBe(2);
+  });
+
+  it('la búsqueda fácil toca cada 15 s y la de descarte cada 30 s, solo en fase 2', () => {
+    const p = pelea();
+    const disparos = [];
+    for (let s = 1; s <= 30; s++) disparos.push(...p.avanzarUnSegundo());
+    expect(disparos).toEqual(['facil', 'facil']);
+
+    p.faseForzada = true;
+    const enFase2 = [];
+    for (let s = 1; s <= 30; s++) enFase2.push(...p.avanzarUnSegundo());
+    expect(enFase2).toEqual(['facil', 'facil', 'descarte']);
+  });
+
+  it('sin notas en la versión uber', () => {
+    const uber = new PeleaUriel({ tableroInicial: vaciar([0]), solucion: SOLUCION, uber: true });
+    expect(uber.alternarNota(0, 5)).toBe(false);
+    expect(uber.cajasPorBusqueda).toBe(2);
+  });
+});
+
+describe('registro de jefes', () => {
+  beforeEach(async () => {
+    await iniciarGuardado(crearAlmacenEnMemoria());
+  });
+
+  it('Uriel se desbloquea al completar un sudoku fácil', async () => {
+    expect(jefeDesbloqueado('uriel')).toBe(false);
+    await modificarGuardado((g) => { g.logros.sudoku_facil = '2026-10-03'; });
+    expect(jefeDesbloqueado('uriel')).toBe(true);
+  });
+
+  it('anota victorias, mejor tiempo, victorias rápidas y la mejor marca', async () => {
+    await registrarVictoriaDeJefe('uriel', { segundos: 400, errores: 2, usoNotas: true, puntosJefe: 3 });
+    await registrarVictoriaDeJefe('uriel', { segundos: 200, errores: 2, usoNotas: false, puntosJefe: 3 });
+    await registrarVictoriaDeJefe('uriel', { segundos: 500, errores: 0, usoNotas: false, puntosJefe: 3 });
+
+    const stats = estadisticasDeJefe('uriel');
+    expect(stats.victorias).toBe(3);
+    expect(stats.mejorTiempo).toBe(200);
+    expect(stats.victoriasRapidas).toBe(1);
+    expect(stats.mejorMarca).toMatchObject({ errores: 0, segundos: 500 });
+  });
+
+  it('da los logros de Uriel, incluido el de no dejarlo anotar', async () => {
+    const logros = await registrarVictoriaDeJefe('uriel', { segundos: 300, errores: 1, usoNotas: false, puntosJefe: 0 });
+    expect(logros.map((l) => l.id)).toEqual(['uriel_derrotado', 'uriel_aleteo_mariposa']);
+    expect(obtenerGuardado().logros.uriel_derrotado).toBeDefined();
+  });
+
+  it('investigar por completo a Uriel desbloquea a Uber Uriel', async () => {
+    for (let i = 0; i < 5; i++) {
+      await registrarVictoriaDeJefe('uriel', { segundos: i === 0 ? 100 : 400, errores: 0, usoNotas: false, puntosJefe: 2 });
+    }
+    expect(estaCompletamenteInvestigado('uriel')).toBe(true);
+    expect(jefeDesbloqueado('uriel_uber')).toBe(true);
+  });
+});

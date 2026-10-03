@@ -116,7 +116,11 @@
   color: var(--success);
 }
 
-/* Celda que puso un jefe. */
+/* En una pelea: quién se anotó cada casilla. */
+.celda.jugador {
+  background: var(--success-bg);
+}
+
 .celda.jefe {
   background: var(--boss-bg);
   color: var(--boss);

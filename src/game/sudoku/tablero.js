@@ -34,3 +34,13 @@ export function tableroATexto(tablero) {
 export function textoATablero(texto) {
   return [...texto].map(Number);
 }
+
+// Celdas cuyo número se repite con alguna vecina (misma fila, columna o
+// caja). A diferencia de celdasIncorrectas, no mira la solución: es lo que
+// el jugador podría ver por sí mismo.
+export function celdasRepetidas(tablero, lienzo) {
+  return new Set(lienzo.celdas.filter((indice) => {
+    const valor = tablero[indice];
+    return valor !== 0 && lienzo.vecinos[indice].some((vecina) => tablero[vecina] === valor);
+  }));
+}

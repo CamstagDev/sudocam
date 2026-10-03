@@ -23,13 +23,15 @@ export function crearTecladoNumerico(contenedor, { alElegirDigito, alBorrar, alA
     boton.addEventListener('click', () => alElegirDigito(Number(boton.dataset.digito)));
   });
   teclado.querySelector('#tecla-borrar').addEventListener('click', alBorrar);
-  teclado.querySelector('#tecla-notas').addEventListener('click', alAlternarNotas);
+  // Sin `alAlternarNotas` (jefes uber) no hay botón de notas.
+  if (alAlternarNotas) teclado.querySelector('#tecla-notas').addEventListener('click', alAlternarNotas);
+  else teclado.querySelector('#tecla-notas').remove();
 
   function dibujar({ digitosCompletos, modoNotas }) {
     teclado.querySelectorAll('[data-digito]').forEach((boton) => {
       boton.classList.toggle('completo', digitosCompletos.has(Number(boton.dataset.digito)));
     });
-    teclado.querySelector('#tecla-notas').classList.toggle('activo', modoNotas);
+    teclado.querySelector('#tecla-notas')?.classList.toggle('activo', modoNotas);
   }
 
   return { dibujar };
