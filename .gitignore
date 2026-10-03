@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+out/
+release/
+
+# Android (Capacitor)
+android/app/build/
+android/.gradle/
+android/local.properties
+*.keystore
+*.jks
+
+# Logs y entorno
+*.log
+.env
+.env.*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
