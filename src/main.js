@@ -9,6 +9,8 @@ import { pantallaMenu } from './screens/menu.js';
 import { pantallaSudoku } from './screens/sudoku.js';
 import { pantallaEnConstruccion } from './screens/en-construccion.js';
 import { iniciarGuardado } from './save/guardado.js';
+import { almacenNavegador } from './save/almacen-navegador.js';
+import { almacenEscritorio, estamosEnEscritorio } from './save/almacen-escritorio.js';
 import { mostrarAviso } from './ui/modal.js';
 
 registrarPantalla(RUTA_INICIO, pantallaMenu);
@@ -18,10 +20,15 @@ registrarPantalla('logros', pantallaEnConstruccion('Logros', '🏆'));
 registrarPantalla('personalizacion', pantallaEnConstruccion('Personalización', '🎨'));
 registrarPantalla('guardado', pantallaEnConstruccion('Datos de guardado', '💾'));
 
+// Dónde vive el guardado según dónde corre el juego.
+function elegirAlmacen() {
+  return estamosEnEscritorio() ? almacenEscritorio : almacenNavegador;
+}
+
 // Primero se carga el guardado (todas las pantallas lo leen), después se
 // dibuja la app.
 async function arrancar() {
-  const aviso = await iniciarGuardado();
+  const aviso = await iniciarGuardado(elegirAlmacen());
 
   const shell = crearShell(document.getElementById('app'));
   iniciarRouter((ruta, pantalla, params) => shell.mostrarPantalla(ruta, pantalla, params));
