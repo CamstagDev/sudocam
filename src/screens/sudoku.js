@@ -24,6 +24,9 @@ import { crearVistaTablero } from '../ui/vista-tablero.js';
 import { crearTecladoNumerico } from '../ui/teclado-numerico.js';
 import { crearCronometro, formatearSegundos } from '../ui/cronometro.js';
 import { leerPreferencias } from '../preferencias.js';
+import { desbloquearLogros, logrosPorSudokus } from '../game/logros/logros.js';
+import { obtenerGuardado } from '../save/guardado.js';
+import { mostrarLogrosNuevos } from '../ui/aviso-logro.js';
 
 // Traduce los parámetros de la ruta a una configuración válida, sin
 // confiar en lo que venga (alguien podría escribir la URL a mano).
@@ -259,6 +262,8 @@ export const pantallaSudoku = {
       // Una partida ganada ya no tiene sentido en pausa: libera el lugar.
       if (idEnPausa) await eliminarPartidaEnPausa(idEnPausa);
       await registrarSudokuCompletado(partida.dificultad);
+      const nuevos = await desbloquearLogros(logrosPorSudokus(obtenerGuardado(), partida.dificultad));
+      mostrarLogrosNuevos(nuevos);
     }
 
     /* ---------- Dibujo ---------- */

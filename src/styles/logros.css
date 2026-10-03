@@ -1,0 +1,167 @@
+/* ============================================================
+   SudoCam — logros: pantalla, vitrina del menú y aviso flotante
+   ============================================================ */
+
+/* ---------- Pantalla de Logros ---------- */
+
+.lista-logros {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.logro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logro-icono {
+  flex-shrink: 0;
+  width: 46px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.logro-cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.logro-nombre {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.logro-descripcion {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.logro-fecha {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Bloqueado: el nombre queda a brillo normal (es la pista); se atenúan el
+   candado y la descripción. */
+.logro.bloqueado .logro-icono {
+  opacity: 0.5;
+}
+
+.logro.bloqueado .logro-descripcion {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.logro-progreso {
+  height: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+}
+
+.logro-progreso-relleno {
+  height: 100%;
+  background: var(--accent);
+}
+
+.logro-progreso-texto {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ---------- Vitrina "Últimos logros" del menú ---------- */
+
+.vitrina-logros {
+  display: block;
+  width: 100%;
+  font-family: var(--font);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.vitrina-logros:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-strong);
+}
+
+.vitrina-logros-ver {
+  font-size: 13px;
+  color: var(--accent-strong);
+}
+
+.vitrina-logros-iconos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.vitrina-logros-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-strong);
+  font-size: 22px;
+}
+
+/* ---------- Aviso flotante ---------- */
+
+.aviso-logro {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(320px, calc(100vw - 2 * var(--gutter)));
+  padding: 14px 18px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface-solid-strong);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.aviso-logro.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.aviso-logro-icono {
+  flex-shrink: 0;
+  font-size: 28px;
+}
+
+.aviso-logro-titulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.aviso-logro-nombre {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+}
