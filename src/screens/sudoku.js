@@ -220,7 +220,7 @@ export const pantallaSudoku = {
         digitosCompletos: new Set(DIGITOS.filter((digito) => partida.digitoCompleto(digito))),
         modoNotas,
       });
-      badgeErrores.textContent = partida.erroresRevisados ? `Errores: ${partida.erroresVisibles.size}` : 'Errores: –';
+      badgeErrores.textContent = `Errores: ${partida.errores}`;
     }
 
     /* ---------- Arranque ---------- */

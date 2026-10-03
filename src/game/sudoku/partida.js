@@ -7,8 +7,8 @@ import { celdasIncorrectas, estaCompleto, vecesDelDigito } from './tablero.js';
 
 export class PartidaSudoku {
   // tableroInicial y solucion son arreglos de 81 números (ver tablero.js).
-  // tableroActual y segundos permiten retomar una partida en pausa.
-  constructor({ dificultad, politicaErrores, tableroInicial, solucion, tableroActual, segundos = 0 }) {
+  // tableroActual, segundos y errores permiten retomar una partida en pausa.
+  constructor({ dificultad, politicaErrores, tableroInicial, solucion, tableroActual, segundos = 0, errores = 0 }) {
     this.dificultad = dificultad;
     this.politicaErrores = politicaErrores;
     this.tableroInicial = [...tableroInicial];
@@ -25,6 +25,16 @@ export class PartidaSudoku {
     // revisar). `erroresRevisados` dice si refleja de verdad el tablero.
     this.erroresVisibles = new Set();
     this.erroresRevisados = false;
+
+    // Cuántos errores cometió el jugador en toda la partida. Nunca baja:
+    // corregir un número no borra el error que ya se cometió. Un error se
+    // cuenta en el momento en que se le muestra (al escribirlo, al
+    // Comprobar o al llenar el tablero, según la política), y una sola
+    // vez: `yaContadas` guarda las celdas cuyo número equivocado actual
+    // ya sumó. Si la celda cambia, sale de ahí y su próximo error vuelve
+    // a contar.
+    this.errores = errores;
+    this.yaContadas = new Set();
 
     this.actualizarErroresVisibles();
   }
@@ -53,6 +63,7 @@ export class PartidaSudoku {
   colocar(indice, valor) {
     if (this.resuelta || this.esFija(indice)) return false;
     this.tablero[indice] = valor;
+    this.yaContadas.delete(indice);
     this.notas[indice].clear(); // la celda ya tiene un número de verdad
     this.actualizarErroresVisibles();
     return true;
@@ -64,6 +75,7 @@ export class PartidaSudoku {
       this.notas[indice].clear();
     } else {
       this.tablero[indice] = 0;
+      this.yaContadas.delete(indice);
       this.actualizarErroresVisibles();
     }
     return true;
@@ -81,10 +93,19 @@ export class PartidaSudoku {
 
   /* ---------- Errores ---------- */
 
-  // Revisión explícita (botón "Comprobar").
+  // Muestra los errores actuales y suma al contador los que se ven por
+  // primera vez. La usa el botón "Comprobar" y, según la política, cada
+  // jugada (ver actualizarErroresVisibles).
   comprobar() {
     this.erroresVisibles = celdasIncorrectas(this.tablero, this.solucion);
     this.erroresRevisados = true;
+
+    for (const indice of this.erroresVisibles) {
+      if (!this.yaContadas.has(indice)) {
+        this.yaContadas.add(indice);
+        this.errores++;
+      }
+    }
   }
 
   // Qué errores se ven tras cada jugada, según la política:

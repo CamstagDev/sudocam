@@ -56,6 +56,35 @@ describe('PartidaSudoku', () => {
     expect(partida.resuelta).toBe(false);
   });
 
+  it('el contador de errores nunca baja al corregir', () => {
+    const partida = nuevaPartida('instantaneo');
+    partida.colocar(0, 9);
+    expect(partida.errores).toBe(1);
+
+    partida.borrar(0);
+    expect(partida.errores).toBe(1);
+
+    partida.colocar(0, 8); // otro error en la misma celda: cuenta aparte
+    expect(partida.errores).toBe(2);
+
+    partida.colocar(1, 3); // jugada correcta: no cambia nada
+    expect(partida.errores).toBe(2);
+  });
+
+  it('boton: un error cuenta al comprobar, y una sola vez', () => {
+    const partida = nuevaPartida('boton');
+    partida.colocar(0, 9);
+    expect(partida.errores).toBe(0);
+
+    partida.comprobar();
+    partida.comprobar();
+    expect(partida.errores).toBe(1);
+
+    partida.colocar(0, 5); // lo corrige: el error ya cometido se queda
+    partida.comprobar();
+    expect(partida.errores).toBe(1);
+  });
+
   it('detecta la victoria y bloquea jugadas posteriores', () => {
     const partida = nuevaPartida('instantaneo');
     partida.colocar(0, 5);

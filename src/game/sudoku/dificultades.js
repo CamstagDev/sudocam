@@ -10,7 +10,7 @@ export const DIFICULTADES = {
     nombre: 'Fácil',
     pistas: 40,
     politicaErrores: 'instantaneo',
-    descripcion: 'Los errores se marcan al instante mientras escribes.',
+    descripcion: 'Los errores se marcan al instante mientras juegas.',
   },
   medio: {
     nombre: 'Medio',
