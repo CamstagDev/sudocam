@@ -15,6 +15,11 @@ sube cuando cambia la forma del archivo de guardado.
   guardado y el color de los jefes en Personalización esperan al primer
   jefe. Vale también para los uber, Typhon incluido. Lo único que sigue
   adelantando cuántos jefes hay es el logro "Cazador de jefes".
+- Nuevo color en Personalización: "Fila, columna y caja", el resaltado de
+  la fila, columna y caja de la celda seleccionada (antes un gris fijo).
+  Cada tema trae el suyo (rosa suave en Sakura, beige en Papel...) y se
+  usa en todos los tableros: sudoku, multi sudoku, jefes y uber. Los
+  guardados anteriores toman el de su tema sin migrar nada.
 
 ## 0.1.0 (2026-10-04)
 

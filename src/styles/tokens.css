@@ -18,6 +18,8 @@
   --accent-strong: #a898ff;
   --accent-contrast: #13101f;
   --logo-color: #a898ff;
+  /* "resaltado": fila, columna y caja de la celda seleccionada */
+  --related-bg: #23242c;
   /* "acierto": números correctos / partida resuelta */
   --success: #4fd18a;
   --success-bg: rgba(79, 209, 138, 0.12);

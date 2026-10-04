@@ -159,7 +159,7 @@
 }
 
 .celda.relacionada {
-  background: var(--surface-strong);
+  background: var(--related-bg);
 }
 
 .celda.mismo-numero {

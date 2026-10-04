@@ -15,6 +15,15 @@ describe('temaCompleto', () => {
     expect(tema.acento).toBe('#8b7cf6');
     expect(tema.error).toBe('#ffaa00');
   });
+
+  it('un guardado sin "resaltado" toma el de su tema, o uno sacado del fondo y el texto', () => {
+    const { resaltado, ...sakuraViejo } = TEMAS[4].colores;
+    expect(temaCompleto(sakuraViejo).resaltado).toBe(resaltado);
+
+    const personalizadoViejo = { ...sakuraViejo, acento: '#123456' };
+    expect(temaCompleto(personalizadoViejo).resaltado).toMatch(/^#[0-9a-f]{6}$/);
+    expect(temaEnUso(personalizadoViejo)).toBe('personalizado');
+  });
 });
 
 describe('temaEnUso', () => {
