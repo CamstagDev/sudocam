@@ -10,6 +10,8 @@ import {
 import { PeleaHecate, SEGUNDOS_TOTALES } from '../src/game/jefes/hecate.js';
 import { PeleaJormungandr } from '../src/game/jefes/jormungandr.js';
 import { PeleaBabel } from '../src/game/jefes/babel.js';
+import { CONFIGURACION, PeleaTyphon } from '../src/game/jefes/typhon.js';
+import { generarMultiSudoku } from '../src/game/multisudoku/generador.js';
 import {
   estadisticasDeJefe,
   estaCompletamenteInvestigado,
@@ -323,5 +325,69 @@ describe('PeleaBabel', () => {
     const todos = p.filasDelTeclado().flat().map((tecla) => tecla.texto);
     expect(new Set(todos).size).toBe(27);
     expect(p.alternarNota(0, 1)).toBe(false);
+  });
+});
+
+describe('PeleaTyphon', () => {
+  function pelea(uber = false) {
+    const { cantidad, pistasPorGrilla } = uber ? CONFIGURACION.uber : CONFIGURACION.normal;
+    const { puzzle, solucion } = generarMultiSudoku({ cantidad, pistasPorGrilla });
+    return new PeleaTyphon({ tableroInicial: puzzle, solucion, uber });
+  }
+
+  it('girar cuatro veces deja todo como estaba, y cada giro mueve números y solución juntos', () => {
+    const p = pelea();
+    const vacia = p.lienzo.celdas.find((i) => p.tablero[i] === 0);
+    p.colocar(vacia, p.solucion[vacia]);
+    const antes = JSON.stringify([p.tablero, p.solucion, p.tableroInicial]);
+
+    p.girar('derecha');
+    expect(p.tablero[p.indiceGirado(vacia, 'derecha')]).toBe(p.solucion[p.indiceGirado(vacia, 'derecha')]);
+    p.girar('derecha');
+    p.girar('derecha');
+    p.girar('derecha');
+    expect(JSON.stringify([p.tablero, p.solucion, p.tableroInicial])).toBe(antes);
+
+    p.girar('izquierda');
+    p.girar('derecha');
+    expect(JSON.stringify([p.tablero, p.solucion, p.tableroInicial])).toBe(antes);
+  });
+
+  it('girar no saca a ninguna celda de la forma', () => {
+    const p = pelea();
+    const activas = new Set(p.lienzo.celdas);
+    expect(p.lienzo.celdas.every((i) => activas.has(p.indiceGirado(i, 'derecha')))).toBe(true);
+  });
+
+  it('si hay giros de los dos lados, se turnan', () => {
+    const p = pelea();
+    p.girosPendientes = { derecha: 2, izquierda: 1 };
+    expect([p.siguienteGiro(), p.siguienteGiro(), p.siguienteGiro(), p.siguienteGiro()])
+      .toEqual(['derecha', 'izquierda', 'derecha', null]);
+  });
+
+  it('uber: la caja que pulsa y no se salva regenera su tablero, sin tocar el del medio', () => {
+    const p = pelea(true);
+    p.esperaPadre = 1;
+    expect(p.avanzarUnSegundo().map((e) => e.tipo)).toContain('pulso');
+    const caja = p.pulso.caja;
+    const centro = p.lienzo.celdas.filter((i) => p.lienzo.ubicaciones[i].some((l) => l.grilla === 2));
+    const centroAntes = centro.map((i) => p.solucion[i]);
+
+    let eventos = [];
+    for (let s = 0; s < 10; s++) eventos.push(...p.avanzarUnSegundo().map((e) => e.tipo));
+    expect(eventos).toContain('regenera');
+    expect(centro.map((i) => p.solucion[i])).toEqual(centroAntes);
+    expect(caja.some((i) => p.tablero[i] === 0) || caja.every((i) => p.esFija(i))).toBe(true);
+  });
+
+  it('uber: escribir un número correcto en la caja que pulsa la salva', () => {
+    const p = pelea(true);
+    p.esperaPadre = 1;
+    p.avanzarUnSegundo();
+    const vacia = p.pulso.caja.find((i) => p.tablero[i] === 0);
+    p.colocar(vacia, p.solucion[vacia]);
+    expect(p.pulso).toBeNull();
+    expect(p.avanzarUnSegundo().map((e) => e.tipo)).toContain('salvada');
   });
 });

@@ -42,6 +42,7 @@ export const pantallaBabel = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
+      mostrarHabilidades: true,
       fases: false,
       habilidades: [
         { id: 'simbolos', emoji: '&%', nombre: '&%?#' },

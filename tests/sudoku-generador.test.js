@@ -106,7 +106,7 @@ describe('generarMultiSudoku', () => {
       expect(esSolucionValida(solucion, lienzo)).toBe(true);
       expect(contarSoluciones(puzzle, lienzo).soluciones).toBe(1);
       for (const pistas of pistasPorGrilla(puzzle, lienzo)) {
-        expect(pistas).toBeGreaterThanOrEqual(22);
+        expect(pistas).toBeGreaterThanOrEqual(18); // el del medio de la X comparte 4 cajas
         expect(pistas).toBeLessThanOrEqual(32);
       }
     });

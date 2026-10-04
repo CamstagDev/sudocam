@@ -27,6 +27,7 @@
 //   });
 //   juego.mostrarMensaje('Texto', 'error' | 'exito');
 //   juego.dibujar();    redibujar si la partida cambió desde afuera (p. ej. jugó el jefe)
+//   juego.seleccionada / juego.seleccionar(indice)
 //   juego.detenerCronometro(); juego.reanudarCronometro();
 //   juego.destruir();   al salir de la pantalla
 
@@ -255,6 +256,11 @@ export function crearJuegoSudoku(contenedor, {
     dibujar: revisarFin,
     get seleccionada() {
       return seleccionada;
+    },
+    // Mover la selección desde afuera (Typhon la mueve al girar el tablero).
+    seleccionar(indice) {
+      seleccionada = indice;
+      dibujar();
     },
     detenerCronometro: () => cronometro.detener(),
     reanudarCronometro: () => cronometro.iniciar(),

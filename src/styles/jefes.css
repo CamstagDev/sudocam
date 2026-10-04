@@ -428,3 +428,46 @@ button.retrato-jefe {
 .juego-babel-uber .tecla {
   max-height: 44px;
 }
+
+/* ---------- Typhon ---------- */
+
+/* Un giro: el tablero rota 90° y cada número rota al revés para seguir
+   derecho. Al terminar, screens/jefes/typhon.js gira los datos y quita las
+   clases sin animación. La duración debe coincidir con MS_GIRO. */
+.tablero-que-gira {
+  --duracion-giro: 0.5s;
+}
+
+.tablero-que-gira.girando,
+.tablero-que-gira.girando .celda-valor,
+.tablero-que-gira.girando .celda-notas {
+  transition: transform var(--duracion-giro) ease-in-out;
+}
+
+.tablero-que-gira.girando-derecha {
+  transform: rotate(90deg);
+}
+
+.tablero-que-gira.girando-derecha .celda-valor,
+.tablero-que-gira.girando-derecha .celda-notas {
+  transform: rotate(-90deg);
+}
+
+.tablero-que-gira.girando-izquierda {
+  transform: rotate(-90deg);
+}
+
+.tablero-que-gira.girando-izquierda .celda-valor,
+.tablero-que-gira.girando-izquierda .celda-notas {
+  transform: rotate(90deg);
+}
+
+/* Padre de los monstruos: la caja que hay que salvar. El borde (no el
+   fondo) se ve incluso encima de la selección. */
+.celda.pulsando {
+  animation: caja-pulsando 1s ease-in-out infinite;
+}
+
+@keyframes caja-pulsando {
+  50% { box-shadow: inset 0 0 0 3px var(--boss); }
+}

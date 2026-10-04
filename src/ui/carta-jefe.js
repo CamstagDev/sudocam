@@ -19,6 +19,7 @@ const RUTAS_DE_PELEA = {
   hecate: 'jefe-hecate',
   jormungandr: 'jefe-jormungandr',
   babel: 'jefe-babel',
+  typhon: 'jefe-typhon',
 };
 
 const RESUMEN_DE_PELEA = {
@@ -26,6 +27,7 @@ const RESUMEN_DE_PELEA = {
   hecate: 'Resuelve el tablero en 15 minutos entre ilusiones y engaños',
   jormungandr: 'Resuelve un sudoku difícil mientras la serpiente se lo come',
   babel: 'Resuelve un sudoku escrito en símbolos que cambian',
+  typhon: 'Cuatro tableros en círculo que no paran de girar',
 };
 
 // Jefes que piden opciones antes de pelear (devuelven null si se cancela).

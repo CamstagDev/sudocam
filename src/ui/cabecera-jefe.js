@@ -8,6 +8,8 @@
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
 //     fases: true,         false si el jefe no tiene fases (Babel)
+//     mostrarHabilidades:  por defecto ocultas en los uber de Uriel y Hecate,
+//                          que no telegrafían nada; los demás uber las muestran
 //   });
 //   cabecera.retrato                  el botón del retrato (para secretos)
 //   cabecera.habilidades.facil        ver icono-habilidad.js
@@ -20,7 +22,15 @@ import { crearRetratoJefe } from './retrato-jefe.js';
 import { crearIconoHabilidad } from './icono-habilidad.js';
 import { formatearSegundos } from './cronometro.js';
 
-export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = [], marcador = false, reloj = false, fases = true }) {
+export function crearCabeceraJefe(contenedor, {
+  id,
+  uber = false,
+  habilidades = [],
+  marcador = false,
+  reloj = false,
+  fases = true,
+  mostrarHabilidades = !uber,
+}) {
   const jefe = JEFES[id];
   const nombre = jefe.normal ? JEFES[jefe.normal].nombre : jefe.nombre;
 
@@ -56,14 +66,13 @@ export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = 
   const retrato = crearRetratoJefe(id);
   parte('retrato').replaceWith(retrato);
 
-  // Los uber no telegrafían nada: sin iconos de habilidades.
   const iconos = {};
   for (const habilidad of habilidades) {
     iconos[habilidad.id] = crearIconoHabilidad(habilidad);
     iconos[habilidad.id].elemento.classList.toggle('hidden', Boolean(habilidad.oculta));
     parte('habilidades').appendChild(iconos[habilidad.id].elemento);
   }
-  if (uber || habilidades.length === 0) parte('habilidades').classList.add('hidden');
+  if (!mostrarHabilidades || habilidades.length === 0) parte('habilidades').classList.add('hidden');
 
   return {
     retrato,
