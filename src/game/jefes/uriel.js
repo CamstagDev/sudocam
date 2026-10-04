@@ -15,28 +15,14 @@
 // cronómetros y animaciones, está en screens/jefes/uriel.js.
 
 import { mezclar } from '../sudoku/azar.js';
+import { CAJAS, cajaDe, columna, fila, indicesDeColumna, indicesDeFila } from '../sudoku/geometria-9x9.js';
 import { PartidaDeJefe } from './partida-de-jefe.js';
+
+export { CAJAS, cajaDe };
 
 export const SEGUNDOS_BUSQUEDA_FACIL = 15;
 export const SEGUNDOS_BUSQUEDA_DESCARTE = 30;
 const UMBRAL_FASE_2 = 0.5;
-
-/* ---------- Geometría del 9x9 ---------- */
-
-const fila = (indice) => Math.floor(indice / 9);
-const columna = (indice) => indice % 9;
-const indicesDeFila = (f) => Array.from({ length: 9 }, (_, c) => f * 9 + c);
-const indicesDeColumna = (c) => Array.from({ length: 9 }, (_, f) => f * 9 + c);
-
-export const CAJAS = Array.from({ length: 9 }, (_, numero) => {
-  const filaInicio = Math.floor(numero / 3) * 3;
-  const columnaInicio = (numero % 3) * 3;
-  return Array.from({ length: 9 }, (_, i) => (filaInicio + Math.floor(i / 3)) * 9 + columnaInicio + (i % 3));
-});
-
-export function cajaDe(indice) {
-  return CAJAS.find((caja) => caja.includes(indice));
-}
 
 /* ---------- Lo que Uriel "ve" ---------- */
 

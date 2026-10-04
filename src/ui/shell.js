@@ -1,4 +1,5 @@
 import { RUTA_INICIO, navegar } from '../router.js';
+import { descartarModales } from './modal.js';
 
 // Accesos globales de la barra superior. En PC se ven como iconos sueltos;
 // en el teléfono se agrupan detrás del botón ☰ (ver .solo-pc / .solo-movil
@@ -85,6 +86,7 @@ export function crearShell(raiz) {
       });
       document.title = pantalla.titulo ? `SudoCam · ${pantalla.titulo}` : 'SudoCam';
       cerrarMenuMovil();
+      descartarModales();
       contenido.replaceChildren();
       pantalla.render(contenido, params);
       window.scrollTo(0, 0);

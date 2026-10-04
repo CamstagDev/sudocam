@@ -4,6 +4,9 @@
 //   const modal = abrirModal({ titulo: 'Nuevo Sudoku', contenido: elemento, alCerrar });
 //   modal.cerrar();
 
+// Modales abiertos ahora mismo (ver descartarModales).
+const abiertos = new Set();
+
 export function abrirModal({ titulo, contenido, alCerrar = () => {} }) {
   const fondo = document.createElement('div');
   fondo.className = 'modal-fondo';
@@ -24,9 +27,14 @@ export function abrirModal({ titulo, contenido, alCerrar = () => {} }) {
     if (evento.key === 'Escape') cerrar();
   }
 
-  function cerrar() {
+  function quitar() {
     document.removeEventListener('keydown', alPresionarTecla);
     fondo.remove();
+    abiertos.delete(quitar);
+  }
+
+  function cerrar() {
+    quitar();
     alCerrar();
   }
 
@@ -37,7 +45,14 @@ export function abrirModal({ titulo, contenido, alCerrar = () => {} }) {
   document.addEventListener('keydown', alPresionarTecla);
 
   document.body.appendChild(fondo);
+  abiertos.add(quitar);
   return { cerrar, panel };
+}
+
+// Quita todos los modales sin avisar a nadie: lo usa el cascarón al
+// cambiar de pantalla, para que no quede uno abierto encima de otra.
+export function descartarModales() {
+  [...abiertos].forEach((quitar) => quitar());
 }
 
 // Modal de solo lectura con un mensaje y un botón "Entendido".

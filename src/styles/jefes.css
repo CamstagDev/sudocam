@@ -408,3 +408,23 @@ button.retrato-jefe {
 .icono-habilidad.tocable {
   cursor: pointer;
 }
+
+/* ---------- Babel ---------- */
+
+/* Uber: 27 teclas en 3 filas (una por alfabeto), cada fila con el color
+   de su alfabeto, igual que las cajas del tablero. */
+.juego-babel-uber .tecla[data-alfabeto="0"] {
+  background: var(--neutral-bg);
+}
+
+.juego-babel-uber .tecla[data-alfabeto="1"] {
+  background: var(--boss-bg);
+}
+
+.juego-babel-uber .tecla[data-alfabeto="2"] {
+  background: var(--success-bg);
+}
+
+.juego-babel-uber .tecla {
+  max-height: 44px;
+}

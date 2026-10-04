@@ -127,6 +127,20 @@
   font-weight: 700;
 }
 
+/* Uber Babel: cada caja se tiñe con el color de su alfabeto (va antes de
+   .relacionada y .seleccionada para que esas sigan viéndose encima). */
+.celda.alfabeto-0 {
+  background: var(--neutral-bg);
+}
+
+.celda.alfabeto-1 {
+  background: var(--boss-bg);
+}
+
+.celda.alfabeto-2 {
+  background: var(--success-bg);
+}
+
 .celda.relacionada {
   background: var(--surface-strong);
 }

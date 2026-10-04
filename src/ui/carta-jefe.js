@@ -11,19 +11,36 @@
 import { navegar } from '../router.js';
 import { JEFES } from '../game/jefes/catalogo.js';
 import { PISTAS_DE_DESBLOQUEO, jefeDesbloqueado } from '../game/jefes/registro.js';
+import { elegirDificultadDeJefe } from './selector-dificultad-jefe.js';
 
 // Ruta de la pelea de cada jefe ya construido.
 const RUTAS_DE_PELEA = {
   uriel: 'jefe-uriel',
   hecate: 'jefe-hecate',
   jormungandr: 'jefe-jormungandr',
+  babel: 'jefe-babel',
 };
 
 const RESUMEN_DE_PELEA = {
   uriel: 'Llena más casillas que el jefe antes de que complete el tablero',
   hecate: 'Resuelve el tablero en 15 minutos entre ilusiones y engaños',
   jormungandr: 'Resuelve un sudoku difícil mientras la serpiente se lo come',
+  babel: 'Resuelve un sudoku escrito en símbolos que cambian',
 };
+
+// Jefes que piden opciones antes de pelear (devuelven null si se cancela).
+const OPCIONES_ANTES_DE_PELEAR = {
+  babel: async () => {
+    const dificultad = await elegirDificultadDeJefe('Babel');
+    return dificultad && { dificultad };
+  },
+};
+
+async function irAPelear(id, ruta, extra = {}) {
+  const elegirOpciones = OPCIONES_ANTES_DE_PELEAR[id];
+  const opciones = elegirOpciones ? await elegirOpciones() : {};
+  if (opciones) navegar(ruta, { ...opciones, ...extra });
+}
 
 function botonChico({ icono, titulo, alTocar, clase }) {
   const boton = document.createElement('button');
@@ -60,7 +77,7 @@ export function crearCartaJefe(id) {
       <span class="game-card-desc">${ruta ? RESUMEN_DE_PELEA[id] : 'Próximamente en esta versión'}</span>
     </button>
   `;
-  if (ruta) envoltura.querySelector('.game-card').addEventListener('click', () => navegar(ruta));
+  if (ruta) envoltura.querySelector('.game-card').addEventListener('click', () => irAPelear(id, ruta));
 
   envoltura.appendChild(botonChico({
     icono: 'ℹ',
@@ -74,7 +91,7 @@ export function crearCartaJefe(id) {
       icono: JEFES[`${id}_uber`].emoji,
       titulo: `${jefe.nombre} (Uber)`,
       clase: 'carta-boton-uber',
-      alTocar: () => navegar(ruta, { uber: 1 }),
+      alTocar: () => irAPelear(id, ruta, { uber: 1 }),
     }));
   }
 

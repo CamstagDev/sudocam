@@ -21,6 +21,9 @@
 //                                          realidad (Hecate; ver PeleaHecate.disfraz)
 //     estadoTeclado: () => ({ bloqueados: Set, cargando: Map }),   ver teclado-numerico.js
 //     mostrarCronometro: false,            cuando el jefe tiene su propio reloj
+//     simbolo: (indice, digito) => texto,  cómo se escribe cada dígito (Babel)
+//     filasTeclado: () => filas,           botones del teclado (ver teclado-numerico.js)
+//     teclasNumericas: false,              el teclado físico no escribe números (Babel)
 //   });
 //   juego.mostrarMensaje('Texto', 'error' | 'exito');
 //   juego.dibujar();    redibujar si la partida cambió desde afuera (p. ej. jugó el jefe)
@@ -45,6 +48,9 @@ export function crearJuegoSudoku(contenedor, {
   disfraz = () => ({ valores: new Map(), fijas: new Set(), notas: new Map() }),
   estadoTeclado = () => ({}),
   mostrarCronometro = preferencias.mostrarCronometro,
+  simbolo = undefined,
+  filasTeclado = null,
+  teclasNumericas = true,
 }) {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card juego';
@@ -182,7 +188,7 @@ export function crearJuegoSudoku(contenedor, {
 
     if (tecla === 'n' || tecla === 'N') {
       alternarModoNotas();
-    } else if (tecla >= '1' && tecla <= '9') {
+    } else if (teclasNumericas && tecla >= '1' && tecla <= '9') {
       escribir(Number(tecla));
     } else if (tecla === 'Backspace' || tecla === 'Delete' || tecla === '0') {
       borrar();
@@ -197,6 +203,15 @@ export function crearJuegoSudoku(contenedor, {
 
   /* ---------- Dibujo ---------- */
 
+  // Babel cambia los botones cuando "evoluciona": solo se rehacen si cambiaron.
+  let filasDibujadas = '';
+  function rearmarTecladoSiCambio(filas) {
+    const clave = JSON.stringify(filas);
+    if (clave === filasDibujadas) return;
+    filasDibujadas = clave;
+    teclado.rearmar(filas);
+  }
+
   function dibujar() {
     // Lo que se muestra puede no ser la verdad (engaños de Hecate).
     const { valores, fijas, notas } = disfraz();
@@ -210,7 +225,9 @@ export function crearJuegoSudoku(contenedor, {
       resaltarRelacionadas: preferencias.resaltarRelacionadas,
       resaltarIguales: preferencias.resaltarIguales,
       marcas: marcas(),
+      simbolo,
     });
+    if (filasTeclado) rearmarTecladoSiCambio(filasTeclado());
     teclado.dibujar({
       digitosCompletos: new Set(DIGITOS.filter((digito) => partida.digitoCompleto(digito))),
       modoNotas,

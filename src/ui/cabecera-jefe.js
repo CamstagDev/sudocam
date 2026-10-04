@@ -7,6 +7,7 @@
 //     habilidades: [{ id: 'facil', emoji: '🔍', nombre: 'Búsqueda fácil', oculta: false }],
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
+//     fases: true,         false si el jefe no tiene fases (Babel)
 //   });
 //   cabecera.retrato                  el botón del retrato (para secretos)
 //   cabecera.habilidades.facil        ver icono-habilidad.js
@@ -19,7 +20,7 @@ import { crearRetratoJefe } from './retrato-jefe.js';
 import { crearIconoHabilidad } from './icono-habilidad.js';
 import { formatearSegundos } from './cronometro.js';
 
-export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = [], marcador = false, reloj = false }) {
+export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = [], marcador = false, reloj = false, fases = true }) {
   const jefe = JEFES[id];
   const nombre = jefe.normal ? JEFES[jefe.normal].nombre : jefe.nombre;
 
@@ -32,7 +33,7 @@ export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = 
         <p class="cabecera-jefe-nombre">
           ${nombre}
           ${uber ? '<span class="badge negativo">UBER</span>' : ''}
-          <span class="badge" data-id="fase">Fase 1</span>
+          <span class="badge ${fases ? '' : 'hidden'}" data-id="fase">Fase 1</span>
         </p>
         <p class="campo-ayuda" data-id="descripcion"></p>
       </div>

@@ -10,6 +10,8 @@
 // para los jefes: { jefe: Set de índices, 'jefe-buscando': Set... }
 // `notasFalsas` (opcional, Hecate) muestra una nota con otro número:
 // Map(celda -> Map(nota real -> número que se muestra)).
+// `simbolo` (opcional, Babel) decide cómo se escribe cada dígito en cada
+// celda: (indice, digito) => texto.
 
 import { TAMANO_CAJA, TAMANO_GRILLA } from '../game/sudoku/lienzo.js';
 
@@ -72,6 +74,7 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
     resaltarIguales = true,
     marcas = {},
     notasFalsas = new Map(),
+    simbolo = (indice, digito) => String(digito),
   }) {
     Object.keys(marcas).forEach((clase) => clasesDeMarcas.add(clase));
     const valorSeleccionado = seleccionada === null ? 0 : tablero[seleccionada];
@@ -82,13 +85,13 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
       const notasCelda = notas[indice];
       const conNotas = valor === 0 && notasCelda.size > 0;
 
-      celda.querySelector('.celda-valor').textContent = valor === 0 ? '' : String(valor);
+      celda.querySelector('.celda-valor').textContent = valor === 0 ? '' : simbolo(indice, valor);
       if (conNotas) {
         const falsas = notasFalsas.get(indice);
         celda.querySelectorAll('.nota').forEach((nota, i) => {
           const digito = i + 1;
           const falsa = falsas?.get(digito);
-          nota.textContent = notasCelda.has(digito) ? String(falsa ?? digito) : '';
+          nota.textContent = notasCelda.has(digito) ? simbolo(indice, falsa ?? digito) : '';
           nota.classList.toggle('nota-falsa', falsa !== undefined);
         });
       }

@@ -9,6 +9,7 @@ import {
 } from '../src/game/jefes/uriel.js';
 import { PeleaHecate, SEGUNDOS_TOTALES } from '../src/game/jefes/hecate.js';
 import { PeleaJormungandr } from '../src/game/jefes/jormungandr.js';
+import { PeleaBabel } from '../src/game/jefes/babel.js';
 import {
   estadisticasDeJefe,
   estaCompletamenteInvestigado,
@@ -284,5 +285,43 @@ describe('PeleaJormungandr', () => {
     p.colocar(1, SOLUCION[1]);
     p.esperaComer = 1;
     expect(p.avanzarUnSegundo().bocados).toHaveLength(2);
+  });
+});
+
+describe('PeleaBabel', () => {
+  // Caja 0 con sus 9 celdas vacías y otra celda suelta en la caja 4.
+  const VACIAS = [0, 1, 2, 9, 10, 11, 18, 19, 20, 40];
+  function pelea(uber = false) {
+    return new PeleaBabel({ tableroInicial: vaciar(VACIAS), solucion: SOLUCION, dificultad: 'medio', uber });
+  }
+
+  it('cada dígito tiene su propio símbolo y el teclado no va en orden de 1 a 9 fijo', () => {
+    const p = pelea();
+    const simbolos = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => p.simboloDe(0, d)));
+    expect(simbolos.size).toBe(9);
+    expect(p.filasDelTeclado()).toHaveLength(1);
+    expect(p.filasDelTeclado()[0].map((tecla) => tecla.digito).sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  });
+
+  it('completar una caja hace evolucionar la lengua (una sola vez por caja)', () => {
+    const p = pelea();
+    const antes = p.simboloDe(0, 5);
+    [0, 1, 2, 9, 10, 11, 18, 19].forEach((i) => p.colocar(i, SOLUCION[i]));
+    expect(p.evoluciones).toBe(0);
+    p.colocar(20, SOLUCION[20]);
+    expect(p.evoluciones).toBe(1);
+
+    p.borrar(20);
+    p.colocar(20, SOLUCION[20]);
+    expect(p.evoluciones).toBe(1);
+    expect(antes).toBeDefined();
+  });
+
+  it('la uber tiene 3 alfabetos sin símbolos repetidos y no permite notas', () => {
+    const p = pelea(true);
+    expect(p.filasDelTeclado()).toHaveLength(3);
+    const todos = p.filasDelTeclado().flat().map((tecla) => tecla.texto);
+    expect(new Set(todos).size).toBe(27);
+    expect(p.alternarNota(0, 1)).toBe(false);
   });
 });
