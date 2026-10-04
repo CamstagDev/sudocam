@@ -2,8 +2,9 @@
 // Todo se guarda solo, en cuanto el jugador cambia algo; no hay botón
 // "Guardar".
 //
-// Elegir un tema predefinido pone sus colores en los selectores; cambiar
-// cualquier color a mano pasa a "Personalizado" (ver temaEnUso en tema.js).
+// Elegir un tema predefinido pone sus colores y su borde en los
+// selectores; cambiar cualquiera a mano pasa a "Personalizado" (ver
+// temaEnUso en tema.js).
 //
 // Mientras no haya ningún jefe desbloqueado, el color de los jefes y su
 // casilla de ejemplo no se muestran (el selector sigue en la página, oculto,
@@ -17,7 +18,9 @@ import {
   restablecerTema,
   temaCompleto,
   temaEnUso,
+  valoresDelTema,
 } from '../tema.js';
+import { BORDES, imagenDeBorde } from '../bordes.js';
 import {
   CAMPOS_PREFERENCIAS,
   guardarPreferencia,
@@ -48,6 +51,16 @@ function botonTema({ id, nombre, colores }) {
         <span style="background: ${colores.pista}"></span>
         <span style="background: ${colores.error}"></span>
       </span>
+      ${nombre}
+    </button>
+  `;
+}
+
+// Opción de borde: un cuadrito con ese borde y su nombre.
+function opcionBorde([id, { nombre }]) {
+  return `
+    <button type="button" class="opcion-borde" data-borde="${id}">
+      <span class="muestra-borde"></span>
       ${nombre}
     </button>
   `;
@@ -107,9 +120,11 @@ export const pantallaPersonalizacion = {
         ${muestraTablero({ conJefes })}
         <p class="campo-ayuda tarjeta-ayuda">
           Los paneles y bordes se calculan a partir del fondo y el texto. Cambiar cualquier
-          color pasa tu tema a "Personalizado".
+          color o el borde pasa tu tema a "Personalizado".
         </p>
         <div class="grilla-colores">${camposColor.join('')}</div>
+        <h3 class="subtitulo-tarjeta">Borde de las tarjetas</h3>
+        <div class="grilla-bordes">${Object.entries(BORDES).map(opcionBorde).join('')}</div>
       </section>
 
       <section class="card">
@@ -124,14 +139,29 @@ export const pantallaPersonalizacion = {
     const entradasColor = [...contenedor.querySelectorAll('[data-color]')];
     const interruptores = [...contenedor.querySelectorAll('[data-preferencia]')];
     const opcionesTema = [...contenedor.querySelectorAll('[data-tema]')];
+    const opcionesBorde = [...contenedor.querySelectorAll('[data-borde]')];
+    let bordeElegido = null;
 
-    function leerColoresElegidos() {
-      return Object.fromEntries(entradasColor.map((entrada) => [entrada.dataset.color, entrada.value]));
+    function leerTemaElegido() {
+      const colores = Object.fromEntries(entradasColor.map((entrada) => [entrada.dataset.color, entrada.value]));
+      return { ...colores, borde: bordeElegido };
     }
 
-    function marcarTemaEnUso(colores) {
-      const enUso = temaEnUso(colores);
+    // Marca el tema y el borde en uso; las muestras de borde se pintan
+    // con el color de acento elegido.
+    function marcarElegidos(tema) {
+      const enUso = temaEnUso(tema);
       opcionesTema.forEach((opcion) => opcion.classList.toggle('activo', opcion.dataset.tema === enUso));
+      opcionesBorde.forEach((opcion) => {
+        opcion.classList.toggle('activo', opcion.dataset.borde === tema.borde);
+        opcion.querySelector('.muestra-borde').style.borderImageSource = imagenDeBorde(opcion.dataset.borde, tema.acento);
+      });
+    }
+
+    // Vista previa al instante, sin guardar (mientras se arrastra un color).
+    function previsualizar() {
+      aplicarTema(leerTemaElegido());
+      marcarElegidos(temaCompleto(leerTemaElegido()));
     }
 
     function mostrarValoresGuardados() {
@@ -139,7 +169,8 @@ export const pantallaPersonalizacion = {
       entradasColor.forEach((entrada) => {
         entrada.value = tema[entrada.dataset.color];
       });
-      marcarTemaEnUso(tema);
+      bordeElegido = tema.borde;
+      marcarElegidos(tema);
       const preferencias = leerPreferencias();
       interruptores.forEach((interruptor) => {
         interruptor.checked = preferencias[interruptor.dataset.preferencia];
@@ -149,19 +180,24 @@ export const pantallaPersonalizacion = {
     // "input" llega mientras se arrastra en el selector (vista previa en
     // vivo); "change" cuando el jugador lo suelta (ahí se guarda).
     entradasColor.forEach((entrada) => {
-      entrada.addEventListener('input', () => {
-        aplicarTema(leerColoresElegidos());
-        marcarTemaEnUso(leerColoresElegidos());
+      entrada.addEventListener('input', previsualizar);
+      entrada.addEventListener('change', () => guardarTema(leerTemaElegido()));
+    });
+
+    opcionesBorde.forEach((opcion) => {
+      opcion.addEventListener('click', async () => {
+        bordeElegido = opcion.dataset.borde;
+        previsualizar();
+        await guardarTema(leerTemaElegido());
       });
-      entrada.addEventListener('change', () => guardarTema(leerColoresElegidos()));
     });
 
     opcionesTema.forEach((opcion) => {
       const tema = TEMAS.find(({ id }) => id === opcion.dataset.tema);
       if (!tema) return; // "Personalizado" solo indica, no se elige
       opcion.addEventListener('click', async () => {
-        aplicarTema(tema.colores);
-        await guardarTema(tema.colores);
+        aplicarTema(valoresDelTema(tema));
+        await guardarTema(valoresDelTema(tema));
         mostrarValoresGuardados();
       });
     });

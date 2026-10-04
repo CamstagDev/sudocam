@@ -197,3 +197,54 @@
 .opcion-tema.personalizado.activo {
   color: var(--text);
 }
+
+/* ---------- Borde de las tarjetas ---------- */
+
+.subtitulo-tarjeta {
+  margin: 22px 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.grilla-bordes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+}
+
+.opcion-borde {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.opcion-borde.activo {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* La imagen (border-image-source) la pone personalizacion.js. */
+.muestra-borde {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 10px solid transparent;
+  border-image-slice: 18;
+  border-image-width: 10px;
+  border-image-repeat: round;
+}
+
+.opcion-borde[data-borde="linea"] .muestra-borde {
+  border: 2px solid var(--text-muted);
+  border-radius: 6px;
+}

@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { crearAlmacenEnMemoria } from '../src/save/almacen-navegador.js';
 import { iniciarGuardado, obtenerGuardado } from '../src/save/guardado.js';
-import { TEMAS, temaCompleto, temaEnUso } from '../src/tema.js';
+import { TEMAS, temaCompleto, temaEnUso, valoresDelTema } from '../src/tema.js';
+import { imagenDeBorde } from '../src/bordes.js';
 import { guardarPreferencia, leerPreferencias, restablecerPreferencias } from '../src/preferencias.js';
 
 describe('temaCompleto', () => {
-  it('sin tema guardado usa los colores del tema SudoCam', () => {
-    expect(temaCompleto(null)).toEqual(TEMAS[0].colores);
+  it('sin tema guardado usa los valores del tema SudoCam', () => {
+    expect(temaCompleto(null)).toEqual(valoresDelTema(TEMAS[0]));
   });
 
   it('usa los colores guardados válidos e ignora los que no lo son', () => {
@@ -36,8 +37,26 @@ describe('temaEnUso', () => {
     expect(temaEnUso({ ...TEMAS[4].colores, texto: '#123456' })).toBe('personalizado');
   });
 
-  it('todos los temas traen todos los colores', () => {
-    for (const tema of TEMAS) expect(temaCompleto(tema.colores)).toEqual(tema.colores);
+  it('todos los temas traen todos los colores y un borde válido', () => {
+    for (const tema of TEMAS) expect(temaCompleto(valoresDelTema(tema))).toEqual(valoresDelTema(tema));
+  });
+
+  it('cambiar solo el borde también pasa a personalizado', () => {
+    const sakura = valoresDelTema(TEMAS.find(({ id }) => id === 'sakura'));
+    expect(temaEnUso(sakura)).toBe('sakura');
+    expect(temaEnUso({ ...sakura, borde: 'linea' })).toBe('personalizado');
+  });
+
+  it('un guardado sin borde toma el de su tema, o la línea normal', () => {
+    const sakura = TEMAS.find(({ id }) => id === 'sakura');
+    expect(temaCompleto(sakura.colores).borde).toBe('sakura');
+    expect(temaCompleto({ ...sakura.colores, acento: '#123456' }).borde).toBe('linea');
+    expect(temaCompleto({ ...sakura.colores, borde: 'inventado' }).borde).toBe('sakura');
+  });
+
+  it('el borde de línea no lleva imagen y el de pétalos sí, del color pedido', () => {
+    expect(imagenDeBorde('linea', '#ff0000')).toBe('none');
+    expect(decodeURIComponent(imagenDeBorde('sakura', '#ff0000'))).toContain('fill="#ff0000"');
   });
 });
 

@@ -27,6 +27,12 @@ sube cuando cambia la forma del archivo de guardado.
   celdas que importan y espera el número correcto. Después el jugador
   termina el tablero solo, con una lista de consejos para mejorar al costado
   (debajo en el teléfono). Se puede saltar en cualquier momento.
+- Estilo del borde de las tarjetas en Personalización ("Borde de las
+  tarjetas"): la línea normal o pétalos de sakura en fila, como una línea
+  punteada, del color del acento. Vale para tarjetas, menús y ventanas,
+  no para el tablero. Es parte del tema: Sakura trae los pétalos y los
+  demás la línea, y elegir un tema lo cambia solo; cambiarlo a mano pasa
+  a "Personalizado". Los guardados anteriores toman el de su tema.
 
 ## 0.1.0 (2026-10-04)
 
