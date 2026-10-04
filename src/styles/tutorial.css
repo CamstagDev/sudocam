@@ -1,0 +1,165 @@
+/* ============================================================
+   SudoCam — tutorial (ver screens/tutorial.js)
+   ============================================================ */
+
+/* Teléfono: globo, tablero y consejos uno debajo del otro. PC: el globo
+   o los consejos (nunca los dos a la vez) en una columna al costado. */
+.tutorial {
+  display: grid;
+  grid-template-areas:
+    "globo"
+    "juego"
+    "consejos";
+  gap: clamp(12px, 3vw, 18px);
+}
+
+.tutorial-juego {
+  grid-area: juego;
+  min-width: 0;
+}
+
+.globo-tutorial {
+  grid-area: globo;
+}
+
+.consejos-tutorial {
+  grid-area: consejos;
+}
+
+@media (min-width: 900px) {
+  .tutorial {
+    grid-template-columns: minmax(0, 1fr) clamp(260px, 28vw, 320px);
+    grid-template-areas: "juego lateral";
+    align-items: start;
+  }
+
+  .globo-tutorial,
+  .consejos-tutorial {
+    grid-area: lateral;
+    position: sticky;
+    top: 16px;
+  }
+}
+
+/* ---------- Globo con las explicaciones ---------- */
+
+.globo-tutorial {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.globo-tutorial-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.globo-tutorial-contador {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.globo-tutorial-titulo {
+  margin: 0;
+  font-size: clamp(16px, 4.2vw, 18px);
+}
+
+.globo-tutorial-texto,
+.globo-tutorial-acierto {
+  margin: 0;
+  font-size: clamp(13px, 3.6vw, 14px);
+  line-height: 1.5;
+}
+
+.globo-tutorial-texto {
+  color: var(--text-muted);
+}
+
+.globo-tutorial-acierto {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success);
+}
+
+.btn-enlace {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-enlace:hover {
+  color: var(--text);
+}
+
+/* ---------- Celdas resaltadas por cada paso ----------
+   Van después de tablero.css para ganarle a .relacionada; la celda
+   seleccionada sigue viéndose encima. */
+
+.celda.tuto-zona:not(.seleccionada) {
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface-solid));
+}
+
+/* Va después de la zona: en el barrido, las celdas de la caja que ya
+   quedan descartadas se ven "tachadas" y solo brilla la que queda. */
+.celda.tuto-linea:not(.seleccionada) {
+  background: color-mix(in srgb, var(--boss) 10%, var(--surface-solid));
+}
+
+.celda.tuto-pista {
+  box-shadow: inset 0 0 0 2px var(--boss);
+  color: var(--boss);
+}
+
+.celda.tuto-objetivo {
+  animation: tuto-latido 1.2s ease-in-out infinite;
+}
+
+@keyframes tuto-latido {
+  0%, 100% { box-shadow: inset 0 0 0 2px var(--accent); }
+  50% { box-shadow: inset 0 0 0 4px var(--accent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celda.tuto-objetivo {
+    animation: none;
+    box-shadow: inset 0 0 0 3px var(--accent);
+  }
+}
+
+/* ---------- Consejos ---------- */
+
+.lista-consejos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.lista-consejos li {
+  font-size: clamp(13px, 3.6vw, 14px);
+  line-height: 1.45;
+}
+
+.lista-consejos strong {
+  display: block;
+}
+
+.lista-consejos span {
+  color: var(--text-muted);
+}

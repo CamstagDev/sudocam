@@ -20,6 +20,13 @@ sube cuando cambia la forma del archivo de guardado.
   Cada tema trae el suyo (rosa suave en Sakura, beige en Papel...) y se
   usa en todos los tableros: sudoku, multi sudoku, jefes y uber. Los
   guardados anteriores toman el de su tema sin migrar nada.
+- Nuevo modo Tutorial (en Juegos): un sudoku muy fácil con un globo que
+  explica paso a paso las reglas (filas, columnas, cajas) y cuatro técnicas
+  con ejemplos sobre el tablero: el que falta en una fila, en una caja, el
+  barrido y el candidato único, más las notas. Cada ejemplo resalta las
+  celdas que importan y espera el número correcto. Después el jugador
+  termina el tablero solo, con una lista de consejos para mejorar al costado
+  (debajo en el teléfono). Se puede saltar en cualquier momento.
 
 ## 0.1.0 (2026-10-04)
 

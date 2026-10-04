@@ -2,12 +2,13 @@
 // oculta; mostrar() la enseña con el tiempo final.
 //
 //   const victoria = crearTarjetaVictoria(contenedor, { titulo: '¡Sudoku resuelto!', alJugarOtraVez });
+//   (textoOtraVez cambia lo que dice ese botón)
 //   victoria.mostrar(segundos);
 
 import { RUTA_INICIO, navegar } from '../router.js';
 import { formatearSegundos } from './cronometro.js';
 
-export function crearTarjetaVictoria(contenedor, { titulo, alJugarOtraVez }) {
+export function crearTarjetaVictoria(contenedor, { titulo, alJugarOtraVez, textoOtraVez = 'Jugar otra vez' }) {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card victoria hidden';
   tarjeta.innerHTML = `
@@ -20,6 +21,7 @@ export function crearTarjetaVictoria(contenedor, { titulo, alJugarOtraVez }) {
     </div>
   `;
   tarjeta.querySelector('h2').textContent = titulo;
+  tarjeta.querySelector('[data-accion="otra-vez"]').textContent = textoOtraVez;
   tarjeta.querySelector('[data-accion="otra-vez"]').addEventListener('click', alJugarOtraVez);
   tarjeta.querySelector('[data-accion="menu"]').addEventListener('click', () => navegar(RUTA_INICIO));
   contenedor.prepend(tarjeta);

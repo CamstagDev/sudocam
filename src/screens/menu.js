@@ -11,6 +11,7 @@ import { crearCartaJefe } from '../ui/carta-jefe.js';
 const JUEGOS = [
   { ruta: 'sudoku', icono: '🔢', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
   { ruta: 'multisudoku', icono: '🧬', titulo: 'Multi Sudoku', desc: 'Varios tableros de 9x9 entrelazados por sus cajas de las esquinas' },
+  { ruta: 'tutorial', icono: '🎓', titulo: 'Tutorial', desc: 'Aprende a resolver un sudoku paso a paso' },
 ];
 
 function cartaJuego({ ruta, icono, titulo, desc }) {

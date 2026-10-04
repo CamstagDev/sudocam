@@ -24,6 +24,10 @@
 //     simbolo: (indice, digito) => texto,  cómo se escribe cada dígito (Babel)
 //     filasTeclado: () => filas,           botones del teclado (ver teclado-numerico.js)
 //     teclasNumericas: false,              el teclado físico no escribe números (Babel)
+//
+//     Opcional, para el tutorial:
+//     puedeJugar: ({ indice, digito, notas }) => boolean,   false = la jugada no se hace
+//                                          (digito 0 = borrar)
 //   });
 //   juego.mostrarMensaje('Texto', 'error' | 'exito');
 //   juego.dibujar();    redibujar si la partida cambió desde afuera (p. ej. jugó el jefe)
@@ -53,6 +57,7 @@ export function crearJuegoSudoku(contenedor, {
   simbolo = undefined,
   filasTeclado = null,
   teclasNumericas = true,
+  puedeJugar = () => true,
 }) {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card juego';
@@ -140,7 +145,7 @@ export function crearJuegoSudoku(contenedor, {
   /* ---------- Jugadas ---------- */
 
   function escribir(digito) {
-    if (seleccionada === null) return;
+    if (seleccionada === null || !puedeJugar({ indice: seleccionada, digito, notas: modoNotas })) return;
     const cambio = modoNotas ? partida.alternarNota(seleccionada, digito) : partida.colocar(seleccionada, digito);
     if (!cambio) return;
 
@@ -154,7 +159,8 @@ export function crearJuegoSudoku(contenedor, {
   }
 
   function borrar() {
-    if (seleccionada === null || !partida.borrar(seleccionada)) return;
+    if (seleccionada === null || !puedeJugar({ indice: seleccionada, digito: 0 })) return;
+    if (!partida.borrar(seleccionada)) return;
     ocultarMensaje();
     dibujar();
   }
