@@ -1,0 +1,75 @@
+# Al subir una etiqueta vX.Y.Z (ver scripts/nueva-version.mjs), compila el
+# instalador de Windows y el APK de Android y los publica en una Release
+# de GitHub, con las notas de esa versión sacadas de CHANGELOG.md.
+name: Publicar versión
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      # Electron descarga su programa la primera vez que se usa;
+      # electron-builder lo toma de node_modules/electron/dist.
+      - run: npx electron --version
+      - run: npm run instalador:windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: release/*.exe
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run android:sync
+      # APK de prueba (sin firma de Google Play; eso llega con el paso de
+      # publicar en la tienda).
+      - run: ./gradlew assembleDebug
+        working-directory: android
+      - run: mv android/app/build/outputs/apk/debug/app-debug.apk "SudoCam-${GITHUB_REF_NAME}.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: SudoCam-*.apk
+
+  publicar:
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: archivos
+          merge-multiple: true
+      # Las notas de la Release son la sección de esta versión en CHANGELOG.md.
+      - name: Notas de la versión
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="## $version " 'index($0, v) == 1 { dentro = 1; next } /^## / { dentro = 0 } dentro' CHANGELOG.md > notas.md
+          cat notas.md
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: SudoCam ${{ github.ref_name }}
+          body_path: notas.md
+          files: archivos/*

@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+// La versión sale de package.json, la única fuente de verdad (la misma
+// que usan el menú del juego y el instalador de Windows). Google Play
+// pide además un número entero que siempre suba: 1.2.3 -> 10203.
+def versionDelJuego = new groovy.json.JsonSlurper().parse(file('../../package.json')).version
+def (mayor, menor, parche) = versionDelJuego.tokenize('.').collect { it.toInteger() }
+
 android {
     namespace = "com.camstagdev.sudocam"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +13,8 @@ android {
         applicationId "com.camstagdev.sudocam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode mayor * 10000 + menor * 100 + parche
+        versionName versionDelJuego
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

@@ -14,7 +14,8 @@
     "escritorio:dev": "electron . --dev",
     "instalador:windows": "vite build && electron-builder --win",
     "android:sync": "vite build && cap sync android",
-    "android:apk": "npm run android:sync && cd android && gradlew assembleDebug"
+    "android:apk": "npm run android:sync && node scripts/gradle.mjs assembleDebug",
+    "version:nueva": "node scripts/nueva-version.mjs"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.2",

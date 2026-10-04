@@ -23,6 +23,7 @@ partida.
 | `npm run escritorio:dev` | Abre la app de Windows contra `npm run dev` (hay que tenerlo corriendo) |
 | `npm run instalador:windows` | Genera `release/SudoCam Setup <versión>.exe` |
 | `npm run android:apk` | Genera `android/app/build/outputs/apk/debug/app-debug.apk` |
+| `npm run version:nueva -- parche` | Nueva versión (parche, menor o mayor): cambia el número, cierra el CHANGELOG, hace commit y etiqueta. Con `git push --follow-tags`, GitHub compila y publica el instalador y el APK |
 
 Para Android no hace falta Android Studio: basta con un JDK 21 y las
 herramientas de línea de comandos del SDK de Android, con las variables
