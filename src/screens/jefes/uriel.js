@@ -14,8 +14,7 @@ import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearRetratoJefe } from '../../ui/retrato-jefe.js';
-import { crearIconoHabilidad } from '../../ui/icono-habilidad.js';
+import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
@@ -49,43 +48,17 @@ export const pantallaUriel = {
 
     /* ---------- Cabecera del jefe ---------- */
 
-    const cabecera = document.createElement('section');
-    cabecera.className = 'card cabecera-jefe';
-    cabecera.innerHTML = `
-      <div class="cabecera-jefe-fila">
-        <div data-id="retrato"></div>
-        <div class="cabecera-jefe-texto">
-          <p class="cabecera-jefe-nombre">
-            Uriel
-            ${uber ? '<span class="badge negativo">UBER</span>' : ''}
-            <span class="badge" data-id="fase">Fase 1</span>
-          </p>
-          <p class="campo-ayuda" data-id="descripcion"></p>
-        </div>
-      </div>
-      <div class="habilidades" data-id="habilidades"></div>
-      <div class="marcador">
-        <span class="marcador-lado jugador"><small>Tú</small><strong data-id="puntos-jugador">0</strong></span>
-        <span class="marcador-barra">
-          <span class="marcador-relleno jugador" data-id="barra-jugador"></span>
-          <span class="marcador-relleno jefe" data-id="barra-jefe"></span>
-        </span>
-        <span class="marcador-lado jefe"><small>Uriel</small><strong data-id="puntos-jefe">0</strong></span>
-      </div>
-    `;
-    contenedor.appendChild(cabecera);
-    const parte = (id) => cabecera.querySelector(`[data-id="${id}"]`);
-
-    const retrato = crearRetratoJefe(idJefe);
-    parte('retrato').replaceWith(retrato);
-
-    const habilidades = {
-      facil: crearIconoHabilidad({ emoji: '🔍', nombre: 'Búsqueda fácil' }),
-      descarte: crearIconoHabilidad({ emoji: '🧮', nombre: 'Búsqueda por descarte' }),
-      purga: crearIconoHabilidad({ emoji: '⚖️', nombre: 'Purga del Débil' }),
-    };
-    Object.values(habilidades).forEach((icono) => parte('habilidades').appendChild(icono.elemento));
-    habilidades.descarte.elemento.classList.add('hidden');
+    const cabecera = crearCabeceraJefe(contenedor, {
+      id: idJefe,
+      uber,
+      marcador: true,
+      habilidades: [
+        { id: 'facil', emoji: '🔍', nombre: 'Búsqueda fácil' },
+        { id: 'descarte', emoji: '🧮', nombre: 'Búsqueda por descarte', oculta: true },
+        { id: 'purga', emoji: '⚖️', nombre: 'Purga del Débil' },
+      ],
+    });
+    const { habilidades, retrato } = cabecera;
 
     /* ---------- Cuerpo: tablero y registro ---------- */
 
@@ -118,26 +91,19 @@ export const pantallaUriel = {
     });
 
     // El registro va al lado del tablero (debajo en el teléfono). Uber no
-    // telegrafía nada: sin registro ni iconos de habilidades.
+    // telegrafía nada: sin registro.
     const registro = uber ? { anotar: () => {} } : crearRegistroEventos(cuerpo);
-    if (uber) parte('habilidades').classList.add('hidden');
 
     /* ---------- Cabecera: fase y marcador ---------- */
 
     let faseMostrada = 1;
 
     function actualizarCabecera() {
-      const { jugador, jefe } = pelea.puntos;
-      parte('puntos-jugador').textContent = String(jugador);
-      parte('puntos-jefe').textContent = String(jefe);
-      parte('barra-jugador').style.width = `${(jugador / pelea.casillasALlenar) * 100}%`;
-      parte('barra-jefe').style.width = `${(jefe / pelea.casillasALlenar) * 100}%`;
+      cabecera.mostrarPuntos({ ...pelea.puntos, total: pelea.casillasALlenar });
 
       const fase = pelea.fase;
-      parte('fase').textContent = `Fase ${fase}`;
-      parte('fase').classList.toggle('negativo', fase === 2);
-      parte('descripcion').textContent = DESCRIPCION_FASE[fase]
-        + (uber ? ' Uber Uriel lanza cada búsqueda sobre 2 cajas distintas.' : '');
+      cabecera.mostrarFase(fase, DESCRIPCION_FASE[fase]
+        + (uber ? ' Uber Uriel lanza cada búsqueda sobre 2 cajas distintas.' : ''));
 
       if (fase === 2 && faseMostrada === 1) {
         faseMostrada = 2;

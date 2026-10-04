@@ -1,0 +1,89 @@
+// Tarjeta de arriba en una pelea de jefe: retrato, nombre, fase,
+// descripción, iconos de habilidades y, según el jefe, un marcador de
+// puntos o un reloj grande.
+//
+//   const cabecera = crearCabeceraJefe(contenedor, {
+//     id: 'uriel', uber: false,
+//     habilidades: [{ id: 'facil', emoji: '🔍', nombre: 'Búsqueda fácil', oculta: false }],
+//     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
+//     reloj: false,        cuenta regresiva grande (Hecate)
+//   });
+//   cabecera.retrato                  el botón del retrato (para secretos)
+//   cabecera.habilidades.facil        ver icono-habilidad.js
+//   cabecera.mostrarFase(2, 'Descripción de la fase 2');
+//   cabecera.mostrarPuntos({ jugador, jefe, total });
+//   cabecera.mostrarReloj(segundos, critico);
+
+import { JEFES } from '../game/jefes/catalogo.js';
+import { crearRetratoJefe } from './retrato-jefe.js';
+import { crearIconoHabilidad } from './icono-habilidad.js';
+import { formatearSegundos } from './cronometro.js';
+
+export function crearCabeceraJefe(contenedor, { id, uber = false, habilidades = [], marcador = false, reloj = false }) {
+  const jefe = JEFES[id];
+  const nombre = jefe.normal ? JEFES[jefe.normal].nombre : jefe.nombre;
+
+  const tarjeta = document.createElement('section');
+  tarjeta.className = 'card cabecera-jefe';
+  tarjeta.innerHTML = `
+    <div class="cabecera-jefe-fila">
+      <div data-id="retrato"></div>
+      <div class="cabecera-jefe-texto">
+        <p class="cabecera-jefe-nombre">
+          ${nombre}
+          ${uber ? '<span class="badge negativo">UBER</span>' : ''}
+          <span class="badge" data-id="fase">Fase 1</span>
+        </p>
+        <p class="campo-ayuda" data-id="descripcion"></p>
+      </div>
+    </div>
+    ${reloj ? '<p class="reloj-jefe" data-id="reloj"></p>' : ''}
+    <div class="habilidades" data-id="habilidades"></div>
+    ${marcador ? `
+      <div class="marcador">
+        <span class="marcador-lado jugador"><small>Tú</small><strong data-id="puntos-jugador">0</strong></span>
+        <span class="marcador-barra">
+          <span class="marcador-relleno jugador" data-id="barra-jugador"></span>
+          <span class="marcador-relleno jefe" data-id="barra-jefe"></span>
+        </span>
+        <span class="marcador-lado jefe"><small>${nombre}</small><strong data-id="puntos-jefe">0</strong></span>
+      </div>` : ''}
+  `;
+  contenedor.appendChild(tarjeta);
+  const parte = (nombreParte) => tarjeta.querySelector(`[data-id="${nombreParte}"]`);
+
+  const retrato = crearRetratoJefe(id);
+  parte('retrato').replaceWith(retrato);
+
+  // Los uber no telegrafían nada: sin iconos de habilidades.
+  const iconos = {};
+  for (const habilidad of habilidades) {
+    iconos[habilidad.id] = crearIconoHabilidad(habilidad);
+    iconos[habilidad.id].elemento.classList.toggle('hidden', Boolean(habilidad.oculta));
+    parte('habilidades').appendChild(iconos[habilidad.id].elemento);
+  }
+  if (uber || habilidades.length === 0) parte('habilidades').classList.add('hidden');
+
+  return {
+    retrato,
+    habilidades: iconos,
+
+    mostrarFase(fase, descripcion) {
+      parte('fase').textContent = `Fase ${fase}`;
+      parte('fase').classList.toggle('negativo', fase === 2);
+      parte('descripcion').textContent = descripcion;
+    },
+
+    mostrarPuntos({ jugador, jefe: puntosJefe, total }) {
+      parte('puntos-jugador').textContent = String(jugador);
+      parte('puntos-jefe').textContent = String(puntosJefe);
+      parte('barra-jugador').style.width = `${(jugador / total) * 100}%`;
+      parte('barra-jefe').style.width = `${(puntosJefe / total) * 100}%`;
+    },
+
+    mostrarReloj(segundos, critico = false) {
+      parte('reloj').textContent = formatearSegundos(segundos);
+      parte('reloj').classList.toggle('critico', critico);
+    },
+  };
+}

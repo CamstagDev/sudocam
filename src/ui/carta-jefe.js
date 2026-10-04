@@ -15,10 +15,12 @@ import { PISTAS_DE_DESBLOQUEO, jefeDesbloqueado } from '../game/jefes/registro.j
 // Ruta de la pelea de cada jefe ya construido.
 const RUTAS_DE_PELEA = {
   uriel: 'jefe-uriel',
+  hecate: 'jefe-hecate',
 };
 
 const RESUMEN_DE_PELEA = {
   uriel: 'Llena más casillas que el jefe antes de que complete el tablero',
+  hecate: 'Resuelve el tablero en 15 minutos entre ilusiones y engaños',
 };
 
 function botonChico({ icono, titulo, alTocar, clase }) {

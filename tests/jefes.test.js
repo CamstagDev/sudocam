@@ -7,6 +7,7 @@ import {
   buscarJugadaFacil,
   buscarJugadaPorDescarte,
 } from '../src/game/jefes/uriel.js';
+import { PeleaHecate, SEGUNDOS_TOTALES } from '../src/game/jefes/hecate.js';
 import {
   estadisticasDeJefe,
   estaCompletamenteInvestigado,
@@ -146,5 +147,78 @@ describe('registro de jefes', () => {
     }
     expect(estaCompletamenteInvestigado('uriel')).toBe(true);
     expect(jefeDesbloqueado('uriel_uber')).toBe(true);
+  });
+});
+
+describe('PeleaHecate', () => {
+  // `vacias` empiezan vacías; el resto viene de SOLUCION.
+  function pelea(vacias = [0, 1, 2, 9, 10, 11, 18, 19, 20, 40]) {
+    return new PeleaHecate({ tableroInicial: vaciar(vacias), solucion: SOLUCION });
+  }
+
+  function avanzar(p, segundos) {
+    const eventos = [];
+    for (let s = 0; s < segundos; s++) eventos.push(...p.avanzarUnSegundo());
+    return eventos;
+  }
+
+  it('cada error resta un minuto, y sin tiempo es derrota', () => {
+    const p = pelea();
+    p.colocar(0, 9);
+    expect(p.restantes).toBe(SEGUNDOS_TOTALES - 60);
+
+    p.restantes = 30;
+    p.colocar(1, 9);
+    expect(p.derrotada).toBe(true);
+  });
+
+  it('cada 15 s lanza una ilusión sobre una celda vacía, que dura 10 s', () => {
+    const p = pelea();
+    const [vision] = avanzar(p, 15).filter((e) => e.tipo === 'vision');
+    expect(p.tablero[vision.indice]).toBe(0);
+    expect(p.disfraz().valores.get(vision.indice)).toBe(vision.valor);
+    expect(p.disfraz().fijas.has(vision.indice)).toBe(true);
+
+    avanzar(p, 10);
+    expect(p.disfraz().valores.has(vision.indice)).toBe(false);
+  });
+
+  it('escribir sobre la ilusión la hace desaparecer', () => {
+    const p = pelea();
+    const [vision] = avanzar(p, 15).filter((e) => e.tipo === 'vision');
+    p.colocar(vision.indice, SOLUCION[vision.indice]);
+    expect(p.disfraz().valores.has(vision.indice)).toBe(false);
+  });
+
+  it('el aullido petrifica un dígito que falta a los 20 s, y se libera después', () => {
+    const p = pelea();
+    const amenazado = p.aullido.digito;
+    expect(p.digitoCompleto(amenazado)).toBe(false);
+
+    const eventos = avanzar(p, 20);
+    expect(eventos).toContainEqual({ tipo: 'petrifica', digito: amenazado });
+    const celdaDondeVa = [0, 1, 2, 9, 10, 11, 18, 19, 20, 40].find((i) => SOLUCION[i] === amenazado);
+    expect(p.colocar(celdaDondeVa, amenazado)).toBe(false);
+
+    expect(avanzar(p, 5)).toContainEqual({ tipo: 'libera', digito: amenazado });
+    expect(p.colocar(celdaDondeVa, amenazado)).toBe(true);
+  });
+
+  it('pasa a fase 2 al quedar 1 minuto, y ahí empieza a maldecir', () => {
+    const p = pelea();
+    p.colocar(0, SOLUCION[0]);
+    p.restantes = 61;
+    expect(p.fase).toBe(1);
+    avanzar(p, 1);
+    expect(p.fase).toBe(2);
+
+    const maldiciones = avanzar(p, 10).filter((e) => e.tipo === 'maldicion');
+    expect(maldiciones).toHaveLength(1);
+    expect(maldiciones[0].falso).not.toBe(maldiciones[0].real);
+  });
+
+  it('la uber no permite notas', () => {
+    const uber = new PeleaHecate({ tableroInicial: vaciar([0]), solucion: SOLUCION, uber: true });
+    expect(uber.alternarNota(0, 5)).toBe(false);
   });
 });

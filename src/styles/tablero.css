@@ -283,3 +283,37 @@
     margin-inline: 12px;
   }
 }
+
+/* ---------- Teclas bloqueadas o "cargándose" (jefes) ---------- */
+
+.tecla {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Relleno que sube por la tecla, por ejemplo mientras Hecate la convierte
+   en piedra. El número va por encima. */
+.tecla-relleno {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0;
+  background: var(--boss-bg);
+  transition: height 1s linear;
+}
+
+.tecla-numero {
+  position: relative;
+}
+
+.tecla.cargando {
+  border: 2px solid var(--boss-border);
+}
+
+.tecla.bloqueado {
+  border-color: var(--boss-border);
+  background: var(--boss-bg);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}

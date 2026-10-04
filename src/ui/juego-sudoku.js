@@ -17,6 +17,10 @@
 //     mostrarErrores: false,               sin el contador de errores
 //     marcas: () => ({ clase: Set }),      clases extra por celda (ver vista-tablero.js)
 //     alJugar: ({ indice, valor, correcto }) => ...,   después de cada número escrito
+//     disfraz: () => ({ valores: Map, fijas: Set, notas: Map }),   lo que se ve distinto de la
+//                                          realidad (Hecate; ver PeleaHecate.disfraz)
+//     estadoTeclado: () => ({ bloqueados: Set, cargando: Map }),   ver teclado-numerico.js
+//     mostrarCronometro: false,            cuando el jefe tiene su propio reloj
 //   });
 //   juego.mostrarMensaje('Texto', 'error' | 'exito');
 //   juego.dibujar();    redibujar si la partida cambió desde afuera (p. ej. jugó el jefe)
@@ -38,6 +42,9 @@ export function crearJuegoSudoku(contenedor, {
   mostrarErrores = true,
   marcas = () => ({}),
   alJugar = () => {},
+  disfraz = () => ({ valores: new Map(), fijas: new Set(), notas: new Map() }),
+  estadoTeclado = () => ({}),
+  mostrarCronometro = preferencias.mostrarCronometro,
 }) {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card juego';
@@ -68,7 +75,7 @@ export function crearJuegoSudoku(contenedor, {
   // contar hasta el final, así que el contador solo confundiría.
   btnComprobar.classList.toggle('hidden', partida.politicaErrores !== 'boton');
   badgeErrores.classList.toggle('hidden', !mostrarErrores || partida.politicaErrores === 'final');
-  cronometroEl.classList.toggle('hidden', !preferencias.mostrarCronometro);
+  cronometroEl.classList.toggle('hidden', !mostrarCronometro);
 
   const botonesExtra = accionesExtra.map(({ texto, alTocar }) => {
     const boton = document.createElement('button');
@@ -191,10 +198,13 @@ export function crearJuegoSudoku(contenedor, {
   /* ---------- Dibujo ---------- */
 
   function dibujar() {
+    // Lo que se muestra puede no ser la verdad (engaños de Hecate).
+    const { valores, fijas, notas } = disfraz();
     vista.dibujar({
-      tablero: partida.tablero,
-      fijas: partida.tableroInicial.map((valor) => valor !== 0),
+      tablero: partida.tablero.map((valor, indice) => valores.get(indice) ?? valor),
+      fijas: partida.tableroInicial.map((valor, indice) => valor !== 0 || fijas.has(indice)),
       notas: partida.notas,
+      notasFalsas: notas,
       errores: partida.erroresVisibles,
       seleccionada,
       resaltarRelacionadas: preferencias.resaltarRelacionadas,
@@ -204,6 +214,7 @@ export function crearJuegoSudoku(contenedor, {
     teclado.dibujar({
       digitosCompletos: new Set(DIGITOS.filter((digito) => partida.digitoCompleto(digito))),
       modoNotas,
+      ...estadoTeclado(),
     });
     badgeErrores.textContent = `Errores: ${partida.errores}`;
   }

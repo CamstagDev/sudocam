@@ -8,6 +8,8 @@
 //
 // `marcas` (opcional) pone clases extra en algunas celdas, por ejemplo
 // para los jefes: { jefe: Set de índices, 'jefe-buscando': Set... }
+// `notasFalsas` (opcional, Hecate) muestra una nota con otro número:
+// Map(celda -> Map(nota real -> número que se muestra)).
 
 import { TAMANO_CAJA, TAMANO_GRILLA } from '../game/sudoku/lienzo.js';
 
@@ -69,6 +71,7 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
     resaltarRelacionadas = true,
     resaltarIguales = true,
     marcas = {},
+    notasFalsas = new Map(),
   }) {
     Object.keys(marcas).forEach((clase) => clasesDeMarcas.add(clase));
     const valorSeleccionado = seleccionada === null ? 0 : tablero[seleccionada];
@@ -81,8 +84,12 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
 
       celda.querySelector('.celda-valor').textContent = valor === 0 ? '' : String(valor);
       if (conNotas) {
+        const falsas = notasFalsas.get(indice);
         celda.querySelectorAll('.nota').forEach((nota, i) => {
-          nota.textContent = notasCelda.has(i + 1) ? String(i + 1) : '';
+          const digito = i + 1;
+          const falsa = falsas?.get(digito);
+          nota.textContent = notasCelda.has(digito) ? String(falsa ?? digito) : '';
+          nota.classList.toggle('nota-falsa', falsa !== undefined);
         });
       }
 

@@ -345,3 +345,44 @@ button.retrato-jefe {
 .pista-seccion {
   font-style: italic;
 }
+
+/* ---------- Hecate ---------- */
+
+/* Reloj grande de una pelea contrarreloj; rojo cuando queda poco. */
+.reloj-jefe {
+  margin: 0;
+  font-size: clamp(32px, 10vw, 40px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.reloj-jefe.critico {
+  color: var(--error);
+}
+
+/* Los engaños aparecen con un fundido lento, para que se note el cambio. */
+.celda.ilusion .celda-valor,
+.celda.maldicion .celda-valor,
+.nota.nota-falsa {
+  animation: engano-aparece 0.55s ease;
+}
+
+@keyframes engano-aparece {
+  from { opacity: 0; }
+}
+
+/* Hecate normal: la ilusión parpadea lento; quien preste atención la nota. */
+.celda.ilusion-parpadeante .celda-valor {
+  animation: ilusion-parpadeo 2.4s ease-in-out infinite;
+}
+
+@keyframes ilusion-parpadeo {
+  50% { opacity: 0.45; }
+}
+
+.nota.nota-falsa {
+  color: var(--boss);
+  font-weight: 800;
+}
