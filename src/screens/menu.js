@@ -5,6 +5,7 @@ import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { ultimosLogros } from '../game/logros/logros.js';
 import { ORDEN_JEFES } from '../game/jefes/catalogo.js';
+import { jefeDesbloqueado } from '../game/jefes/registro.js';
 import { crearCartaJefe } from '../ui/carta-jefe.js';
 
 const JUEGOS = [
@@ -39,6 +40,20 @@ function vitrinaDeLogros() {
   `;
 }
 
+// Solo los jefes ya desbloqueados: los demás no se insinúan de ninguna
+// forma. Sin ninguno, la sección "Jefes" entera no aparece.
+function seccionDeJefes() {
+  const desbloqueados = ORDEN_JEFES.filter((id) => jefeDesbloqueado(id));
+  if (desbloqueados.length === 0) return null;
+
+  const seccion = document.createElement('section');
+  seccion.className = 'menu-seccion';
+  seccion.innerHTML = '<h2 class="section-title">Jefes</h2><div class="game-grid"></div>';
+  const grilla = seccion.querySelector('.game-grid');
+  desbloqueados.forEach((id) => grilla.appendChild(crearCartaJefe(id)));
+  return seccion;
+}
+
 // Los juegos piden sus opciones antes de empezar; el resto abre directo.
 const SELECTORES = {
   sudoku: elegirDificultadSudoku,
@@ -63,10 +78,7 @@ export const pantallaMenu = {
         <div class="game-grid">${JUEGOS.map(cartaJuego).join('')}</div>
       </section>
 
-      <section class="menu-seccion">
-        <h2 class="section-title">Jefes</h2>
-        <div class="game-grid" id="jefes"></div>
-      </section>
+      <div id="jefes"></div>
 
       ${vitrinaDeLogros()}
 
@@ -83,8 +95,10 @@ export const pantallaMenu = {
       boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
     });
 
-    const grillaJefes = contenedor.querySelector('#jefes');
-    ORDEN_JEFES.forEach((id) => grillaJefes.appendChild(crearCartaJefe(id)));
+    const jefes = seccionDeJefes();
+    const lugarDeJefes = contenedor.querySelector('#jefes');
+    if (jefes) lugarDeJefes.replaceWith(jefes);
+    else lugarDeJefes.remove();
 
     dibujarPartidasEnPausa(contenedor.querySelector('#partidas-en-pausa'));
   },

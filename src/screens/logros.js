@@ -1,9 +1,10 @@
 // Pantalla de Logros: todos los logros por sección, con su estado.
 // Mientras un logro está bloqueado se ve su nombre (como pista) pero no
-// su descripción.
+// su descripción. Los logros de jefes todavía bloqueados no aparecen
+// (ver game/logros/visibles.js).
 
 import { SECCIONES } from '../game/logros/catalogo.js';
-import { logrosConEstado } from '../game/logros/logros.js';
+import { logrosVisiblesConEstado } from '../game/logros/visibles.js';
 
 function formatearFecha(iso) {
   return new Date(iso).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -40,15 +41,16 @@ function contarDesbloqueados(logros) {
 export const pantallaLogros = {
   titulo: 'Logros',
   subtitulo: () => {
-    const logros = logrosConEstado();
+    const logros = logrosVisiblesConEstado();
     return `${contarDesbloqueados(logros)} de ${logros.length} desbloqueados`;
   },
 
   render(contenedor) {
-    const porId = new Map(logrosConEstado().map((logro) => [logro.id, logro]));
+    const porId = new Map(logrosVisiblesConEstado().map((logro) => [logro.id, logro]));
 
     contenedor.innerHTML = SECCIONES.map((seccion) => {
-      const logros = seccion.logros.map((logro) => porId.get(logro.id));
+      const logros = seccion.logros.filter((logro) => porId.has(logro.id)).map((logro) => porId.get(logro.id));
+      if (logros.length === 0) return '';
       return `
         <section class="card">
           <div class="cabecera-tarjeta">

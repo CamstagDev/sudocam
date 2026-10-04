@@ -7,6 +7,11 @@
 // `progreso(guardado)` (opcional) devuelve { actual, objetivo } para los
 // logros que piden juntar varias cosas; la pantalla de Logros lo muestra
 // como barra mientras sigue bloqueado.
+//
+// `jefe` (opcional) es el jefe del que habla el logro: mientras ese jefe
+// siga bloqueado, el logro no se muestra en ninguna parte (ver visibles.js).
+// "Cazador de jefes" no lleva `jefe` a propósito: es el único que puede
+// adelantar cuántos jefes hay.
 
 // Jefes "normales" (no uber): "Cazador de jefes" pide vencerlos a todos.
 export const JEFES_NORMALES = ['uriel', 'hecate', 'jormungandr', 'babel', 'typhon'];
@@ -41,15 +46,15 @@ export const SECCIONES = [
     id: 'jefes',
     nombre: 'Jefes',
     logros: [
-      { id: 'uriel_derrotado', nombre: 'El patrón se rompe', descripcion: 'Vence a Uriel.', icono: '👹' },
-      { id: 'uriel_aleteo_mariposa', nombre: 'Aleteo de mariposa', descripcion: 'Vence a Uriel sin dejar que anote ni un solo punto.', icono: '🦋' },
-      { id: 'hecate_derrotada', nombre: 'Escape de la locura', descripcion: 'Vence a Hecate.', icono: '🔮' },
-      { id: 'hecate_sin_pasiva', nombre: 'Cordura intacta', descripcion: 'Vence a Hecate sin que su pasiva Pesar Castigador se dispare: sin cometer ni un error.', icono: '🧘' },
-      { id: 'jormungandr_derrotado', nombre: 'La serpiente se muerde la cola', descripcion: 'Vence a Jörmungandr.', icono: '🐍' },
-      { id: 'jormungandr_hambruna', nombre: 'Hambruna', descripcion: 'Vence a Jörmungandr sin que llegue nunca a la fase 2.', icono: '🥀' },
-      { id: 'babel_derrotado_facil', nombre: 'Primeras sílabas', descripcion: 'Vence a Babel en dificultad fácil.', icono: '🗼' },
-      { id: 'babel_derrotado_medio', nombre: 'Lenguas cruzadas', descripcion: 'Vence a Babel en dificultad medio.', icono: '🗿' },
-      { id: 'babel_derrotado_dificil', nombre: 'Políglota', descripcion: 'Vence a Babel en dificultad difícil.', icono: '📜' },
+      { id: 'uriel_derrotado', jefe: 'uriel', nombre: 'El patrón se rompe', descripcion: 'Vence a Uriel.', icono: '👹' },
+      { id: 'uriel_aleteo_mariposa', jefe: 'uriel', nombre: 'Aleteo de mariposa', descripcion: 'Vence a Uriel sin dejar que anote ni un solo punto.', icono: '🦋' },
+      { id: 'hecate_derrotada', jefe: 'hecate', nombre: 'Escape de la locura', descripcion: 'Vence a Hecate.', icono: '🔮' },
+      { id: 'hecate_sin_pasiva', jefe: 'hecate', nombre: 'Cordura intacta', descripcion: 'Vence a Hecate sin que su pasiva Pesar Castigador se dispare: sin cometer ni un error.', icono: '🧘' },
+      { id: 'jormungandr_derrotado', jefe: 'jormungandr', nombre: 'La serpiente se muerde la cola', descripcion: 'Vence a Jörmungandr.', icono: '🐍' },
+      { id: 'jormungandr_hambruna', jefe: 'jormungandr', nombre: 'Hambruna', descripcion: 'Vence a Jörmungandr sin que llegue nunca a la fase 2.', icono: '🥀' },
+      { id: 'babel_derrotado_facil', jefe: 'babel', nombre: 'Primeras sílabas', descripcion: 'Vence a Babel en dificultad fácil.', icono: '🗼' },
+      { id: 'babel_derrotado_medio', jefe: 'babel', nombre: 'Lenguas cruzadas', descripcion: 'Vence a Babel en dificultad medio.', icono: '🗿' },
+      { id: 'babel_derrotado_dificil', jefe: 'babel', nombre: 'Políglota', descripcion: 'Vence a Babel en dificultad difícil.', icono: '📜' },
       {
         id: 'todos_los_jefes',
         nombre: 'Cazador de jefes',
@@ -57,13 +62,13 @@ export const SECCIONES = [
         icono: '🏆',
         progreso: (guardado) => ({ actual: jefesNormalesVencidos(guardado), objetivo: JEFES_NORMALES.length }),
       },
-      { id: 'typhon_derrotado', nombre: 'Calma tras la tormenta', descripcion: 'Vence a Typhon.', icono: '🌪️' },
-      { id: 'typhon_ojo_de_la_tormenta', nombre: 'Ojo de la tormenta', descripcion: 'Vence a Typhon sin cometer ni un error a pesar de los giros.', icono: '🧭' },
-      { id: 'uriel_uber_derrotado', nombre: 'Doble patrón', descripcion: 'Vence a Uber Uriel.', icono: '💠' },
-      { id: 'hecate_uber_derrotada', nombre: 'Ilusión perfecta', descripcion: 'Vence a Uber Hecate.', icono: '✨' },
-      { id: 'jormungandr_uber_derrotado', nombre: 'Hambre insaciable', descripcion: 'Vence a Uber Jörmungandr.', icono: '🌀' },
-      { id: 'babel_uber_derrotado', nombre: 'La torre no cae', descripcion: 'Vence a Uber Babel.', icono: '⚡' },
-      { id: 'typhon_uber_derrotado', nombre: 'Padre del caos', descripcion: 'Vence a Uber Typhon.', icono: '👁️' },
+      { id: 'typhon_derrotado', jefe: 'typhon', nombre: 'Calma tras la tormenta', descripcion: 'Vence a Typhon.', icono: '🌪️' },
+      { id: 'typhon_ojo_de_la_tormenta', jefe: 'typhon', nombre: 'Ojo de la tormenta', descripcion: 'Vence a Typhon sin cometer ni un error a pesar de los giros.', icono: '🧭' },
+      { id: 'uriel_uber_derrotado', jefe: 'uriel_uber', nombre: 'Doble patrón', descripcion: 'Vence a Uber Uriel.', icono: '💠' },
+      { id: 'hecate_uber_derrotada', jefe: 'hecate_uber', nombre: 'Ilusión perfecta', descripcion: 'Vence a Uber Hecate.', icono: '✨' },
+      { id: 'jormungandr_uber_derrotado', jefe: 'jormungandr_uber', nombre: 'Hambre insaciable', descripcion: 'Vence a Uber Jörmungandr.', icono: '🌀' },
+      { id: 'babel_uber_derrotado', jefe: 'babel_uber', nombre: 'La torre no cae', descripcion: 'Vence a Uber Babel.', icono: '⚡' },
+      { id: 'typhon_uber_derrotado', jefe: 'typhon_uber', nombre: 'Padre del caos', descripcion: 'Vence a Uber Typhon.', icono: '👁️' },
     ],
   },
 ];

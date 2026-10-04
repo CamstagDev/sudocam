@@ -11,9 +11,9 @@
 // menos tiempo.
 
 import { modificarGuardado, obtenerGuardado } from '../../save/guardado.js';
-import { JEFES, SECCIONES_INFORMACION, SEGUNDOS_VICTORIA_RAPIDA } from './catalogo.js';
+import { JEFES, ORDEN_JEFES, SECCIONES_INFORMACION, SEGUNDOS_VICTORIA_RAPIDA } from './catalogo.js';
 import { JEFES_NORMALES } from '../logros/catalogo.js';
-import { desbloquearLogros, estaDesbloqueado } from '../logros/logros.js';
+import { desbloquearLogros } from '../logros/logros.js';
 
 const SIN_ESTADISTICAS = { victorias: 0, mejorTiempo: null, victoriasRapidas: 0, mejorMarca: null };
 
@@ -82,41 +82,45 @@ export async function registrarVictoriaDeJefe(jefe, { segundos, errores, usoNota
 
 /* ---------- Desbloqueos ---------- */
 
+// Todas estas reglas leen el guardado actual salvo que se les pase otro
+// (p. ej. el resumen de un archivo antes de importarlo).
+
 // Las tres secciones de su página de información desbloqueadas.
-export function estaCompletamenteInvestigado(id) {
+export function estaCompletamenteInvestigado(id, guardado = obtenerGuardado()) {
   const jefe = JEFES[id];
-  const stats = estadisticasDeJefe(id);
+  const stats = estadisticasDeJefe(id, guardado);
   return SECCIONES_INFORMACION.every((seccion) => !jefe[seccion] || jefe[seccion].seDesbloqueaCon(stats));
 }
 
-const haVencidoA = (id) => estadisticasDeJefe(id).victorias > 0;
+const haVencidoA = (id, guardado) => estadisticasDeJefe(id, guardado).victorias > 0;
+const tieneLogro = (id, guardado) => Boolean(guardado.logros[id]);
 
 // Qué hace falta para enfrentar a cada jefe. Los normales piden vencer al
 // anterior y, los tres primeros, haber completado un sudoku de esa
 // dificultad por tu cuenta. Los uber piden investigar por completo a su
 // versión normal (Babel: vencerlo en difícil).
 const REQUISITOS = {
-  uriel: () => estaDesbloqueado('sudoku_facil'),
-  hecate: () => haVencidoA('uriel') && estaDesbloqueado('sudoku_medio'),
-  jormungandr: () => haVencidoA('hecate') && estaDesbloqueado('sudoku_dificil'),
-  babel: () => haVencidoA('jormungandr'),
-  typhon: () => haVencidoA('jormungandr'),
-  uriel_uber: () => estaCompletamenteInvestigado('uriel'),
-  hecate_uber: () => estaCompletamenteInvestigado('hecate'),
-  jormungandr_uber: () => estaCompletamenteInvestigado('jormungandr'),
-  babel_uber: () => estaDesbloqueado('babel_derrotado_dificil'),
-  typhon_uber: () => estaCompletamenteInvestigado('typhon'),
+  uriel: (g) => tieneLogro('sudoku_facil', g),
+  hecate: (g) => haVencidoA('uriel', g) && tieneLogro('sudoku_medio', g),
+  jormungandr: (g) => haVencidoA('hecate', g) && tieneLogro('sudoku_dificil', g),
+  babel: (g) => haVencidoA('jormungandr', g),
+  typhon: (g) => haVencidoA('jormungandr', g),
+  uriel_uber: (g) => estaCompletamenteInvestigado('uriel', g),
+  hecate_uber: (g) => estaCompletamenteInvestigado('hecate', g),
+  jormungandr_uber: (g) => estaCompletamenteInvestigado('jormungandr', g),
+  babel_uber: (g) => tieneLogro('babel_derrotado_dificil', g),
+  typhon_uber: (g) => estaCompletamenteInvestigado('typhon', g),
 };
 
-export function jefeDesbloqueado(id) {
-  return Boolean(REQUISITOS[id]?.());
+// Un jefe bloqueado no existe para el jugador: el juego no lo muestra en
+// ninguna parte (ni carta, ni nombre, ni sus logros) hasta desbloquearlo.
+export function jefeDesbloqueado(id, guardado = obtenerGuardado()) {
+  return Boolean(REQUISITOS[id]?.(guardado));
 }
 
-// Texto para la carta bloqueada del menú.
-export const PISTAS_DE_DESBLOQUEO = {
-  uriel: 'Completa un sudoku fácil para desbloquear a este jefe',
-  hecate: 'Vence a Uriel y completa un sudoku medio para desbloquear a esta jefa',
-  jormungandr: 'Vence a Hecate y completa un sudoku difícil para desbloquear a este jefe',
-  babel: 'Vence a Jörmungandr para desbloquear a este jefe',
-  typhon: 'Vence a Jörmungandr para desbloquear a este jefe',
-};
+// Si hay al menos un jefe desbloqueado; mientras no, todo lo que hable de
+// jefes en general (la sección del menú, su color en Personalización...)
+// también queda oculto.
+export function hayJefesDesbloqueados(guardado = obtenerGuardado()) {
+  return ORDEN_JEFES.some((id) => jefeDesbloqueado(id, guardado));
+}

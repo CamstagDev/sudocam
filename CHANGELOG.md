@@ -9,7 +9,12 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
-
+- Los jefes bloqueados ya no se insinúan en ninguna parte: no tienen carta
+  en el menú (la sección "Jefes" no aparece hasta desbloquear el primero),
+  sus logros no se ven ni cuentan en los totales, y el resumen del
+  guardado y el color de los jefes en Personalización esperan al primer
+  jefe. Vale también para los uber, Typhon incluido. Lo único que sigue
+  adelantando cuántos jefes hay es el logro "Cazador de jefes".
 
 ## 0.1.0 (2026-10-04)
 

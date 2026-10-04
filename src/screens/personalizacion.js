@@ -4,6 +4,10 @@
 //
 // Elegir un tema predefinido pone sus colores en los selectores; cambiar
 // cualquier color a mano pasa a "Personalizado" (ver temaEnUso en tema.js).
+//
+// Mientras no haya ningún jefe desbloqueado, el color de los jefes y su
+// casilla de ejemplo no se muestran (el selector sigue en la página, oculto,
+// para que el tema guardado conserve ese color).
 
 import {
   CAMPOS_TEMA,
@@ -21,10 +25,13 @@ import {
   restablecerPreferencias,
 } from '../preferencias.js';
 import { obtenerGuardado } from '../save/guardado.js';
+import { hayJefesDesbloqueados } from '../game/jefes/registro.js';
 
-function campoColor({ id, nombre }) {
+const COLOR_DE_LOS_JEFES = 'jefe';
+
+function campoColor({ id, nombre }, { oculto = false } = {}) {
   return `
-    <label class="campo-color">
+    <label class="campo-color" ${oculto ? 'hidden' : ''}>
       <input type="color" data-color="${id}" />
       <span>${nombre}</span>
     </label>
@@ -66,23 +73,30 @@ function filaPreferencia({ id, nombre, descripcion }) {
 }
 
 // Unas celdas de ejemplo para ver los colores sin salir de la pantalla.
-const MUESTRA_TABLERO = `
-  <div class="muestra-tablero" aria-hidden="true">
-    <span class="celda fija">5</span>
-    <span class="celda">3</span>
-    <span class="celda seleccionada">8</span>
-    <span class="celda relacionada"></span>
-    <span class="celda error">7</span>
-    <span class="celda acierto">1</span>
-    <span class="celda jefe">4</span>
-  </div>
-`;
+function muestraTablero({ conJefes }) {
+  return `
+    <div class="muestra-tablero" aria-hidden="true">
+      <span class="celda fija">5</span>
+      <span class="celda">3</span>
+      <span class="celda seleccionada">8</span>
+      <span class="celda relacionada"></span>
+      <span class="celda error">7</span>
+      <span class="celda acierto">1</span>
+      ${conJefes ? '<span class="celda jefe">4</span>' : ''}
+    </div>
+  `;
+}
 
 export const pantallaPersonalizacion = {
   titulo: 'Personalización',
   subtitulo: 'Todo se guarda solo',
 
   render(contenedor) {
+    const conJefes = hayJefesDesbloqueados();
+    const camposColor = CAMPOS_TEMA.map((campo) => campoColor(campo, {
+      oculto: campo.id === COLOR_DE_LOS_JEFES && !conJefes,
+    }));
+
     contenedor.innerHTML = `
       <section class="card">
         <div class="cabecera-tarjeta">
@@ -90,12 +104,12 @@ export const pantallaPersonalizacion = {
           <button type="button" class="btn btn-secondary btn-sm" id="restablecer-colores">Restaurar</button>
         </div>
         <div class="grilla-temas">${TEMAS.map(botonTema).join('')}${BOTON_PERSONALIZADO}</div>
-        ${MUESTRA_TABLERO}
+        ${muestraTablero({ conJefes })}
         <p class="campo-ayuda tarjeta-ayuda">
           Los paneles y bordes se calculan a partir del fondo y el texto. Cambiar cualquier
           color pasa tu tema a "Personalizado".
         </p>
-        <div class="grilla-colores">${CAMPOS_TEMA.map(campoColor).join('')}</div>
+        <div class="grilla-colores">${camposColor.join('')}</div>
       </section>
 
       <section class="card">

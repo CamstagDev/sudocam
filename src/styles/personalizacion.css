@@ -29,6 +29,10 @@
   cursor: pointer;
 }
 
+.campo-color[hidden] {
+  display: none;
+}
+
 .campo-color input[type="color"] {
   flex-shrink: 0;
   width: 40px;
