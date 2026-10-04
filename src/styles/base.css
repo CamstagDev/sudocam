@@ -143,11 +143,11 @@ body {
 
 /* Borde con figuras (pétalos de sakura...) en lugar de la línea, si el
    tema lo pide: tarjetas, menús y ventanas, nunca el tablero. La imagen
-   la arma bordes.js (3x3 casillas de 18px) y se reparte a lo largo del
+   la arma bordes.js (3x3 casillas de 24px) y se reparte a lo largo del
    borde como una línea punteada. El fondo se queda dentro de la línea. */
 .con-borde-figura :is(.card, .game-card, .modal, .dropdown-menu) {
-  border: 13px solid transparent;
-  border-image: var(--borde-figura) 18 / 13px round;
+  border: 16px solid transparent;
+  border-image: var(--borde-figura) 24 / 16px round;
   background-clip: padding-box;
 }
 

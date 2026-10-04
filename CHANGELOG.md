@@ -33,6 +33,10 @@ sube cuando cambia la forma del archivo de guardado.
   no para el tablero. Es parte del tema: Sakura trae los pétalos y los
   demás la línea, y elegir un tema lo cambia solo; cambiarlo a mano pasa
   a "Personalizado". Los guardados anteriores toman el de su tema.
+- Los pétalos son más grandes (y menos) y todos siguen el contorno en el
+  mismo sentido, como un camino alrededor de cada tarjeta.
+- Nuevo tema Monocromo: fondo blanco, texto y botones negros, y grises
+  para el resaltado, los números fijos y los errores.
 
 ## 0.1.0 (2026-10-04)
 

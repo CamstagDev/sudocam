@@ -238,9 +238,9 @@
   flex: none;
   width: 40px;
   height: 40px;
-  border: 10px solid transparent;
-  border-image-slice: 18;
-  border-image-width: 10px;
+  border: 12px solid transparent;
+  border-image-slice: 24;
+  border-image-width: 12px;
   border-image-repeat: round;
 }
 

@@ -66,6 +66,12 @@ export const TEMAS = [
     borde: 'linea',
   },
   {
+    id: 'monocromo',
+    nombre: 'Monocromo',
+    colores: { fondo: '#ffffff', texto: '#111111', acento: '#1a1a1a', resaltado: '#ebebeb', logo: '#000000', pista: '#5c5c5c', acierto: '#3d3d3d', error: '#9a9a9a', jefe: '#525252' },
+    borde: 'linea',
+  },
+  {
     id: 'alto-contraste',
     nombre: 'Alto contraste',
     colores: { fondo: '#000000', texto: '#ffffff', acento: '#ffd400', resaltado: '#403800', logo: '#ffd400', pista: '#00e5ff', acierto: '#00ff6a', error: '#ff3b3b', jefe: '#ff9100' },
