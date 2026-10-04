@@ -16,11 +16,13 @@ import { PISTAS_DE_DESBLOQUEO, jefeDesbloqueado } from '../game/jefes/registro.j
 const RUTAS_DE_PELEA = {
   uriel: 'jefe-uriel',
   hecate: 'jefe-hecate',
+  jormungandr: 'jefe-jormungandr',
 };
 
 const RESUMEN_DE_PELEA = {
   uriel: 'Llena más casillas que el jefe antes de que complete el tablero',
   hecate: 'Resuelve el tablero en 15 minutos entre ilusiones y engaños',
+  jormungandr: 'Resuelve un sudoku difícil mientras la serpiente se lo come',
 };
 
 function botonChico({ icono, titulo, alTocar, clase }) {

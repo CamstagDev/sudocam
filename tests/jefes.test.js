@@ -8,6 +8,7 @@ import {
   buscarJugadaPorDescarte,
 } from '../src/game/jefes/uriel.js';
 import { PeleaHecate, SEGUNDOS_TOTALES } from '../src/game/jefes/hecate.js';
+import { PeleaJormungandr } from '../src/game/jefes/jormungandr.js';
 import {
   estadisticasDeJefe,
   estaCompletamenteInvestigado,
@@ -220,5 +221,68 @@ describe('PeleaHecate', () => {
   it('la uber no permite notas', () => {
     const uber = new PeleaHecate({ tableroInicial: vaciar([0]), solucion: SOLUCION, uber: true });
     expect(uber.alternarNota(0, 5)).toBe(false);
+  });
+});
+
+describe('PeleaJormungandr', () => {
+  const VACIAS = [0, 1, 2, 9, 10, 11, 18, 19, 20, 40, 41, 42];
+  function pelea(uber = false) {
+    return new PeleaJormungandr({ tableroInicial: vaciar(VACIAS), solucion: SOLUCION, uber });
+  }
+
+  it('Hambre devora un número del jugador cada 60 s y llena el vientre', () => {
+    const p = pelea();
+    p.colocar(0, SOLUCION[0]);
+    for (let s = 0; s < 59; s++) expect(p.avanzarUnSegundo()).toBeNull();
+
+    const { tecnica, bocados } = p.avanzarUnSegundo();
+    expect(tecnica).toBe('hambre');
+    expect(bocados).toEqual([{ indice: 0, valor: SOLUCION[0], pista: false }]);
+    expect(p.tablero[0]).toBe(0);
+    expect(p.vientre).toBe(1);
+  });
+
+  it('llenar una celda baja el vientre una sola vez por celda', () => {
+    const p = pelea();
+    p.vientre = 5;
+    p.colocar(0, SOLUCION[0]);
+    expect(p.vientre).toBe(4);
+    p.borrar(0);
+    expect(p.vientre).toBe(5); // borrar devuelve el alivio
+    p.colocar(0, SOLUCION[0]);
+    expect(p.vientre).toBe(4);
+  });
+
+  it('con 10 en el vientre pasa a Glotonería y devora pistas, que dejan de ser fijas', () => {
+    const p = pelea();
+    p.cambiarVientre(10);
+    expect(p.fase).toBe(2);
+    const { tecnica, bocados } = p.comer();
+    expect(tecnica).toBe('glotoneria');
+    expect(bocados[0].pista).toBe(true);
+    expect(p.esFija(bocados[0].indice)).toBe(false);
+    expect(p.alcanzoFase2).toBe(true);
+  });
+
+  it('el vientre puede bajar y volver a fase 1', () => {
+    const p = pelea();
+    p.cambiarVientre(10);
+    p.colocar(0, SOLUCION[0]);
+    expect(p.fase).toBe(1);
+  });
+
+  it('el secreto: darle de comer una pista cuenta doble', () => {
+    const p = pelea();
+    const pista = 3; // la celda 3 es una pista
+    expect(p.alimentar(pista)).toMatchObject({ pista: true });
+    expect(p.vientre).toBe(2);
+  });
+
+  it('la uber come más de golpe', () => {
+    const p = pelea(true);
+    p.colocar(0, SOLUCION[0]);
+    p.colocar(1, SOLUCION[1]);
+    p.esperaComer = 1;
+    expect(p.avanzarUnSegundo().bocados).toHaveLength(2);
   });
 });

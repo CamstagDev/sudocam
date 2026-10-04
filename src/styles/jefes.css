@@ -140,7 +140,7 @@ button.retrato-jefe {
   stroke-width: 3;
 }
 
-.icono-habilidad span {
+.icono-habilidad-emoji {
   position: relative;
   opacity: 0.8;
 }
@@ -385,4 +385,26 @@ button.retrato-jefe {
 .nota.nota-falsa {
   color: var(--boss);
   font-weight: 800;
+}
+
+/* Numerito en la esquina de un icono (p. ej. el vientre de Ouroboros). */
+.icono-habilidad-contador {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 18px;
+  padding: 1px 5px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-solid-strong);
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Un icono que se puede tocar (secreto de Ouroboros): solo el cursor lo delata. */
+.icono-habilidad.tocable {
+  cursor: pointer;
 }

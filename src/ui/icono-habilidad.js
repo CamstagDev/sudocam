@@ -7,6 +7,8 @@
 //   icono.cargar(0.4);    0 a 1; con animación suave
 //   icono.reiniciar();    vuelve a 0 sin animación (se acaba de disparar)
 //   icono.destello();
+//   icono.cambiar({ emoji, nombre });   otro aspecto (p. ej. al cambiar de fase)
+//   icono.ponerContador(7);             numerito en la esquina (null lo quita)
 //
 // El anillo es un <circle> de SVG cuyo trazo se "destapa" con
 // stroke-dashoffset (más nítido que un conic-gradient en algunos
@@ -25,7 +27,8 @@ export function crearIconoHabilidad({ emoji, nombre }) {
       <circle class="icono-habilidad-fondo" cx="21" cy="21" r="${RADIO}" />
       <circle class="icono-habilidad-carga" cx="21" cy="21" r="${RADIO}" />
     </svg>
-    <span>${emoji}</span>
+    <span class="icono-habilidad-emoji">${emoji}</span>
+    <span class="icono-habilidad-contador hidden"></span>
   `;
   const trazo = elemento.querySelector('.icono-habilidad-carga');
   trazo.style.strokeDasharray = String(CIRCUNFERENCIA);
@@ -65,6 +68,17 @@ export function crearIconoHabilidad({ emoji, nombre }) {
     elemento.classList.add('disparada');
   }
 
+  function cambiar({ emoji: nuevoEmoji, nombre: nuevoNombre }) {
+    elemento.querySelector('.icono-habilidad-emoji').textContent = nuevoEmoji;
+    elemento.title = nuevoNombre;
+  }
+
+  function ponerContador(numero) {
+    const contador = elemento.querySelector('.icono-habilidad-contador');
+    contador.textContent = numero === null ? '' : String(numero);
+    contador.classList.toggle('hidden', numero === null);
+  }
+
   pintar(0);
-  return { elemento, cargar, reiniciar, destello };
+  return { elemento, cargar, reiniciar, destello, cambiar, ponerContador };
 }
