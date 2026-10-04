@@ -129,6 +129,15 @@
   color: var(--error);
 }
 
+/* Además del color, los números equivocados van subrayados: así se
+   distinguen en cualquier tema, también en Monocromo o sin ver colores.
+   En em para que escale con el tamaño de la celda (multi sudoku, zoom). */
+.celda.error .celda-valor {
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.12em;
+}
+
 .celda.acierto {
   color: var(--success);
 }

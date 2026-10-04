@@ -93,7 +93,7 @@ function muestraTablero({ conJefes }) {
       <span class="celda">3</span>
       <span class="celda seleccionada">8</span>
       <span class="celda relacionada"></span>
-      <span class="celda error">7</span>
+      <span class="celda error"><span class="celda-valor">7</span></span>
       <span class="celda acierto">1</span>
       ${conJefes ? '<span class="celda jefe">4</span>' : ''}
     </div>

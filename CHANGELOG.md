@@ -37,6 +37,9 @@ sube cuando cambia la forma del archivo de guardado.
   mismo sentido, como un camino alrededor de cada tarjeta.
 - Nuevo tema Monocromo: fondo blanco, texto y botones negros, y grises
   para el resaltado, los números fijos y los errores.
+- Los números equivocados ahora van subrayados además de en el color de
+  error, en todos los temas y tableros, para que se distingan aunque el
+  tema no tenga rojo (Monocromo) o no se vean bien los colores.
 
 ## 0.1.0 (2026-10-04)
 
