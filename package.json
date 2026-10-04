@@ -15,6 +15,7 @@
     "instalador:windows": "vite build && electron-builder --win"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
     "electron": "^44.5.1",
     "electron-builder": "^26.15.3",
     "vite": "^8.3.2",
@@ -43,5 +44,11 @@
       "allowToChangeInstallationDirectory": true,
       "shortcutName": "SudoCam"
     }
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/filesystem": "^8.1.4",
+    "@capacitor/share": "^8.0.3"
   }
 }

@@ -79,7 +79,9 @@
 /* ---------- Multi sudoku: más celdas, tablero más ancho ---------- */
 
 .tablero-multi {
-  width: min(100%, 760px);
+  /* --zoom lo pone zoom-tablero.js (pellizco o botones − / +). */
+  width: calc(min(100%, 760px) * var(--zoom, 1));
+  margin-inline: auto;
   /* Los huecos entre grillas se ven como fondo, no como borde. */
   background: transparent;
   border: none;
@@ -87,12 +89,27 @@
 }
 
 .tablero-multi .celda {
-  font-size: clamp(9px, 2.4vw, 17px);
+  font-size: calc(clamp(9px, 2.4vw, 17px) * var(--zoom, 1));
   outline: 1px solid var(--border-strong);
 }
 
 .tablero-multi .nota {
-  font-size: clamp(5px, 1.1vw, 9px);
+  font-size: calc(clamp(5px, 1.1vw, 9px) * var(--zoom, 1));
+}
+
+/* Con zoom el tablero puede ser más ancho que la pantalla: el contenedor
+   se desplaza con el dedo (el pellizco lo maneja zoom-tablero.js). */
+.tablero-contenedor.con-zoom {
+  display: block;
+  max-height: 75vh;
+  overflow: auto;
+  touch-action: pan-x pan-y;
+}
+
+.controles-zoom {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 /* Celda que pertenece a dos grillas a la vez (la caja donde se unen). */

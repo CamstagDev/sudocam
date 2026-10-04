@@ -23,6 +23,7 @@ import { pantallaGuardado } from './screens/guardado.js';
 import { iniciarGuardado } from './save/guardado.js';
 import { almacenNavegador } from './save/almacen-navegador.js';
 import { almacenEscritorio, estamosEnEscritorio } from './save/almacen-escritorio.js';
+import { almacenAndroid, estamosEnAndroid } from './save/almacen-android.js';
 import { mostrarAviso } from './ui/modal.js';
 import { aplicarTemaGuardado } from './tema.js';
 
@@ -41,7 +42,9 @@ registrarPantalla('guardado', pantallaGuardado);
 
 // Dónde vive el guardado según dónde corre el juego.
 function elegirAlmacen() {
-  return estamosEnEscritorio() ? almacenEscritorio : almacenNavegador;
+  if (estamosEnAndroid()) return almacenAndroid;
+  if (estamosEnEscritorio()) return almacenEscritorio;
+  return almacenNavegador;
 }
 
 // Primero se carga el guardado (todas las pantallas lo leen), después se

@@ -34,6 +34,7 @@
 import { celdaEnDireccion } from '../game/sudoku/lienzo.js';
 import { DIGITOS } from '../game/sudoku/tablero.js';
 import { crearVistaTablero } from './vista-tablero.js';
+import { activarZoom } from './zoom-tablero.js';
 import { crearTecladoNumerico } from './teclado-numerico.js';
 import { crearCronometro, formatearSegundos } from './cronometro.js';
 
@@ -107,6 +108,9 @@ export function crearJuegoSudoku(contenedor, {
       dibujar();
     },
   });
+
+  // Los tableros grandes (multi sudoku, Typhon) se pueden acercar.
+  if (partida.lienzo.cantidadGrillas > 1) activarZoom(tarjeta.querySelector('.tablero-contenedor'));
 
   const teclado = crearTecladoNumerico(tarjeta, {
     alElegirDigito: escribir,
