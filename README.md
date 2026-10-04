@@ -22,6 +22,11 @@ partida.
 | `npm run escritorio` | Compila y abre la app de Windows |
 | `npm run escritorio:dev` | Abre la app de Windows contra `npm run dev` (hay que tenerlo corriendo) |
 | `npm run instalador:windows` | Genera `release/SudoCam Setup <versión>.exe` |
+| `npm run android:apk` | Genera `android/app/build/outputs/apk/debug/app-debug.apk` |
+
+Para Android no hace falta Android Studio: basta con un JDK 21 y las
+herramientas de línea de comandos del SDK de Android, con las variables
+`JAVA_HOME` y `ANDROID_HOME` apuntando a ellos.
 
 ## Dónde está cada cosa
 
@@ -33,6 +38,8 @@ src/
   ui/         piezas reutilizables (tablero, teclado, modal, cronómetro...)
   styles/     CSS
 electron/     la app de Windows (ventana + archivos de guardado)
+android/      la app de Android (proyecto de Capacitor)
+scripts/      utilidades (iconos de Android)
 tests/        pruebas automáticas (Vitest)
 ```
 

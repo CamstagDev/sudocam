@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "escritorio": "vite build && electron .",
     "escritorio:dev": "electron . --dev",
-    "instalador:windows": "vite build && electron-builder --win"
+    "instalador:windows": "vite build && electron-builder --win",
+    "android:sync": "vite build && cap sync android",
+    "android:apk": "npm run android:sync && cd android && gradlew assembleDebug"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.2",
