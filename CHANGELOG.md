@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+## 0.2.0 (2026-10-05)
+
 - Los jefes bloqueados ya no se insinúan en ninguna parte: no tienen carta
   en el menú (la sección "Jefes" no aparece hasta desbloquear el primero),
   sus logros no se ven ni cuentan en los totales, y el resumen del
