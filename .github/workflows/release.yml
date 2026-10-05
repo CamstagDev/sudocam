@@ -62,11 +62,21 @@ jobs:
         with:
           path: archivos
           merge-multiple: true
-      # Las notas de la Release son la sección de esta versión en CHANGELOG.md.
+      # Las notas de la Release son la entrada de esta versión en DEVLOG.md
+      # (si la hay) y debajo su sección de CHANGELOG.md.
       - name: Notas de la versión
         run: |
           version="${GITHUB_REF_NAME#v}"
-          awk -v v="## $version " 'index($0, v) == 1 { dentro = 1; next } /^## / { dentro = 0 } dentro' CHANGELOG.md > notas.md
+          seccion() { awk -v v="## $version " 'index($0, v) == 1 { dentro = 1; next } /^## / { dentro = 0 } dentro' "$1"; }
+          devlog="$(seccion DEVLOG.md)"
+          {
+            if [ -n "$devlog" ]; then
+              echo "$devlog"
+              echo
+              echo "## Cambios"
+            fi
+            seccion CHANGELOG.md
+          } > notas.md
           cat notas.md
       - uses: softprops/action-gh-release@v2
         with:
