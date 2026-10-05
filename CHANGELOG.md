@@ -35,8 +35,9 @@ sube cuando cambia la forma del archivo de guardado.
   a "Personalizado". Los guardados anteriores toman el de su tema.
 - Los pétalos son más grandes (y menos) y todos siguen el contorno en el
   mismo sentido, como un camino alrededor de cada tarjeta.
-- Nuevo tema Monocromo: fondo blanco, texto y botones negros, y grises
-  para el resaltado, los números fijos y los errores.
+- Nuevo tema Monocromo: solo blanco y negro (números, botones, errores,
+  jugadas de los jefes); el único gris es el resaltado de la fila, columna
+  y caja de la celda elegida.
 - Los números equivocados ahora van subrayados además de en el color de
   error, en todos los temas y tableros, para que se distingan aunque el
   tema no tenga rojo (Monocromo) o no se vean bien los colores.

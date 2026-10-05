@@ -68,7 +68,7 @@ export const TEMAS = [
   {
     id: 'monocromo',
     nombre: 'Monocromo',
-    colores: { fondo: '#ffffff', texto: '#111111', acento: '#1a1a1a', resaltado: '#ebebeb', logo: '#000000', pista: '#5c5c5c', acierto: '#3d3d3d', error: '#9a9a9a', jefe: '#525252' },
+    colores: { fondo: '#ffffff', texto: '#000000', acento: '#000000', resaltado: '#e3e3e3', logo: '#000000', pista: '#000000', acierto: '#000000', error: '#000000', jefe: '#000000' },
     borde: 'linea',
   },
   {
