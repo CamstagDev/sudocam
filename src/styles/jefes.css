@@ -44,24 +44,27 @@
   gap: 4px;
 }
 
-/* Con ilustración: la imagen llena la carta (3:4) y el texto va abajo,
-   sobre un degradado oscuro para que se lea con cualquier tema. */
+/* Con ilustración: la imagen llena la carta (3:4) y habla por sí sola (ya
+   trae el nombre del jefe), así que el emoji y el texto no se ven. El texto
+   sigue ahí para los lectores de pantalla. */
 .carta-cara.con-ilustracion,
 .carta-cara.con-ilustracion:hover {
   aspect-ratio: 3 / 4;
-  justify-content: flex-end;
-  padding: clamp(10px, 3vw, 14px);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.55) 30%, transparent 55%),
-    var(--ilustracion) center / cover no-repeat;
-  color: #f2f3f5;
+  padding: 0;
+  background: var(--ilustracion) center / cover no-repeat;
 }
 
 .carta-cara.con-ilustracion .game-card-icon {
   display: none;
 }
 
-.carta-cara.con-ilustracion .game-card-desc {
-  color: rgba(242, 243, 245, 0.8);
+.carta-cara.con-ilustracion .carta-cara-texto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .carta-boton-chico {

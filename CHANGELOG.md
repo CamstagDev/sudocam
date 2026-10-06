@@ -9,7 +9,9 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
-- Uriel y Uber Uriel tienen ilustración propia en su carta del menú.
+- Uriel y Uber Uriel tienen ilustración propia en su carta del menú. Las
+  cartas con ilustración muestran solo la imagen (ya trae el nombre del
+  jefe), sin texto encima.
 - El botón de la uber ya no empieza la pelea: da vuelta la carta para
   mostrar a la uber, y tocar la cara que se ve empieza la pelea contra
   ese jefe. Se puede ir y volver entre normal y uber; el botón ℹ abre la
