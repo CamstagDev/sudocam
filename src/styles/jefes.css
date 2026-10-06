@@ -7,14 +7,66 @@
 .carta-jefe {
   position: relative;
   display: flex;
+  perspective: 1200px;
 }
 
-.carta-jefe .game-card {
+/* Las dos caras van apiladas en la misma celda de la grilla (así miden lo
+   mismo) y la carta entera gira para mostrar una u otra. */
+.carta-jefe-giro {
   flex: 1;
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.carta-jefe.volteada .carta-jefe-giro {
+  transform: rotateY(180deg);
+}
+
+.carta-cara {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+}
+
+.carta-dorso {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carta-jefe-giro {
+    transition: none;
+  }
+}
+
+.carta-cara-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Con ilustración: la imagen llena la carta (3:4) y el texto va abajo,
+   sobre un degradado oscuro para que se lea con cualquier tema. */
+.carta-cara.con-ilustracion,
+.carta-cara.con-ilustracion:hover {
+  aspect-ratio: 3 / 4;
+  justify-content: flex-end;
+  padding: clamp(10px, 3vw, 14px);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.55) 30%, transparent 55%),
+    var(--ilustracion) center / cover no-repeat;
+  color: #f2f3f5;
+}
+
+.carta-cara.con-ilustracion .game-card-icon {
+  display: none;
+}
+
+.carta-cara.con-ilustracion .game-card-desc {
+  color: rgba(242, 243, 245, 0.8);
 }
 
 .carta-boton-chico {
   position: absolute;
+  z-index: 1;
   top: 10px;
   width: 30px;
   height: 30px;

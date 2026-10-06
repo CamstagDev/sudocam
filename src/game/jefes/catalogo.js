@@ -191,3 +191,9 @@ export const SECCIONES_INFORMACION = ['ataque1', 'ataque2', 'secreto'];
 export function imagenDeJefe(id) {
   return `./img/jefes/${id}.png`;
 }
+
+// Ilustración de la carta del menú (public/img/cartas/<id>.jpg, 3:4; ver
+// scripts/preparar-carta-jefe.ps1). Si no existe, la carta usa el emoji.
+export function imagenDeCarta(id) {
+  return `./img/cartas/${id}.jpg`;
+}
