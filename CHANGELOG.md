@@ -12,13 +12,19 @@ sube cuando cambia la forma del archivo de guardado.
 - Uriel y Uber Uriel tienen ilustración propia en su carta del menú. Las
   cartas con ilustración muestran solo la imagen (ya trae el nombre del
   jefe), sin texto encima.
+- La página de información de un jefe muestra su ilustración completa
+  arriba, en vez del retrato redondo (los que todavía no tienen
+  ilustración siguen con el retrato).
+- Uriel tiene un retrato nuevo para la miniatura redonda de la pelea.
 - El botón de la uber ya no empieza la pelea: da vuelta la carta para
   mostrar a la uber, y tocar la cara que se ve empieza la pelea contra
   ese jefe. Se puede ir y volver entre normal y uber; el botón ℹ abre la
   información del que se ve. Vale para todos los jefes (los que todavía
   no tienen ilustración muestran su emoji).
-- Nuevo script `scripts/preparar-carta-jefe.ps1`: achica la ilustración de
-  un jefe a 600x800 y la guarda en `public/img/cartas/<id>.jpg`.
+- Nuevo script `scripts/preparar-imagen-jefe.ps1`: achica la imagen de un
+  jefe y la guarda como JPEG, como ilustración de carta (600x800, en
+  `public/img/cartas/<id>.jpg`) o como retrato (256x256, en
+  `public/img/jefes/<id>.jpg`).
 
 ## 0.2.0 (2026-10-05)
 

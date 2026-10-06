@@ -1,10 +1,10 @@
-// Retrato redondo de un jefe: su imagen (public/img/jefes/<id>.png) o, si
-// todavía no existe, su emoji. Para agregar la imagen de un jefe basta con
-// poner el archivo con ese nombre; no hace falta tocar código.
+// Retrato redondo de un jefe (la miniatura de la pelea): su imagen
+// (public/img/jefes/<id>.jpg) o, si todavía no existe, su emoji.
 //
 //   const retrato = crearRetratoJefe('uriel', { tamano: 'grande' });
 
 import { JEFES, imagenDeJefe } from '../game/jefes/catalogo.js';
+import { buscarImagenDeJefe } from './imagen-de-jefe.js';
 
 export function crearRetratoJefe(id, { tamano = 'normal', etiqueta = 'button' } = {}) {
   const jefe = JEFES[id];
@@ -14,17 +14,13 @@ export function crearRetratoJefe(id, { tamano = 'normal', etiqueta = 'button' } 
   retrato.setAttribute('aria-label', jefe.nombre);
   retrato.innerHTML = `<span class="retrato-emoji">${jefe.emoji}</span>`;
 
-  // Los uber usan la imagen de su versión normal (si no tienen la propia).
-  const imagen = new Image();
-  imagen.alt = '';
-  imagen.addEventListener('load', () => retrato.replaceChildren(imagen));
-  imagen.addEventListener('error', () => {
-    if (jefe.normal && !imagen.dataset.respaldo) {
-      imagen.dataset.respaldo = '1';
-      imagen.src = imagenDeJefe(jefe.normal);
-    }
+  buscarImagenDeJefe(id, imagenDeJefe).then((ruta) => {
+    if (!ruta) return;
+    const imagen = new Image();
+    imagen.alt = '';
+    imagen.src = ruta;
+    retrato.replaceChildren(imagen);
   });
-  imagen.src = imagenDeJefe(id);
 
   return retrato;
 }

@@ -365,6 +365,15 @@ button.retrato-jefe {
 
 /* ---------- Información del jefe ---------- */
 
+.ilustracion-jefe {
+  display: block;
+  width: min(100%, 420px);
+  aspect-ratio: 3 / 4;
+  margin: 0 auto 16px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
 .estadisticas-jefe {
   margin-top: 14px;
 }

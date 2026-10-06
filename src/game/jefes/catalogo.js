@@ -186,14 +186,16 @@ export const ORDEN_JEFES = ['uriel', 'hecate', 'jormungandr', 'babel', 'typhon']
 
 export const SECCIONES_INFORMACION = ['ataque1', 'ataque2', 'secreto'];
 
-// Ruta de la imagen del jefe (public/img/jefes/<id>.png). Si no existe,
-// las pantallas usan el emoji.
+// Las imágenes de los jefes se preparan con scripts/preparar-imagen-jefe.ps1.
+// Si un jefe no tiene alguna, las pantallas usan su emoji.
+
+// Retrato redondo, la miniatura de la pelea (public/img/jefes/<id>.jpg).
 export function imagenDeJefe(id) {
-  return `./img/jefes/${id}.png`;
+  return `./img/jefes/${id}.jpg`;
 }
 
-// Ilustración de la carta del menú (public/img/cartas/<id>.jpg, 3:4; ver
-// scripts/preparar-carta-jefe.ps1). Si no existe, la carta usa el emoji.
+// Ilustración completa, 3:4: la carta del menú y la página de información
+// (public/img/cartas/<id>.jpg).
 export function imagenDeCarta(id) {
   return `./img/cartas/${id}.jpg`;
 }

@@ -3,10 +3,14 @@
 // Muestra al jefe y sus secciones (ataques, secreto). Cada sección se ve
 // tachada hasta cumplir lo que pide (ver seDesbloqueaCon en
 // game/jefes/catalogo.js), con una pista de cómo desbloquearla.
+//
+// Arriba va la ilustración completa del jefe (la de su carta) o, si todavía
+// no tiene, su retrato redondo al lado del nombre.
 
-import { JEFES, SECCIONES_INFORMACION } from '../game/jefes/catalogo.js';
+import { JEFES, SECCIONES_INFORMACION, imagenDeCarta } from '../game/jefes/catalogo.js';
 import { estadisticasDeJefe, jefeDesbloqueado } from '../game/jefes/registro.js';
 import { crearRetratoJefe } from '../ui/retrato-jefe.js';
+import { buscarImagenDeJefe } from '../ui/imagen-de-jefe.js';
 import { formatearSegundos } from '../ui/cronometro.js';
 
 function textoDeEstadisticas(jefe, stats) {
@@ -35,6 +39,19 @@ function tarjetaSeccion(seccion, stats) {
   return tarjeta;
 }
 
+async function ponerImagenDeCabecera(cabecera, id) {
+  const ruta = await buscarImagenDeJefe(id, imagenDeCarta);
+  if (!ruta) {
+    cabecera.querySelector('.cabecera-jefe-fila').prepend(crearRetratoJefe(id, { tamano: 'grande', etiqueta: 'div' }));
+    return;
+  }
+  const ilustracion = new Image();
+  ilustracion.className = 'ilustracion-jefe';
+  ilustracion.alt = JEFES[id].nombre;
+  ilustracion.src = ruta;
+  cabecera.prepend(ilustracion);
+}
+
 export const pantallaJefeInfo = {
   titulo: 'Información del jefe',
 
@@ -52,7 +69,6 @@ export const pantallaJefeInfo = {
     cabecera.className = 'card';
     cabecera.innerHTML = `
       <div class="cabecera-jefe-fila">
-        <div data-id="retrato"></div>
         <div class="cabecera-jefe-texto">
           <h1 class="cabecera-jefe-nombre"></h1>
           <p class="campo-ayuda" data-id="descripcion"></p>
@@ -60,7 +76,7 @@ export const pantallaJefeInfo = {
       </div>
       <p class="campo-ayuda estadisticas-jefe" data-id="estadisticas"></p>
     `;
-    cabecera.querySelector('[data-id="retrato"]').replaceWith(crearRetratoJefe(id, { tamano: 'grande', etiqueta: 'div' }));
+    ponerImagenDeCabecera(cabecera, id);
     cabecera.querySelector('h1').textContent = jefe.nombre;
     cabecera.querySelector('[data-id="descripcion"]').textContent = jefe.descripcion;
     cabecera.querySelector('[data-id="estadisticas"]').textContent = textoDeEstadisticas(jefe, stats);

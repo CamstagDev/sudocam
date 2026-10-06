@@ -17,6 +17,7 @@ import { navegar } from '../router.js';
 import { JEFES, imagenDeCarta } from '../game/jefes/catalogo.js';
 import { jefeDesbloqueado } from '../game/jefes/registro.js';
 import { elegirDificultadDeJefe } from './selector-dificultad-jefe.js';
+import { buscarImagenDeJefe } from './imagen-de-jefe.js';
 
 // Ruta de la pelea de cada jefe ya construido (la uber usa la misma, con
 // ?uber=1).
@@ -69,19 +70,13 @@ function rotularBotonChico(boton, { icono, titulo }) {
   boton.setAttribute('aria-label', titulo);
 }
 
-// Pone la ilustración de `id` de fondo en la cara; si no hay, prueba con la
-// de `respaldo` (la uber sin ilustración propia usa la de su versión
-// normal), y si tampoco, la cara se queda con el emoji.
-function ponerIlustracion(cara, id, respaldo) {
-  const imagen = new Image();
-  imagen.addEventListener('load', () => {
-    cara.style.setProperty('--ilustracion', `url("${imagen.src}")`);
-    cara.classList.add('con-ilustracion');
-  });
-  imagen.addEventListener('error', () => {
-    if (respaldo) ponerIlustracion(cara, respaldo);
-  });
-  imagen.src = imagenDeCarta(id);
+// Pone la ilustración del jefe de fondo en la cara; sin ilustración, la
+// cara se queda con el emoji y el texto.
+async function ponerIlustracion(cara, id) {
+  const ruta = await buscarImagenDeJefe(id, imagenDeCarta);
+  if (!ruta) return;
+  cara.style.setProperty('--ilustracion', `url("${ruta}")`);
+  cara.classList.add('con-ilustracion');
 }
 
 // Una cara de la carta: el jefe `id` (normal o uber). Si se puede pelear,
@@ -99,7 +94,7 @@ function crearCara(id, { pelear, clase }) {
     </span>
   `;
   if (pelear) cara.addEventListener('click', pelear);
-  ponerIlustracion(cara, id, jefe.normal);
+  ponerIlustracion(cara, id);
   return cara;
 }
 
