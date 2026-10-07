@@ -43,7 +43,7 @@
    lienzo (9x9, o más grande con huecos en un multi sudoku). */
 .tablero {
   display: grid;
-  gap: 1px;
+  gap: var(--grosor-linea, 1px);
   width: min(100%, 480px);
   background: var(--border-strong);
   border: 2px solid var(--border-strong);
@@ -61,7 +61,7 @@
   color: var(--player-number); /* los números que escribe el jugador */
   font-family: var(--font);
   font-size: clamp(16px, 5vw, 22px);
-  font-weight: 600;
+  font-weight: var(--peso-numeros, 600);
   cursor: pointer;
   touch-action: manipulation; /* sin el retraso de doble toque en el teléfono */
 }
@@ -69,11 +69,11 @@
 /* Líneas gruesas entre las cajas de 3x3 (las clases las calcula
    vista-tablero.js). */
 .celda.borde-caja-derecha {
-  border-right: 3px solid var(--accent);
+  border-right: var(--grosor-caja, 3px) solid var(--accent);
 }
 
 .celda.borde-caja-abajo {
-  border-bottom: 3px solid var(--accent);
+  border-bottom: var(--grosor-caja, 3px) solid var(--accent);
 }
 
 /* ---------- Multi sudoku: más celdas, tablero más ancho ---------- */

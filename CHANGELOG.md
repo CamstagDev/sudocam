@@ -9,6 +9,11 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Estilos de pelea: en la pelea contra Uber Uriel y Uber Hecate las líneas
+  de las cajas y los números brillan; contra Jörmungandr las líneas y los
+  números son más gruesos, y contra su uber las líneas todavía más. Solo
+  se ven con el tema del jefe. Los amarillos del tema de Uriel van un poco
+  más hacia el naranja.
 - Temas de jefes: Uriel (grises de piedra y dorados), Hecate (morados),
   Jörmungandr (azul profundo con turquesa brillante) y Uber Jörmungandr
   (rojos). En cada pelea se usa el tema del jefe (las uber sin tema propio

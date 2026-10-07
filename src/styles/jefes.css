@@ -673,3 +673,66 @@ button.retrato-jefe {
 @keyframes caja-pulsando {
   50% { box-shadow: inset 0 0 0 3px var(--boss); }
 }
+
+/* ---------- Estilos de pelea ---------- */
+
+/* Algunos jefes cambian el aspecto del tablero en su pelea, además de los
+   colores (tema.js pone data-estilo-pelea en <html>). */
+
+/* Jörmungandr: líneas de las cajas y números más gruesos; su uber, todavía
+   más. */
+[data-estilo-pelea="grueso"] {
+  --grosor-caja: 5px;
+  --peso-numeros: 800;
+}
+
+[data-estilo-pelea="muy-grueso"] {
+  --grosor-caja: 7px;
+  --peso-numeros: 900;
+}
+
+/* En estos estilos las líneas de las cajas se dibujan como una capa encima
+   del borde de cada celda que además tapa el hueco de 1px hasta la celda
+   vecina: así se ven continuas aunque sean gruesas, y pueden brillar sin
+   que las celdas de al lado las tapen. */
+[data-estilo-pelea] .celda.borde-caja-derecha,
+[data-estilo-pelea] .celda.borde-caja-abajo {
+  position: relative;
+}
+
+[data-estilo-pelea] .celda.borde-caja-derecha::after,
+[data-estilo-pelea] .celda.borde-caja-abajo::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+[data-estilo-pelea] .celda.borde-caja-derecha::after {
+  top: 0;
+  right: calc(-1 * var(--grosor-caja, 3px));
+  bottom: -1px;
+  width: var(--grosor-caja, 3px);
+}
+
+[data-estilo-pelea] .celda.borde-caja-abajo::before {
+  right: -1px;
+  bottom: calc(-1 * var(--grosor-caja, 3px));
+  left: 0;
+  height: var(--grosor-caja, 3px);
+}
+
+/* Uber Uriel y Uber Hecate: las líneas de las cajas y los números brillan. */
+[data-estilo-pelea="brillo"] .tablero {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+[data-estilo-pelea="brillo"] .celda .celda-valor {
+  text-shadow: 0 0 6px currentColor, 0 0 14px color-mix(in srgb, currentColor 60%, transparent);
+}
+
+[data-estilo-pelea="brillo"] .celda.borde-caja-derecha::after,
+[data-estilo-pelea="brillo"] .celda.borde-caja-abajo::before {
+  box-shadow: 0 0 8px 1px var(--accent);
+}

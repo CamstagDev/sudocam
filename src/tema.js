@@ -91,7 +91,7 @@ export const TEMAS_DE_JEFES = [
     nombre: 'Uriel',
     jefe: 'uriel',
     // Grises oscuros de piedra y el brillo dorado de sus patrones.
-    colores: { fondo: '#141416', texto: '#eee8da', numeros: '#eee8da', acento: '#d4a017', resaltado: '#2a2824', logo: '#f5c542', pista: '#f2d24c', acierto: '#8fd694', error: '#ff5a5a', jefe: '#ff7a1a' },
+    colores: { fondo: '#141416', texto: '#eee8da', numeros: '#eee8da', acento: '#d4a017', resaltado: '#2a2824', logo: '#f7b733', pista: '#f5ba3c', acierto: '#8fd694', error: '#ff5a5a', jefe: '#ff7a1a' },
     borde: 'linea',
   },
   {
@@ -119,6 +119,16 @@ export const TEMAS_DE_JEFES = [
     borde: 'linea',
   },
 ];
+
+// Estilo extra del tablero en la pelea contra cada jefe, aparte de los
+// colores (ver "Estilos de pelea" en styles/jefes.css). Solo en la pelea y
+// solo con el tema del jefe; no viaja con el tema si se elige para la app.
+const ESTILOS_DE_PELEA = {
+  uriel_uber: 'brillo', // líneas y números que brillan
+  hecate_uber: 'brillo',
+  jormungandr: 'grueso', // líneas y números más gruesos
+  jormungandr_uber: 'muy-grueso',
+};
 
 // Todos los temas que se pueden reconocer como "en uso".
 const TODOS_LOS_TEMAS = [...TEMAS, ...TEMAS_DE_JEFES];
@@ -304,6 +314,10 @@ export function aplicarTemaDePantalla(pantalla, params) {
   const idJefe = pantalla.jefe?.(params);
   const delJefe = idJefe && !leerPreferencias().sobrescribirTemasDeJefes ? temaDeJefe(idJefe) : null;
   aplicarTema(delJefe ? valoresDelTema(delJefe) : obtenerGuardado().perfil.tema);
+
+  const estilo = delJefe ? ESTILOS_DE_PELEA[idJefe] : null;
+  if (estilo) document.documentElement.dataset.estiloPelea = estilo;
+  else delete document.documentElement.dataset.estiloPelea;
 }
 
 export async function guardarTema(tema) {
