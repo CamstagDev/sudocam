@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+## 0.3.0 (2026-10-07)
+
 - Uriel y Uber Uriel tienen ilustración propia en su carta del menú. Las
   cartas con ilustración muestran solo la imagen (ya trae el nombre del
   jefe), sin texto encima.
