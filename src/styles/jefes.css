@@ -96,6 +96,10 @@
 
 /* ---------- Carrusel de jefes del menú ---------- */
 
+.titulo-jefes {
+  text-align: center;
+}
+
 .carrusel-jefes {
   display: flex;
   flex-direction: column;
@@ -179,6 +183,19 @@
 .carrusel-vecino.siguiente {
   margin-left: calc(var(--ancho-carta) * -0.22);
   transform: rotateY(-35deg);
+}
+
+/* En PC, todo el carrusel un 50 % más grande. */
+@media (min-width: 900px) {
+  .carrusel-escena {
+    --ancho-carta: 450px;
+  }
+
+  .carrusel-jefes .retrato-jefe.retrato-mini {
+    width: 64px;
+    height: 64px;
+    font-size: 30px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

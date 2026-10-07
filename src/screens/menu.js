@@ -49,7 +49,8 @@ function seccionDeJefes() {
 
   const seccion = document.createElement('section');
   seccion.className = 'menu-seccion';
-  seccion.innerHTML = '<h2 class="section-title">Jefes</h2>';
+  // El título va centrado sobre el carrusel (más adelante, una imagen).
+  seccion.innerHTML = '<h2 class="section-title titulo-jefes">Jefes</h2>';
   seccion.appendChild(crearCarruselJefes(desbloqueados));
   return seccion;
 }

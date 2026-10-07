@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- En PC el carrusel de jefes es un 50 % más grande (carta y miniaturas), y
+  el título "Jefes" va centrado sobre él.
 - Los jefes del menú ahora son un carrusel: se ve un jefe a la vez, con
   el anterior y el siguiente inclinados y semitransparentes a los costados
   (tocarlos lleva a ese jefe), y arriba una fila de miniaturas para saltar
