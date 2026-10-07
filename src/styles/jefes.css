@@ -150,9 +150,18 @@
   perspective: 900px;
 }
 
+/* La carta del medio, con un borde de neón del color del jefe (--neon lo
+   pone carrusel-jefes.js; sin tema, el acento). */
 .carrusel-actual {
+  --neon-color: var(--neon, var(--accent));
   flex: 0 0 var(--ancho-carta);
   z-index: 1;
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 0 0 2px var(--neon-color),
+    0 0 14px 2px color-mix(in srgb, var(--neon-color) 70%, transparent),
+    0 0 36px 6px color-mix(in srgb, var(--neon-color) 35%, transparent);
+  transition: box-shadow 0.4s ease;
   animation: carrusel-entra 0.25s ease;
 }
 

@@ -3,7 +3,6 @@ import { VERSION_APP } from '../version.js';
 import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
 import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
-import { ultimosLogros } from '../game/logros/logros.js';
 import { tituloDeModo } from '../ui/modos.js';
 
 const JUEGOS = [
@@ -18,23 +17,6 @@ function cartaJuego({ ruta, icono, titulo, desc }) {
       <span class="game-card-icon">${icono}</span>
       <span class="game-card-title">${titulo}</span>
       <span class="game-card-desc">${desc}</span>
-    </button>
-  `;
-}
-
-// Vitrina con los últimos logros ganados; no aparece hasta ganar el primero.
-function vitrinaDeLogros() {
-  const ultimos = ultimosLogros(6);
-  if (ultimos.length === 0) return '';
-  return `
-    <button type="button" class="card vitrina-logros" data-ruta="logros">
-      <span class="cabecera-tarjeta">
-        <span class="section-title">Últimos logros</span>
-        <span class="vitrina-logros-ver">Ver todos →</span>
-      </span>
-      <span class="vitrina-logros-iconos">
-        ${ultimos.map((logro) => `<span class="vitrina-logros-icono" title="${logro.nombre}">${logro.icono}</span>`).join('')}
-      </span>
     </button>
   `;
 }
@@ -62,8 +44,6 @@ export const pantallaMenu = {
         ${tituloDeModo(RUTA_INICIO)}
         <div class="game-grid">${JUEGOS.map(cartaJuego).join('')}</div>
       </section>
-
-      ${vitrinaDeLogros()}
 
       <section class="card">
         <h2 class="section-title">Partidas guardadas</h2>

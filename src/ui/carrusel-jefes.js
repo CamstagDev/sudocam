@@ -4,6 +4,9 @@
 // moverse. Arriba, una fila de miniaturas redondas para saltar a cualquier
 // jefe; la miniatura del jefe que está volteado muestra a su uber.
 //
+// La carta del medio brilla con un borde de neón del color del jefe (el de
+// su tema; ver tema.js), y cambia al de la uber si se da vuelta.
+//
 //   seccion.appendChild(crearCarruselJefes(['uriel', 'hecate', ...]));
 //
 // En el teléfono también se puede deslizar el dedo sobre la carta.
@@ -12,6 +15,7 @@ import { JEFES, imagenDeCarta } from '../game/jefes/catalogo.js';
 import { crearCartaJefe } from './carta-jefe.js';
 import { crearRetratoJefe } from './retrato-jefe.js';
 import { buscarImagenDeJefe } from './imagen-de-jefe.js';
+import { temaDeJefe } from '../tema.js';
 
 const DESLIZAMIENTO_MINIMO = 50; // px para que un deslizamiento cuente
 
@@ -21,6 +25,18 @@ let ultimoMirado = null;
 const volteados = new Set();
 
 const idVisible = (id) => (volteados.has(id) ? `${id}_uber` : id);
+
+// El neón de la carta: el color de acento del tema del jefe que se ve. Una
+// uber sin tema propio usa el de su versión normal, así que para que se
+// note la vuelta toma el color de las jugadas del jefe de ese tema.
+function ponerNeon(carta, id) {
+  const visible = idVisible(id);
+  const tema = temaDeJefe(visible);
+  const usaElDeLaNormal = visible !== id && tema?.jefe !== visible;
+  const color = usaElDeLaNormal ? tema?.colores.jefe : tema?.colores.acento;
+  if (color) carta.style.setProperty('--neon', color);
+  else carta.style.removeProperty('--neon');
+}
 
 function crearMiniatura(id, alTocar) {
   const miniatura = crearRetratoJefe(idVisible(id), { tamano: 'mini' });
@@ -83,10 +99,12 @@ export function crearCarruselJefes(ids) {
       alVoltear: (uber) => {
         if (uber) volteados.add(id);
         else volteados.delete(id);
+        ponerNeon(carta, id);
         dibujarMiniaturas();
       },
     });
     carta.classList.add('carrusel-actual');
+    ponerNeon(carta, id);
 
     const piezas = [carta];
     const anterior = vecinoDe(-1);

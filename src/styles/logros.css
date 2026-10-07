@@ -1,5 +1,5 @@
 /* ============================================================
-   SudoCam — logros: pantalla, vitrina del menú y aviso flotante
+   SudoCam — logros: pantalla, últimos logros y aviso flotante
    ============================================================ */
 
 /* ---------- Pantalla de Logros ---------- */
@@ -79,26 +79,6 @@
 }
 
 /* ---------- Vitrina "Últimos logros" del menú ---------- */
-
-.vitrina-logros {
-  display: block;
-  width: 100%;
-  font-family: var(--font);
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.vitrina-logros:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-strong);
-}
-
-.vitrina-logros-ver {
-  font-size: 13px;
-  color: var(--accent-strong);
-}
 
 .vitrina-logros-iconos {
   display: flex;

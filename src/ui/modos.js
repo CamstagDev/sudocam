@@ -13,7 +13,7 @@ export const MODOS = [
   {
     ruta: RUTA_INICIO,
     nombre: 'Clásico',
-    imagen: null,
+    imagen: './img/titulos/clasico.png',
     disponible: () => true,
   },
   {

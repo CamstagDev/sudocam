@@ -9,6 +9,12 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- El modo Clásico tiene su ilustración, en el menú "Modos" y como título
+  de su página.
+- La carta del medio del carrusel de jefes brilla con un borde de neón del
+  color del jefe, y cambia de color al darla vuelta a la uber.
+- "Últimos logros" pasa de la página de inicio a la pantalla de Logros
+  (arriba de todo).
 - El menú principal se separa en modos, cada uno con su página: Clásico
   (la de inicio: sudoku 9x9, multi sudoku, tutorial, últimos logros y
   partidas guardadas) y Jefes (el carrusel). Se cambia de modo con el menú

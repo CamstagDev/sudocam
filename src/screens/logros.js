@@ -5,6 +5,7 @@
 
 import { SECCIONES } from '../game/logros/catalogo.js';
 import { logrosVisiblesConEstado } from '../game/logros/visibles.js';
+import { ultimosLogros } from '../game/logros/logros.js';
 
 function formatearFecha(iso) {
   return new Date(iso).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -34,6 +35,21 @@ function tarjetaLogro(logro) {
   `;
 }
 
+// Los últimos logros ganados, arriba de todo; no aparece hasta ganar el
+// primero.
+function vitrinaDeLogros() {
+  const ultimos = ultimosLogros(6);
+  if (ultimos.length === 0) return '';
+  return `
+    <section class="card vitrina-logros">
+      <h2 class="section-title">Últimos logros</h2>
+      <div class="vitrina-logros-iconos">
+        ${ultimos.map((logro) => `<span class="vitrina-logros-icono" title="${logro.nombre}">${logro.icono}</span>`).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function contarDesbloqueados(logros) {
   return logros.filter((logro) => logro.desbloqueado).length;
 }
@@ -48,7 +64,7 @@ export const pantallaLogros = {
   render(contenedor) {
     const porId = new Map(logrosVisiblesConEstado().map((logro) => [logro.id, logro]));
 
-    contenedor.innerHTML = SECCIONES.map((seccion) => {
+    contenedor.innerHTML = vitrinaDeLogros() + SECCIONES.map((seccion) => {
       const logros = seccion.logros.filter((logro) => porId.has(logro.id)).map((logro) => porId.get(logro.id));
       if (logros.length === 0) return '';
       return `
