@@ -13,6 +13,11 @@
 // `imagen` (opcional) es la ruta de un dibujo para el centro del icono; se
 // ve el emoji hasta que carga, o si no existe.
 //
+// `silenciosa: true` muestra solo el dibujo, sin ningún indicador: sin
+// anillo de carga, sin destello, sin contador y sin cambios de aspecto
+// (los uber que no telegrafían sus ataques). Los métodos siguen existiendo
+// pero no hacen nada, así la pelea no tiene que saber si es silenciosa.
+//
 // El anillo es un <circle> de SVG cuyo trazo se "destapa" con
 // stroke-dashoffset (más nítido que un conic-gradient en algunos
 // navegadores).
@@ -33,9 +38,11 @@ function ponerImagen(elemento, ruta) {
   dibujo.src = ruta;
 }
 
-export function crearIconoHabilidad({ emoji, nombre, imagen = null }) {
+const NO_HACER_NADA = () => {};
+
+export function crearIconoHabilidad({ emoji, nombre, imagen = null, silenciosa = false }) {
   const elemento = document.createElement('div');
-  elemento.className = 'icono-habilidad';
+  elemento.className = `icono-habilidad ${silenciosa ? 'silenciosa' : ''}`;
   elemento.title = nombre;
   elemento.innerHTML = `
     <svg class="icono-habilidad-anillo" viewBox="0 0 42 42" aria-hidden="true">
@@ -96,5 +103,15 @@ export function crearIconoHabilidad({ emoji, nombre, imagen = null }) {
   }
 
   pintar(0);
+  if (silenciosa) {
+    return {
+      elemento,
+      cargar: NO_HACER_NADA,
+      reiniciar: NO_HACER_NADA,
+      destello: NO_HACER_NADA,
+      cambiar: NO_HACER_NADA,
+      ponerContador: NO_HACER_NADA,
+    };
+  }
   return { elemento, cargar, reiniciar, destello, cambiar, ponerContador };
 }

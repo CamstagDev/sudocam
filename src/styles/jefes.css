@@ -130,10 +130,28 @@ button.retrato-jefe {
 
 /* ---------- Cabecera de la pelea ---------- */
 
+/* Dos columnas: el retrato, cuadrado y tan alto como la columna de la
+   derecha (el lado lo calcula cabecera-jefe.js en --lado-retrato), y todo
+   lo demás. */
 .cabecera-jefe {
+  display: grid;
+  grid-template-columns: var(--lado-retrato, 72px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 3vw, 20px);
+}
+
+.cabecera-jefe .retrato-jefe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  font-size: calc(var(--lado-retrato, 72px) * 0.45);
+}
+
+.cabecera-jefe-contenido {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  min-width: 0;
 }
 
 .cabecera-jefe-fila {
@@ -240,6 +258,11 @@ button.retrato-jefe {
   outline-offset: 3px;
 }
 
+/* Silenciosa: solo el dibujo, sin el anillo de carga. */
+.icono-habilidad.silenciosa .icono-habilidad-anillo {
+  display: none;
+}
+
 .icono-habilidad.disparada {
   animation: habilidad-disparada 0.6s ease;
 }
@@ -250,17 +273,19 @@ button.retrato-jefe {
 
 /* ---------- Marcador (tira y afloja) ---------- */
 
+/* Va en la columna de la derecha de la cabecera, al lado del retrato:
+   espacios ajustados para que a la barra le quede lugar en el teléfono. */
 .marcador {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(6px, 2vw, 12px);
 }
 
 .marcador-lado {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 48px;
+  min-width: clamp(34px, 9vw, 48px);
 }
 
 .marcador-lado small {

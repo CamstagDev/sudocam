@@ -63,7 +63,7 @@ export const pantallaTyphon = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
-      mostrarHabilidades: true,
+      habilidadesSilenciosas: false,
       fases: uber,
       habilidades: [
         uber

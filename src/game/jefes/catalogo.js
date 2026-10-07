@@ -51,7 +51,7 @@ export const JEFES = {
     },
     secreto: {
       titulo: '¿Secreto?',
-      texto: 'Toca 3 veces el retrato de Uriel durante la pelea para forzar su fase 2 al instante, sin esperar a que se llene la mitad del tablero.',
+      texto: 'Uriel no soporta que lo afanen. Si le insistes en la cara unas cuantas veces durante la pelea, quizá pierda la paciencia antes de tiempo.',
       seDesbloqueaCon: (stats) => stats.victorias >= 5 && stats.victoriasRapidas >= 1,
       pista: 'Gana a Uriel 5 veces, con al menos una en menos de 3:33, para desbloquear esto.',
     },

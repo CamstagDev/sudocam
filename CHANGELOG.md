@@ -24,7 +24,13 @@ sube cuando cambia la forma del archivo de guardado.
   esas secciones pasan a ser de ambientación: insinúan cómo funciona cada
   habilidad sin explicarla paso a paso.
 - Uriel tiene historia: su descripción cuenta de dónde salió la máquina de
-  patrones.
+  patrones. Su secreto también pasa a ser de ambientación.
+- Nueva cabecera de las peleas: el retrato del jefe va a la izquierda, tan
+  alto como la tarjeta, y nombre, fase, habilidades y marcador a su
+  derecha (en el teléfono el retrato ocupa a lo sumo un tercio del ancho).
+- Uber Uriel y Uber Hecate ahora muestran los iconos de sus habilidades,
+  todos desde el principio, pero sin ningún indicador: ni carga, ni
+  destellos, ni cambios. Se ve el dibujo, no cuándo van a atacar.
 - Nueva carta de habilidad: icono, nombre y texto de una habilidad. La
   página de información del jefe es ahora su ilustración y su historia
   con esas cartas apiladas debajo, y en la pelea, pasar el mouse (o tocar,

@@ -1,6 +1,6 @@
-// Tarjeta de arriba en una pelea de jefe: retrato, nombre, fase,
-// descripción, iconos de habilidades y, según el jefe, un marcador de
-// puntos o un reloj grande.
+// Tarjeta de arriba en una pelea de jefe: a la izquierda el retrato, tan
+// alto como todo lo demás; a la derecha nombre, fase, descripción, iconos
+// de habilidades y, según el jefe, un marcador de puntos o un reloj grande.
 //
 //   const cabecera = crearCabeceraJefe(contenedor, {
 //     id: 'uriel', uber: false,
@@ -8,8 +8,10 @@
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
 //     fases: true,         false si el jefe no tiene fases (Babel)
-//     mostrarHabilidades:  por defecto ocultas en los uber de Uriel y Hecate,
-//                          que no telegrafían nada; los demás uber las muestran
+//     habilidadesSilenciosas: por defecto en los uber de Uriel y Hecate, que no
+//                          telegrafían nada: se ven todos los iconos desde el
+//                          principio, pero sin carga, destellos ni cambios
+//                          (ver icono-habilidad.js). Los demás uber pasan false.
 //   });
 //   Con `seccion` (la del catálogo), pasar el mouse por el icono muestra la
 //   carta de esa habilidad (ver carta-habilidad.js), tal como se ve en la
@@ -40,6 +42,30 @@ function mostrarCartaAlPasar(elemento, seccion, idNormal) {
   }));
 }
 
+// El retrato mide de lado lo mismo que el alto de la columna de la derecha
+// (a lo sumo un tercio del ancho de la tarjeta, para que en el teléfono le
+// quede espacio a lo demás). Se recalcula si cambia el tamaño: al girar el
+// teléfono, al aparecer una habilidad...
+const FRACCION_MAXIMA_DEL_ANCHO = 1 / 3;
+
+function ajustarRetratoAlAlto(tarjeta, contenido) {
+  let pendiente = false;
+  const ajustar = () => {
+    pendiente = false;
+    const lado = Math.min(contenido.offsetHeight, tarjeta.clientWidth * FRACCION_MAXIMA_DEL_ANCHO);
+    tarjeta.style.setProperty('--lado-retrato', `${Math.round(lado)}px`);
+  };
+  // En el siguiente cuadro, para no cambiar tamaños mientras el navegador
+  // todavía está avisando de cambios de tamaño.
+  const observador = new ResizeObserver(() => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(ajustar);
+  });
+  observador.observe(contenido);
+  observador.observe(tarjeta);
+}
+
 export function crearCabeceraJefe(contenedor, {
   id,
   uber = false,
@@ -47,7 +73,7 @@ export function crearCabeceraJefe(contenedor, {
   marcador = false,
   reloj = false,
   fases = true,
-  mostrarHabilidades = !uber,
+  habilidadesSilenciosas = uber,
 }) {
   const jefe = JEFES[id];
   const nombre = jefe.normal ? JEFES[jefe.normal].nombre : jefe.nombre;
@@ -55,8 +81,8 @@ export function crearCabeceraJefe(contenedor, {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card cabecera-jefe';
   tarjeta.innerHTML = `
-    <div class="cabecera-jefe-fila">
-      <div data-id="retrato"></div>
+    <div data-id="retrato"></div>
+    <div class="cabecera-jefe-contenido" data-id="contenido">
       <div class="cabecera-jefe-texto">
         <p class="cabecera-jefe-nombre">
           ${nombre}
@@ -65,10 +91,9 @@ export function crearCabeceraJefe(contenedor, {
         </p>
         <p class="campo-ayuda" data-id="descripcion"></p>
       </div>
-    </div>
-    ${reloj ? '<p class="reloj-jefe" data-id="reloj"></p>' : ''}
-    <div class="habilidades" data-id="habilidades"></div>
-    ${marcador ? `
+      ${reloj ? '<p class="reloj-jefe" data-id="reloj"></p>' : ''}
+      <div class="habilidades" data-id="habilidades"></div>
+      ${marcador ? `
       <div class="marcador">
         <span class="marcador-lado jugador"><small>Tú</small><strong data-id="puntos-jugador">0</strong></span>
         <span class="marcador-barra">
@@ -77,22 +102,25 @@ export function crearCabeceraJefe(contenedor, {
         </span>
         <span class="marcador-lado jefe"><small>${nombre}</small><strong data-id="puntos-jefe">0</strong></span>
       </div>` : ''}
+    </div>
   `;
   contenedor.appendChild(tarjeta);
   const parte = (nombreParte) => tarjeta.querySelector(`[data-id="${nombreParte}"]`);
 
   const retrato = crearRetratoJefe(id);
   parte('retrato').replaceWith(retrato);
+  ajustarRetratoAlAlto(tarjeta, parte('contenido'));
 
   const iconos = {};
   for (const habilidad of habilidades) {
-    const icono = crearIconoHabilidad(habilidad);
-    icono.elemento.classList.toggle('hidden', Boolean(habilidad.oculta));
+    const icono = crearIconoHabilidad({ ...habilidad, silenciosa: habilidadesSilenciosas });
+    // Que una habilidad aparezca a mitad de pelea ya es una pista.
+    icono.elemento.classList.toggle('hidden', Boolean(habilidad.oculta) && !habilidadesSilenciosas);
     if (habilidad.seccion) mostrarCartaAlPasar(icono.elemento, habilidad.seccion, jefe.normal ?? id);
     parte('habilidades').appendChild(icono.elemento);
     iconos[habilidad.id] = icono;
   }
-  if (!mostrarHabilidades || habilidades.length === 0) parte('habilidades').classList.add('hidden');
+  if (habilidades.length === 0) parte('habilidades').classList.add('hidden');
 
   return {
     retrato,

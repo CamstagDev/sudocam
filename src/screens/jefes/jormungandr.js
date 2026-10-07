@@ -56,7 +56,7 @@ export const pantallaJormungandr = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
-      mostrarHabilidades: true,
+      habilidadesSilenciosas: false,
       habilidades: [
         { id: 'comer', ...POR_FASE[1].habilidad },
         { id: 'ouroboros', emoji: '🐍', nombre: 'Ouroboros' },
