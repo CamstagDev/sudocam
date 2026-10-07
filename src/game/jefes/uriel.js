@@ -7,7 +7,7 @@
 //    azar busca una fila, columna o caja a la que solo le falte un número.
 //  - Búsqueda por descarte, "3x3x3" (cada 30 s, desde la fase 2): un número
 //    que solo cabe en un hueco de la caja, cruzando filas y columnas.
-//  - Pasiva, "Predictable...": cada error del jugador hace que Uriel
+//  - Pasiva, "Predecible...": cada error del jugador hace que Uriel
 //    revise al instante la caja donde ocurrió.
 // La fase 2 empieza cuando se llena la mitad de las casillas que
 // empezaron vacías (o con el truco secreto del retrato).

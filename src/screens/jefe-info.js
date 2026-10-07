@@ -1,53 +1,22 @@
 // Pantalla "Información del jefe": #/jefe?id=uriel
 //
-// Muestra al jefe y sus secciones (ataques, secreto). Cada sección se ve
-// tachada hasta cumplir lo que pide (ver seDesbloqueaCon en
-// game/jefes/catalogo.js), con una pista de cómo desbloquearla.
-//
-// Arriba va la ilustración completa del jefe (la de su carta) o, si todavía
-// no tiene, su retrato redondo al lado del nombre.
+// Arriba, el jefe: su ilustración completa (la de su carta) o, si todavía
+// no tiene, su retrato redondo; su nombre, su historia y tus estadísticas.
+// Debajo, una carta por cada habilidad, la pasiva y el secreto (ver
+// ui/carta-habilidad.js). Cada carta se ve bloqueada hasta cumplir lo que
+// pide (ver seDesbloqueaCon en game/jefes/catalogo.js), con una pista de
+// cómo desbloquearla.
 
-import { JEFES, SECCIONES_INFORMACION, imagenDeCarta, imagenDeHabilidad } from '../game/jefes/catalogo.js';
-import { estadisticasDeJefe, jefeDesbloqueado } from '../game/jefes/registro.js';
+import { JEFES, SECCIONES_INFORMACION, imagenDeCarta } from '../game/jefes/catalogo.js';
+import { estadisticasDeJefe, jefeDesbloqueado, seccionDesbloqueada } from '../game/jefes/registro.js';
 import { crearRetratoJefe } from '../ui/retrato-jefe.js';
+import { crearCartaHabilidad } from '../ui/carta-habilidad.js';
 import { buscarImagenDeJefe } from '../ui/imagen-de-jefe.js';
 import { formatearSegundos } from '../ui/cronometro.js';
 
 function textoDeEstadisticas(jefe, stats) {
   if (stats.victorias === 0) return `Todavía no le has ganado a ${jefe.nombre}.`;
   return `Victorias: ${stats.victorias} · Mejor tiempo: ${formatearSegundos(stats.mejorTiempo)}`;
-}
-
-// El mismo dibujo que la habilidad tiene en la pelea; si no existe, se quita.
-function iconoDeSeccion(id) {
-  const icono = new Image();
-  icono.className = 'icono-seccion-jefe';
-  icono.alt = '';
-  icono.addEventListener('error', () => icono.remove());
-  icono.src = imagenDeHabilidad(id);
-  return icono;
-}
-
-function tarjetaSeccion(seccion, stats) {
-  // Las secciones de los uber no tienen condición: se ven siempre.
-  const desbloqueada = !seccion.seDesbloqueaCon || seccion.seDesbloqueaCon(stats);
-  const tarjeta = document.createElement('section');
-  tarjeta.className = `card seccion-jefe ${desbloqueada ? '' : 'bloqueada'}`;
-
-  if (desbloqueada) {
-    tarjeta.innerHTML = '<h2 class="section-title titulo-seccion-jefe"><span></span></h2><p></p>';
-    tarjeta.querySelector('h2 span').textContent = seccion.titulo;
-    tarjeta.querySelector('p').textContent = seccion.texto;
-    if (seccion.imagen) tarjeta.querySelector('h2').prepend(iconoDeSeccion(seccion.imagen));
-  } else {
-    tarjeta.innerHTML = `
-      <h2 class="section-title">???</h2>
-      <div class="texto-tachado" aria-hidden="true"><span></span><span></span><span></span></div>
-      <p class="campo-ayuda pista-seccion"></p>
-    `;
-    tarjeta.querySelector('.pista-seccion').textContent = seccion.pista;
-  }
-  return tarjeta;
 }
 
 async function ponerImagenDeCabecera(cabecera, id) {
@@ -82,7 +51,7 @@ export const pantallaJefeInfo = {
       <div class="cabecera-jefe-fila">
         <div class="cabecera-jefe-texto">
           <h1 class="cabecera-jefe-nombre"></h1>
-          <p class="campo-ayuda" data-id="descripcion"></p>
+          <p class="descripcion-jefe" data-id="descripcion"></p>
         </div>
       </div>
       <p class="campo-ayuda estadisticas-jefe" data-id="estadisticas"></p>
@@ -93,8 +62,11 @@ export const pantallaJefeInfo = {
     cabecera.querySelector('[data-id="estadisticas"]').textContent = textoDeEstadisticas(jefe, stats);
     contenedor.appendChild(cabecera);
 
-    for (const nombreSeccion of SECCIONES_INFORMACION) {
-      if (jefe[nombreSeccion]) contenedor.appendChild(tarjetaSeccion(jefe[nombreSeccion], stats));
+    const cartas = document.createElement('div');
+    cartas.className = 'cartas-habilidades';
+    for (const seccion of SECCIONES_INFORMACION.map((nombre) => jefe[nombre]).filter(Boolean)) {
+      cartas.appendChild(crearCartaHabilidad(seccion, { desbloqueada: seccionDesbloqueada(seccion, stats) }));
     }
+    contenedor.appendChild(cartas);
   },
 };

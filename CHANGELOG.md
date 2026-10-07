@@ -18,11 +18,19 @@ sube cuando cambia la forma del archivo de guardado.
 - Uriel tiene un retrato nuevo para la miniatura redonda de la pelea.
 - Las habilidades de Uriel tienen nombre e icono propios, iguales en la
   pelea y en su página de información: "123..." (antes Búsqueda fácil),
-  "3x3x3" (antes Búsqueda por descarte) y su pasiva "Predictable..."
+  "3x3x3" (antes Búsqueda por descarte) y su pasiva "Predecible..."
   (antes Purga del Débil), que ahora también tiene su sección en la
   página de información (se ve con la primera victoria). Los textos de
   esas secciones pasan a ser de ambientación: insinúan cómo funciona cada
   habilidad sin explicarla paso a paso.
+- Uriel tiene historia: su descripción cuenta de dónde salió la máquina de
+  patrones.
+- Nueva carta de habilidad: icono, nombre y texto de una habilidad. La
+  página de información del jefe es ahora su ilustración y su historia
+  con esas cartas apiladas debajo, y en la pelea, pasar el mouse (o tocar,
+  en el teléfono) por el icono de una habilidad muestra su carta flotando.
+  Mientras la habilidad no se haya investigado, la carta sale bloqueada,
+  igual que en la página de información.
 - El botón de la uber ya no empieza la pelea: da vuelta la carta para
   mostrar a la uber, y tocar la cara que se ve empieza la pelea contra
   ese jefe. Se puede ir y volver entre normal y uber; el botón ℹ abre la

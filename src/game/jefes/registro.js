@@ -85,11 +85,18 @@ export async function registrarVictoriaDeJefe(jefe, { segundos, errores, usoNota
 // Todas estas reglas leen el guardado actual salvo que se les pase otro
 // (p. ej. el resumen de un archivo antes de importarlo).
 
-// Las tres secciones de su página de información desbloqueadas.
+// Si una sección de la página de información (una habilidad, el secreto...)
+// ya se ve con estas estadísticas. Las de los uber no tienen condición: se
+// ven siempre.
+export function seccionDesbloqueada(seccion, stats) {
+  return !seccion.seDesbloqueaCon || seccion.seDesbloqueaCon(stats);
+}
+
+// Todas las secciones de su página de información desbloqueadas.
 export function estaCompletamenteInvestigado(id, guardado = obtenerGuardado()) {
   const jefe = JEFES[id];
   const stats = estadisticasDeJefe(id, guardado);
-  return SECCIONES_INFORMACION.every((seccion) => !jefe[seccion] || jefe[seccion].seDesbloqueaCon(stats));
+  return SECCIONES_INFORMACION.every((seccion) => !jefe[seccion] || seccionDesbloqueada(jefe[seccion], stats));
 }
 
 const haVencidoA = (id, guardado) => estadisticasDeJefe(id, guardado).victorias > 0;

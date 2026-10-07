@@ -21,7 +21,7 @@ const ganoEnMenosDe = (segundos) => (stats) => stats.mejorTiempo !== null && sta
 export const JEFES = {
   uriel: {
     nombre: 'Uriel',
-    descripcion: 'El jefe de los patrones: el más fácil de SudoCam... por ahora.',
+    descripcion: 'Dicen que Uriel nació en el primer tablero que alguien dejó a medio resolver: una máquina hecha de filas, columnas y cajas que se quedó contando cuando el jugador se fue. Desde entonces recorre cada sudoku buscando el patrón que los resuelve todos. Todavía no lo encuentra... pero cada partida lo acerca un poco más.',
     emoji: '👹',
     // Los textos son de ambientación: insinúan cómo funciona cada habilidad
     // sin explicarla. Las reglas exactas están en game/jefes/uriel.js.
@@ -29,7 +29,7 @@ export const JEFES = {
       titulo: '123...',
       emoji: '🔍',
       imagen: 'uriel_facil',
-      texto: 'Uno, dos, tres... Uriel cuenta sin descanso, y cada tanto posa la mirada en una caja cualquiera. Lo que está a un solo número de quedar completo nunca escapa a sus ojos.',
+      texto: 'Uno, dos, tres... Uriel nunca pierde la cuenta. De vez en cuando se detiene en una caja cualquiera, y donde a ti te falta poco, a él le falta menos.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Uriel para desbloquear esto.',
     },
@@ -37,15 +37,15 @@ export const JEFES = {
       titulo: '3x3x3',
       emoji: '🧮',
       imagen: 'uriel_descarte',
-      texto: 'Cuando la mitad del tablero ya está escrita, Uriel aprende a mirar de a tres: tres filas, tres columnas, tres cajas. Si un número ya pasó por dos de ellas, sabe en qué hueco tiene que caer el último.',
+      texto: 'A mitad de camino, Uriel empieza a ver de a tres. Lo que ya apareció dos veces le dice dónde va a caer la tercera.',
       seDesbloqueaCon: ganoEnMenosDe(300),
       pista: 'Gana a Uriel en menos de 5:00 para desbloquear esto.',
     },
     pasiva: {
-      titulo: 'Predictable...',
+      titulo: 'Predecible...',
       emoji: '⚖️',
       imagen: 'uriel_pasiva',
-      texto: 'Cada tropiezo deja un rastro, y Uriel no se cansa de seguirlo. Allí donde te equivocas, él mira primero.',
+      texto: 'Un error es una huella, y Uriel sabe leer huellas. Donde tropiezas, él ya está mirando.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Uriel para desbloquear esto.',
     },
@@ -155,7 +155,7 @@ export const JEFES = {
     normal: 'uriel',
     ataque1: {
       titulo: 'Ataque doblado',
-      texto: 'Uriel ya no se conforma con una sola caja: 123... y 3x3x3 miran dos a la vez.',
+      texto: 'Dos miradas, una sola cuenta. Lo que antes revisaba de a una caja, ahora lo revisa de a dos.',
     },
   },
   hecate_uber: {

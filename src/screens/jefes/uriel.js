@@ -22,16 +22,16 @@ import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 const MS_POR_CELDA_REVISADA = 160; // velocidad de la animación de búsqueda
 const TOQUES_SECRETO = 3; // toques al retrato para forzar la fase 2
 
-// Nombres e iconos de las habilidades: los mismos de su página de
+// Nombres, iconos y cartas de las habilidades: los mismos de su página de
 // información (game/jefes/catalogo.js).
 const { ataque1: FACIL, ataque2: DESCARTE, pasiva: PASIVA } = JEFES.uriel;
 
 function habilidad(id, seccion, extra = {}) {
-  return { id, emoji: seccion.emoji, nombre: seccion.titulo, imagen: imagenDeHabilidad(seccion.imagen), ...extra };
+  return { id, emoji: seccion.emoji, nombre: seccion.titulo, imagen: imagenDeHabilidad(seccion.imagen), seccion, ...extra };
 }
 
 const DESCRIPCION_FASE = {
-  1: JEFES.uriel.descripcion,
+  1: `Uriel usa ${FACIL.titulo} cada 15 s. Llena más casillas que él antes de que se complete el tablero.`,
   2: `Fase 2: cada 30 s Uriel también usa ${DESCARTE.titulo}, además de ${FACIL.titulo} cada 15 s.`,
 };
 

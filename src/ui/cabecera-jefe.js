@@ -4,13 +4,17 @@
 //
 //   const cabecera = crearCabeceraJefe(contenedor, {
 //     id: 'uriel', uber: false,
-//     habilidades: [{ id: 'facil', emoji: '🔍', nombre: '123...', imagen, oculta: false }],
+//     habilidades: [{ id: 'facil', emoji: '🔍', nombre: '123...', imagen, oculta: false, seccion }],
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
 //     fases: true,         false si el jefe no tiene fases (Babel)
 //     mostrarHabilidades:  por defecto ocultas en los uber de Uriel y Hecate,
 //                          que no telegrafían nada; los demás uber las muestran
 //   });
+//   Con `seccion` (la del catálogo), pasar el mouse por el icono muestra la
+//   carta de esa habilidad (ver carta-habilidad.js), tal como se ve en la
+//   página de información: bloqueada mientras no se haya investigado.
+//
 //   cabecera.retrato                  el botón del retrato (para secretos)
 //   cabecera.habilidades.facil        ver icono-habilidad.js
 //   cabecera.mostrarFase(2, 'Descripción de la fase 2');
@@ -20,7 +24,21 @@
 import { JEFES } from '../game/jefes/catalogo.js';
 import { crearRetratoJefe } from './retrato-jefe.js';
 import { crearIconoHabilidad } from './icono-habilidad.js';
+import { crearCartaHabilidad } from './carta-habilidad.js';
+import { mostrarAlPasar } from './carta-flotante.js';
+import { estadisticasDeJefe, seccionDesbloqueada } from '../game/jefes/registro.js';
 import { formatearSegundos } from './cronometro.js';
+
+// La carta de la habilidad reemplaza al cartelito del navegador (title).
+// Se desbloquea con las estadísticas del jefe normal, como su página.
+function mostrarCartaAlPasar(elemento, seccion, idNormal) {
+  elemento.removeAttribute('title');
+  elemento.classList.add('con-carta');
+  elemento.setAttribute('aria-label', seccion.titulo);
+  mostrarAlPasar(elemento, () => crearCartaHabilidad(seccion, {
+    desbloqueada: seccionDesbloqueada(seccion, estadisticasDeJefe(idNormal)),
+  }));
+}
 
 export function crearCabeceraJefe(contenedor, {
   id,
@@ -68,9 +86,11 @@ export function crearCabeceraJefe(contenedor, {
 
   const iconos = {};
   for (const habilidad of habilidades) {
-    iconos[habilidad.id] = crearIconoHabilidad(habilidad);
-    iconos[habilidad.id].elemento.classList.toggle('hidden', Boolean(habilidad.oculta));
-    parte('habilidades').appendChild(iconos[habilidad.id].elemento);
+    const icono = crearIconoHabilidad(habilidad);
+    icono.elemento.classList.toggle('hidden', Boolean(habilidad.oculta));
+    if (habilidad.seccion) mostrarCartaAlPasar(icono.elemento, habilidad.seccion, jefe.normal ?? id);
+    parte('habilidades').appendChild(icono.elemento);
+    iconos[habilidad.id] = icono;
   }
   if (!mostrarHabilidades || habilidades.length === 0) parte('habilidades').classList.add('hidden');
 
