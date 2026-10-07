@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Uber Uriel tiene su propio retrato para la miniatura redonda de la pelea
+  (antes usaba el de Uriel).
 - Uriel se mueve antes: pasa a fase 2 con el 25 % del tablero lleno (antes
   la mitad), "123..." va cada 10 s (5 s en la uber) y "3x3x3" cada 20 s
   (15 s en la uber). Su pasiva "Predecible..." ahora prueba las dos
