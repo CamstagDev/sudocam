@@ -9,6 +9,14 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Temas de jefes: Uriel (grises de piedra y dorados), Hecate (morados),
+  Jörmungandr (azul profundo con turquesa brillante) y Uber Jörmungandr
+  (rojos). En cada pelea se usa el tema del jefe (las uber sin tema propio
+  usan el de su versión normal). En Personalización, el tema de cada jefe
+  se puede elegir para toda la app después de vencerlo una vez, y la nueva
+  preferencia "Sobrescribir temas de jefes" (apagada por defecto) hace que
+  las peleas usen tus propios colores. Esa preferencia no aparece hasta
+  desbloquear algún jefe.
 - Jörmungandr y Uber Jörmungandr tienen ilustración en su carta, retratos de pelea para la normal y la uber, e iconos para Hambre,
   Glotonería y Ouroboros, con su carta en la pelea y en la página de
   información. En la pelea, Hambre y Glotonería son dos iconos: se ve el

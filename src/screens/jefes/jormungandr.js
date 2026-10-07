@@ -47,6 +47,8 @@ let limpiar = () => {};
 
 export const pantallaJormungandr = {
   titulo: 'Pelea de jefe',
+  // Contra quién es la pelea (para usar su tema; ver tema.js).
+  jefe: (params) => (params.get('uber') === '1' ? 'jormungandr_uber' : 'jormungandr'),
   subtitulo: 'Resuelve antes de que se lo coma todo',
 
   render(contenedor, params) {

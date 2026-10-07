@@ -41,6 +41,8 @@ let visita = 0; // para ignorar un tablero que termina de generarse después de 
 
 export const pantallaTyphon = {
   titulo: 'Pelea de jefe',
+  // Contra quién es la pelea (para usar su tema; ver tema.js).
+  jefe: (params) => (params.get('uber') === '1' ? 'typhon_uber' : 'typhon'),
   subtitulo: 'Resuelve los tableros mientras giran',
 
   async render(contenedor, params) {

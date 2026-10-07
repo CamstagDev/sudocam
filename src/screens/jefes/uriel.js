@@ -38,6 +38,8 @@ let limpiar = () => {};
 
 export const pantallaUriel = {
   titulo: 'Pelea de jefe',
+  // Contra quién es la pelea (para usar su tema; ver tema.js).
+  jefe: (params) => (params.get('uber') === '1' ? 'uriel_uber' : 'uriel'),
   subtitulo: 'Llena más casillas que Uriel',
 
   render(contenedor, params) {

@@ -1,7 +1,15 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { crearAlmacenEnMemoria } from '../src/save/almacen-navegador.js';
 import { iniciarGuardado, obtenerGuardado } from '../src/save/guardado.js';
-import { TEMAS, temaCompleto, temaEnUso, valoresDelTema } from '../src/tema.js';
+import {
+  TEMAS,
+  TEMAS_DE_JEFES,
+  temaCompleto,
+  temaDeJefe,
+  temaEnUso,
+  temasDeJefesDisponibles,
+  valoresDelTema,
+} from '../src/tema.js';
 import { imagenDeBorde } from '../src/bordes.js';
 import { guardarPreferencia, leerPreferencias, restablecerPreferencias } from '../src/preferencias.js';
 
@@ -80,8 +88,13 @@ describe('preferencias', () => {
     await iniciarGuardado(crearAlmacenEnMemoria());
   });
 
-  it('por defecto todo está activado', () => {
-    expect(leerPreferencias()).toEqual({ resaltarRelacionadas: true, resaltarIguales: true, mostrarCronometro: true });
+  it('por defecto: las ayudas activadas y los temas de jefes sin sobrescribir', () => {
+    expect(leerPreferencias()).toEqual({
+      resaltarRelacionadas: true,
+      resaltarIguales: true,
+      mostrarCronometro: true,
+      sobrescribirTemasDeJefes: false,
+    });
   });
 
   it('guarda una preferencia sin tocar las demás, y se puede restablecer', async () => {
@@ -92,5 +105,32 @@ describe('preferencias', () => {
     await restablecerPreferencias();
     expect(obtenerGuardado().perfil.preferencias).toBeNull();
     expect(leerPreferencias().mostrarCronometro).toBe(true);
+  });
+});
+
+describe('temas de jefes', () => {
+  beforeEach(async () => {
+    await iniciarGuardado(crearAlmacenEnMemoria());
+  });
+
+  it('cada uno trae todos los colores y se reconoce como "en uso"', () => {
+    for (const tema of TEMAS_DE_JEFES) {
+      expect(temaCompleto(valoresDelTema(tema))).toEqual(valoresDelTema(tema));
+      expect(temaEnUso(valoresDelTema(tema))).toBe(tema.id);
+    }
+  });
+
+  it('las uber sin tema propio usan el de su versión normal; Uber Jörmungandr tiene el suyo', () => {
+    expect(temaDeJefe('uriel_uber').id).toBe('uriel');
+    expect(temaDeJefe('hecate_uber').id).toBe('hecate');
+    expect(temaDeJefe('jormungandr').id).toBe('jormungandr');
+    expect(temaDeJefe('jormungandr_uber').id).toBe('jormungandr-uber');
+    expect(temaDeJefe('babel')).toBeNull();
+  });
+
+  it('solo se pueden elegir los de los jefes vencidos al menos una vez', () => {
+    expect(temasDeJefesDisponibles()).toEqual([]);
+    obtenerGuardado().jefes.hecate = { victorias: 1 };
+    expect(temasDeJefesDisponibles().map(({ id }) => id)).toEqual(['hecate']);
   });
 });

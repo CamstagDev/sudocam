@@ -14,6 +14,7 @@
 
 import { modificarGuardado, obtenerGuardado } from './save/guardado.js';
 import { BORDE_POR_DEFECTO, esBordeValido, imagenDeBorde } from './bordes.js';
+import { leerPreferencias } from './preferencias.js';
 
 export const CAMPOS_TEMA = [
   { id: 'fondo', nombre: 'Fondo' },
@@ -79,6 +80,48 @@ export const TEMAS = [
     borde: 'linea',
   },
 ];
+
+// Temas de los jefes, sacados de sus ilustraciones. En una pelea se usa el
+// del jefe (salvo que el jugador active "Sobrescribir temas de jefes"), y
+// en Personalización se pueden elegir para toda la app después de vencer a
+// ese jefe una vez. Los uber sin tema propio usan el de su versión normal.
+export const TEMAS_DE_JEFES = [
+  {
+    id: 'uriel',
+    nombre: 'Uriel',
+    jefe: 'uriel',
+    // Grises oscuros de piedra y el brillo dorado de sus patrones.
+    colores: { fondo: '#141416', texto: '#eee8da', numeros: '#eee8da', acento: '#d4a017', resaltado: '#2a2824', logo: '#f5c542', pista: '#f2d24c', acierto: '#8fd694', error: '#ff5a5a', jefe: '#ff7a1a' },
+    borde: 'linea',
+  },
+  {
+    id: 'hecate',
+    nombre: 'Hecate',
+    jefe: 'hecate',
+    // El morado de sus lunas y sus visiones.
+    colores: { fondo: '#120c1c', texto: '#ece4f7', numeros: '#ece4f7', acento: '#a855f7', resaltado: '#2a1d3d', logo: '#c084fc', pista: '#d8b4fe', acierto: '#5eead4', error: '#fb7185', jefe: '#e879f9' },
+    borde: 'linea',
+  },
+  {
+    id: 'jormungandr',
+    nombre: 'Jörmungandr',
+    jefe: 'jormungandr',
+    // Azul de mar profundo, menos oscuro, con el brillo turquesa de sus escamas.
+    colores: { fondo: '#16222c', texto: '#e2eef2', numeros: '#e2eef2', acento: '#22d3ee', resaltado: '#22394b', logo: '#5eead4', pista: '#7dd3fc', acierto: '#4ade80', error: '#f87171', jefe: '#00e5ff' },
+    borde: 'linea',
+  },
+  {
+    id: 'jormungandr-uber',
+    nombre: 'Uber Jörmungandr',
+    jefe: 'jormungandr_uber',
+    // La misma serpiente en rojo: brasas y eclipse.
+    colores: { fondo: '#1c1213', texto: '#f3e6e6', numeros: '#f3e6e6', acento: '#ef4444', resaltado: '#3a2224', logo: '#ff6b6b', pista: '#fca5a5', acierto: '#4ade80', error: '#fbbf24', jefe: '#ff3b30' },
+    borde: 'linea',
+  },
+];
+
+// Todos los temas que se pueden reconocer como "en uso".
+const TODOS_LOS_TEMAS = [...TEMAS, ...TEMAS_DE_JEFES];
 
 const COLORES_POR_DEFECTO = TEMAS[0].colores;
 const COLOR_HEX = /^#[0-9a-f]{6}$/i;
@@ -177,7 +220,7 @@ export function valoresDelTema({ colores, borde }) {
 
 // El tema predefinido con estos colores (sin mirar los campos de `ignorar`).
 function temaConColores(colores, ignorar = []) {
-  return TEMAS.find((tema) => CAMPOS_TEMA.every(({ id }) => ignorar.includes(id) || tema.colores[id] === colores[id]));
+  return TODOS_LOS_TEMAS.find((tema) => CAMPOS_TEMA.every(({ id }) => ignorar.includes(id) || tema.colores[id] === colores[id]));
 }
 
 // Colores que los guardados viejos no traen, y cómo sacarlos de los demás
@@ -236,6 +279,31 @@ export function aplicarTema(tema) {
 
 export function aplicarTemaGuardado() {
   aplicarTema(obtenerGuardado().perfil.tema);
+}
+
+/* ---------- Temas de jefes ---------- */
+
+// El tema de la pelea contra `idJefe` (normal o uber), o null si no tiene.
+export function temaDeJefe(idJefe) {
+  const normal = idJefe.replace(/_uber$/, '');
+  return TEMAS_DE_JEFES.find(({ jefe }) => jefe === idJefe)
+    ?? TEMAS_DE_JEFES.find(({ jefe }) => jefe === normal)
+    ?? null;
+}
+
+// Los temas de jefes que el jugador ya puede elegir: los de los jefes que
+// venció al menos una vez.
+export function temasDeJefesDisponibles(guardado = obtenerGuardado()) {
+  return TEMAS_DE_JEFES.filter(({ jefe }) => (guardado.jefes[jefe]?.victorias ?? 0) > 0);
+}
+
+// El tema que toca en una pantalla: en una pelea (la pantalla dice contra
+// qué jefe con `jefe(params)`), el del jefe, salvo que el jugador prefiera
+// sus propios colores; en el resto, el suyo.
+export function aplicarTemaDePantalla(pantalla, params) {
+  const idJefe = pantalla.jefe?.(params);
+  const delJefe = idJefe && !leerPreferencias().sobrescribirTemasDeJefes ? temaDeJefe(idJefe) : null;
+  aplicarTema(delJefe ? valoresDelTema(delJefe) : obtenerGuardado().perfil.tema);
 }
 
 export async function guardarTema(tema) {

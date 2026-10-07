@@ -27,7 +27,7 @@ import { almacenNavegador } from './save/almacen-navegador.js';
 import { almacenEscritorio, estamosEnEscritorio } from './save/almacen-escritorio.js';
 import { almacenAndroid, estamosEnAndroid } from './save/almacen-android.js';
 import { mostrarAviso } from './ui/modal.js';
-import { aplicarTemaGuardado } from './tema.js';
+import { aplicarTemaDePantalla, aplicarTemaGuardado } from './tema.js';
 
 registrarPantalla(RUTA_INICIO, pantallaMenu);
 registrarPantalla('sudoku', pantallaSudoku);
@@ -57,7 +57,11 @@ async function arrancar() {
   aplicarTemaGuardado();
 
   const shell = crearShell(document.getElementById('app'));
-  iniciarRouter((ruta, pantalla, params) => shell.mostrarPantalla(ruta, pantalla, params));
+  // Cada pantalla con sus colores: en una pelea, los del jefe (ver tema.js).
+  iniciarRouter((ruta, pantalla, params) => {
+    aplicarTemaDePantalla(pantalla, params);
+    shell.mostrarPantalla(ruta, pantalla, params);
+  });
 
   if (aviso) mostrarAviso('Aviso sobre tu guardado', aviso);
 }

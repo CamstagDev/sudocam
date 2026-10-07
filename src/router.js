@@ -9,6 +9,7 @@
 //     subtitulo,                  texto o función (params) => texto (opcional)
 //     render(contenedor, params), dibuja la pantalla dentro de <main>
 //     destruir(),                 limpia timers y listeners (opcional)
+//     jefe(params),               id del jefe si es una pelea (opcional; para su tema)
 //   }
 // `params` son los parámetros que vienen después del "?" en el hash, como
 // URLSearchParams.

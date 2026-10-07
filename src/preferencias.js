@@ -22,6 +22,14 @@ export const CAMPOS_PREFERENCIAS = [
     descripcion: 'Muestra el tiempo que llevas en la partida.',
     porDefecto: true,
   },
+  {
+    id: 'sobrescribirTemasDeJefes',
+    nombre: 'Sobrescribir temas de jefes',
+    descripcion: 'En las peleas usa tus colores en vez de los del jefe.',
+    porDefecto: false,
+    // No se muestra hasta desbloquear algún jefe (no delata que existen).
+    soloConJefes: true,
+  },
 ];
 
 // Las preferencias guardadas encima de las de por defecto.

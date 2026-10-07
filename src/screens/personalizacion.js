@@ -6,18 +6,22 @@
 // selectores; cambiar cualquiera a mano pasa a "Personalizado" (ver
 // temaEnUso en tema.js).
 //
-// Mientras no haya ningún jefe desbloqueado, el color de los jefes y su
-// casilla de ejemplo no se muestran (el selector sigue en la página, oculto,
-// para que el tema guardado conserve ese color).
+// Mientras no haya ningún jefe desbloqueado, el color de los jefes, su
+// casilla de ejemplo y la preferencia de sus temas no se muestran (el
+// selector de color sigue en la página, oculto, para que el tema guardado
+// conserve ese color). El tema de cada jefe aparece para elegir después de
+// vencerlo una vez.
 
 import {
   CAMPOS_TEMA,
   TEMAS,
+  TEMAS_DE_JEFES,
   aplicarTema,
   guardarTema,
   restablecerTema,
   temaCompleto,
   temaEnUso,
+  temasDeJefesDisponibles,
   valoresDelTema,
 } from '../tema.js';
 import { BORDES, imagenDeBorde } from '../bordes.js';
@@ -106,6 +110,8 @@ export const pantallaPersonalizacion = {
 
   render(contenedor) {
     const conJefes = hayJefesDesbloqueados();
+    const temasDeJefes = temasDeJefesDisponibles();
+    const preferencias = CAMPOS_PREFERENCIAS.filter((campo) => !campo.soloConJefes || conJefes);
     const camposColor = CAMPOS_TEMA.map((campo) => campoColor(campo, {
       oculto: campo.id === COLOR_DE_LOS_JEFES && !conJefes,
     }));
@@ -117,6 +123,9 @@ export const pantallaPersonalizacion = {
           <button type="button" class="btn btn-secondary btn-sm" id="restablecer-colores">Restaurar</button>
         </div>
         <div class="grilla-temas">${TEMAS.map(botonTema).join('')}${BOTON_PERSONALIZADO}</div>
+        ${temasDeJefes.length > 0 ? `
+          <h3 class="subtitulo-tarjeta">Temas de jefes</h3>
+          <div class="grilla-temas">${temasDeJefes.map(botonTema).join('')}</div>` : ''}
         ${muestraTablero({ conJefes })}
         <p class="campo-ayuda tarjeta-ayuda">
           Los paneles y bordes se calculan a partir del fondo y el texto. Cambiar cualquier
@@ -132,7 +141,7 @@ export const pantallaPersonalizacion = {
           <h2 class="section-title">Preferencias de juego</h2>
           <button type="button" class="btn btn-secondary btn-sm" id="restablecer-preferencias">Restaurar</button>
         </div>
-        <div class="lista-interruptores">${CAMPOS_PREFERENCIAS.map(filaPreferencia).join('')}</div>
+        <div class="lista-interruptores">${preferencias.map(filaPreferencia).join('')}</div>
       </section>
     `;
 
@@ -193,7 +202,7 @@ export const pantallaPersonalizacion = {
     });
 
     opcionesTema.forEach((opcion) => {
-      const tema = TEMAS.find(({ id }) => id === opcion.dataset.tema);
+      const tema = [...TEMAS, ...TEMAS_DE_JEFES].find(({ id }) => id === opcion.dataset.tema);
       if (!tema) return; // "Personalizado" solo indica, no se elige
       opcion.addEventListener('click', async () => {
         aplicarTema(valoresDelTema(tema));
