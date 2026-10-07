@@ -5,8 +5,10 @@
 
 import { RUTA_INICIO, navegar } from '../router.js';
 import { abrirModal } from './modal.js';
+import { terminarPelea } from './pelea-en-curso.js';
 
 export function mostrarResultadoPelea({ gano, titulo, detalle, alRevancha }) {
+  terminarPelea(); // desde aquí se puede salir sin confirmar
   const contenido = document.createElement('div');
   contenido.className = 'resultado-pelea';
   contenido.innerHTML = `

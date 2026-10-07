@@ -16,6 +16,7 @@ import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
 import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
+import { confirmarRendicion, empezarPelea } from '../../ui/pelea-en-curso.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
@@ -49,6 +50,8 @@ export const pantallaJormungandr = {
   titulo: 'Pelea de jefe',
   // Contra quién es la pelea (para usar su tema; ver tema.js).
   jefe: (params) => (params.get('uber') === '1' ? 'jormungandr_uber' : 'jormungandr'),
+  // Salir a mitad de la pelea (rendirse) pide confirmación.
+  antesDeSalir: confirmarRendicion,
   subtitulo: 'Resuelve antes de que se lo coma todo',
 
   render(contenedor, params) {
@@ -58,6 +61,7 @@ export const pantallaJormungandr = {
       navegar(RUTA_INICIO);
       return;
     }
+    empezarPelea();
 
     const { puzzle, solucion } = generarPuzzle(DIFICULTADES.dificil.pistas);
     const pelea = new PeleaJormungandr({ tableroInicial: puzzle, solucion, uber });
@@ -81,8 +85,8 @@ export const pantallaJormungandr = {
     const juego = crearJuegoSudoku(cuerpo, {
       partida: pelea,
       preferencias: leerPreferencias(),
+      lugarDelCronometro: cabecera.lugarDelTiempo,
       mostrarErrores: false,
-      accionesExtra: [{ texto: 'Rendirse', alTocar: () => navegar(RUTA_INICIO) }],
       alJugar: actualizarCabecera,
       alGanar: ganar,
     });

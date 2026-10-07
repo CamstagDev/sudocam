@@ -18,6 +18,8 @@
 //   página de información: bloqueada mientras no se haya investigado.
 //
 //   cabecera.retrato                  el botón del retrato (para secretos)
+//   cabecera.lugarDelTiempo           arriba a la izquierda, para el cronómetro
+//                                     de la partida (ver juego-sudoku.js)
 //   cabecera.habilidades.facil        ver icono-habilidad.js
 //   cabecera.mostrarFase(2, 'Descripción de la fase 2');
 //   cabecera.mostrarPuntos({ jugador, jefe, total });
@@ -95,6 +97,7 @@ export function crearCabeceraJefe(contenedor, {
   const tarjeta = document.createElement('section');
   tarjeta.className = 'card cabecera-jefe';
   tarjeta.innerHTML = `
+    <span class="cabecera-jefe-tiempo" data-id="tiempo"></span>
     <div data-id="retrato"></div>
     <div class="cabecera-jefe-contenido" data-id="contenido">
       <div class="cabecera-jefe-texto">
@@ -139,6 +142,7 @@ export function crearCabeceraJefe(contenedor, {
   return {
     retrato,
     habilidades: iconos,
+    lugarDelTiempo: parte('tiempo'),
 
     mostrarFase(fase, descripcion) {
       parte('fase').textContent = `Fase ${fase}`;

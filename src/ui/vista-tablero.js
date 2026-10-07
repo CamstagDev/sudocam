@@ -48,6 +48,8 @@ export function crearVistaTablero(contenedor, { lienzo, alTocarCelda }) {
   tableroEl.style.gridTemplateColumns = `repeat(${lienzo.ancho}, 1fr)`;
   tableroEl.style.gridTemplateRows = `repeat(${lienzo.alto}, 1fr)`;
   tableroEl.style.aspectRatio = `${lienzo.ancho} / ${lienzo.alto}`;
+  // Para que el CSS pueda limitar el ancho según el alto de la pantalla.
+  tableroEl.style.setProperty('--proporcion', String(lienzo.ancho / lienzo.alto));
 
   // Solo se crean las celdas activas: los huecos de un multi sudoku quedan
   // vacíos en la grilla CSS.

@@ -79,8 +79,10 @@
 /* ---------- Multi sudoku: más celdas, tablero más ancho ---------- */
 
 .tablero-multi {
-  /* --zoom lo pone zoom-tablero.js (pellizco o botones − / +). */
-  width: calc(min(100%, 760px) * var(--zoom, 1));
+  /* --zoom lo pone zoom-tablero.js (pellizco o botones − / +). Sin zoom,
+     el tablero entero cabe en la pantalla también a lo alto: lo que queda
+     al restarle la barra de arriba, los controles y el teclado. */
+  width: calc(min(100%, 760px, (100dvh - var(--alto-fuera-del-tablero, 330px)) * var(--proporcion, 1)) * var(--zoom, 1));
   margin-inline: auto;
   /* Los huecos entre grillas se ven como fondo, no como borde. */
   background: transparent;

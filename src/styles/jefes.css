@@ -140,6 +140,23 @@ button.retrato-jefe {
   gap: clamp(12px, 3vw, 20px);
 }
 
+/* El cronómetro de la partida, en la esquina de arriba a la izquierda (el
+   retrato es redondo, así que la esquina queda libre). */
+.cabecera-jefe {
+  position: relative;
+}
+
+.cabecera-jefe-tiempo {
+  position: absolute;
+  top: clamp(6px, 1.5vw, 10px);
+  left: clamp(10px, 2.5vw, 14px);
+  z-index: 1;
+}
+
+.cabecera-jefe-tiempo:empty {
+  display: none;
+}
+
 .cabecera-jefe .retrato-jefe {
   width: 100%;
   height: auto;
@@ -345,19 +362,39 @@ button.retrato-jefe {
   gap: 16px;
 }
 
+/* En pantallas anchas, la cabecera del jefe y el registro van en una
+   columna al costado y el tablero ocupa todo el alto de al lado
+   (.pelea-cuerpo se "deshace" para que el juego y el registro sean parte
+   de la misma grilla que la cabecera). */
 @media (min-width: 900px) {
-  .pelea-cuerpo {
-    flex-direction: row;
-    align-items: stretch;
+  .app-content:has(> .cabecera-jefe) {
+    /* Sin el espacio extra de abajo de las demás pantallas: la pelea
+       entra justa en la pantalla, sin barra de desplazamiento. */
+    padding-bottom: clamp(16px, 3vw, 24px);
+    --alto-fuera-del-tablero: 360px; /* ver .tablero-multi */
+    display: grid;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
   }
 
-  .pelea-cuerpo .juego {
-    flex: 1;
-    min-width: 0;
+  .app-content:has(> .cabecera-jefe) > .cabecera-jefe {
+    grid-column: 1;
+    grid-row: 1;
   }
 
-  .pelea-cuerpo .registro-eventos {
-    flex: 0 0 260px;
+  .app-content:has(> .cabecera-jefe) .pelea-cuerpo {
+    display: contents;
+  }
+
+  .app-content:has(> .cabecera-jefe) .juego {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .app-content:has(> .cabecera-jefe) .registro-eventos {
+    grid-column: 1;
+    grid-row: 2;
   }
 }
 

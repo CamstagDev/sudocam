@@ -21,6 +21,8 @@
 //                                          realidad (Hecate; ver PeleaHecate.disfraz)
 //     estadoTeclado: () => ({ bloqueados: Set, cargando: Map }),   ver teclado-numerico.js
 //     mostrarCronometro: false,            cuando el jefe tiene su propio reloj
+//     lugarDelCronometro: elemento,        dónde va el cronómetro, en vez de la barra
+//                                          (la cabecera del jefe)
 //     simbolo: (indice, digito) => texto,  cómo se escribe cada dígito (Babel)
 //     filasTeclado: () => filas,           botones del teclado (ver teclado-numerico.js)
 //     teclasNumericas: false,              el teclado físico no escribe números (Babel)
@@ -54,6 +56,7 @@ export function crearJuegoSudoku(contenedor, {
   disfraz = () => ({ valores: new Map(), fijas: new Set(), notas: new Map() }),
   estadoTeclado = () => ({}),
   mostrarCronometro = preferencias.mostrarCronometro,
+  lugarDelCronometro = null,
   simbolo = undefined,
   filasTeclado = null,
   teclasNumericas = true,
@@ -89,6 +92,7 @@ export function crearJuegoSudoku(contenedor, {
   btnComprobar.classList.toggle('hidden', partida.politicaErrores !== 'boton');
   badgeErrores.classList.toggle('hidden', !mostrarErrores || partida.politicaErrores === 'final');
   cronometroEl.classList.toggle('hidden', !mostrarCronometro);
+  if (lugarDelCronometro) lugarDelCronometro.appendChild(cronometroEl);
 
   const botonesExtra = accionesExtra.map(({ texto, alTocar }) => {
     const boton = document.createElement('button');
@@ -99,6 +103,12 @@ export function crearJuegoSudoku(contenedor, {
     barraAcciones.appendChild(boton);
     return boton;
   });
+
+  // Sin nada que mostrar (p. ej. en una pelea con el cronómetro en la
+  // cabecera), la barra no ocupa lugar.
+  const barra = tarjeta.querySelector('.barra-juego');
+  barra.classList.toggle('hidden', ![...barra.querySelectorAll('.badge, .cronometro, .btn')]
+    .some((pieza) => !pieza.classList.contains('hidden')));
 
   let seleccionada = null;
   let modoNotas = false;

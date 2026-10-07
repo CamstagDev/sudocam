@@ -17,6 +17,7 @@ import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
 import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
+import { confirmarRendicion, empezarPelea } from '../../ui/pelea-en-curso.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 
 const MS_POR_CELDA_REVISADA = 160; // velocidad de la animación de búsqueda
@@ -40,6 +41,8 @@ export const pantallaUriel = {
   titulo: 'Pelea de jefe',
   // Contra quién es la pelea (para usar su tema; ver tema.js).
   jefe: (params) => (params.get('uber') === '1' ? 'uriel_uber' : 'uriel'),
+  // Salir a mitad de la pelea (rendirse) pide confirmación.
+  antesDeSalir: confirmarRendicion,
   subtitulo: 'Llena más casillas que Uriel',
 
   render(contenedor, params) {
@@ -49,6 +52,7 @@ export const pantallaUriel = {
       navegar(RUTA_INICIO);
       return;
     }
+    empezarPelea();
 
     const { puzzle, solucion } = generarPuzzle(DIFICULTADES.facil.pistas);
     const pelea = new PeleaUriel({ tableroInicial: puzzle, solucion, uber });
@@ -80,8 +84,8 @@ export const pantallaUriel = {
     const juego = crearJuegoSudoku(cuerpo, {
       partida: pelea,
       preferencias: leerPreferencias(),
+      lugarDelCronometro: cabecera.lugarDelTiempo,
       mostrarErrores: false,
-      accionesExtra: [{ texto: 'Rendirse', alTocar: () => navegar(RUTA_INICIO) }],
       marcas: () => ({
         jugador: new Set(pelea.duenos.flatMap((dueno, i) => (dueno === 'jugador' ? [i] : []))),
         jefe: new Set(pelea.duenos.flatMap((dueno, i) => (dueno === 'jefe' ? [i] : []))),

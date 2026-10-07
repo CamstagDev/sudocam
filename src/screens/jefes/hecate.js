@@ -15,6 +15,7 @@ import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
 import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
+import { confirmarRendicion, empezarPelea } from '../../ui/pelea-en-curso.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
@@ -34,6 +35,8 @@ export const pantallaHecate = {
   titulo: 'Pelea de jefe',
   // Contra quién es la pelea (para usar su tema; ver tema.js).
   jefe: (params) => (params.get('uber') === '1' ? 'hecate_uber' : 'hecate'),
+  // Salir a mitad de la pelea (rendirse) pide confirmación.
+  antesDeSalir: confirmarRendicion,
   subtitulo: 'Resuelve el tablero antes de que acabe el reloj',
 
   render(contenedor, params) {
@@ -43,6 +46,7 @@ export const pantallaHecate = {
       navegar(RUTA_INICIO);
       return;
     }
+    empezarPelea();
 
     const { puzzle, solucion } = generarPuzzle(DIFICULTADES.medio.pistas);
     const pelea = new PeleaHecate({ tableroInicial: puzzle, solucion, uber });
@@ -70,7 +74,6 @@ export const pantallaHecate = {
       preferencias: leerPreferencias(),
       mostrarErrores: false,
       mostrarCronometro: false,
-      accionesExtra: [{ texto: 'Rendirse', alTocar: () => navegar(RUTA_INICIO) }],
       disfraz: () => pelea.disfraz(),
       // La ilusión de la Hecate normal parpadea lento; la uber no se distingue.
       marcas: () => {

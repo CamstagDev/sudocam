@@ -9,6 +9,15 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Peleas de jefes con más espacio para el tablero: sin el botón
+  "Rendirse" (en la barra de arriba la flecha de volver se cambia por una
+  bandera 🏳️ para rendirse), y el tiempo de la partida va arriba a la
+  izquierda en la cabecera del jefe. Salir a mitad de la pelea, sea con la
+  bandera, el gesto o botón de atrás del teléfono o cualquier enlace, pide
+  confirmación.
+- En pantallas anchas, la cabecera del jefe y el registro van en una
+  columna al costado, y los tableros grandes (Typhon, multi sudoku) se
+  achican para caber enteros en la pantalla, sin barras de desplazamiento.
 - Typhon y Uber Typhon quedan al nivel de los demás jefes: ilustración en
   su carta, retratos de pelea, iconos para Amalgamación y los dos Caos
   (con su carta en la pelea y en la página de información), historia y

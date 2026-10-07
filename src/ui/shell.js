@@ -81,6 +81,12 @@ export function crearShell(raiz) {
       subtitulo.textContent = textoSubtitulo ?? '';
       subtitulo.classList.toggle('hidden', !textoSubtitulo);
       btnVolver.classList.toggle('hidden', ruta === RUTA_INICIO);
+      // En una pelea, "volver" es rendirse (y pide confirmación: ver
+      // antesDeSalir en router.js).
+      const etiqueta = pantalla.jefe ? 'Rendirse' : 'Volver al menú';
+      btnVolver.textContent = pantalla.jefe ? '🏳️' : '←';
+      btnVolver.title = etiqueta;
+      btnVolver.setAttribute('aria-label', etiqueta);
       raiz.querySelectorAll('.navbar [data-ruta]').forEach((boton) => {
         boton.classList.toggle('activo', boton.dataset.ruta === ruta);
       });

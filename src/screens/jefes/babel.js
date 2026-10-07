@@ -16,6 +16,7 @@ import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
 import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
+import { confirmarRendicion, empezarPelea } from '../../ui/pelea-en-curso.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
@@ -32,6 +33,8 @@ export const pantallaBabel = {
   titulo: 'Pelea de jefe',
   // Contra quién es la pelea (para usar su tema; ver tema.js).
   jefe: (params) => (params.get('uber') === '1' ? 'babel_uber' : 'babel'),
+  // Salir a mitad de la pelea (rendirse) pide confirmación.
+  antesDeSalir: confirmarRendicion,
   subtitulo: 'Resuelve el sudoku en un idioma que no conoces',
 
   render(contenedor, params) {
@@ -42,6 +45,7 @@ export const pantallaBabel = {
       navegar(RUTA_INICIO);
       return;
     }
+    empezarPelea();
 
     const { puzzle, solucion } = generarPuzzle(DIFICULTADES[dificultad].pistas);
     const pelea = new PeleaBabel({ tableroInicial: puzzle, solucion, dificultad, uber });
@@ -68,6 +72,7 @@ export const pantallaBabel = {
     const juego = crearJuegoSudoku(cuerpo, {
       partida: pelea,
       preferencias: leerPreferencias(),
+      lugarDelCronometro: cabecera.lugarDelTiempo,
       mostrarErrores: false,
       insignias: [DIFICULTADES[dificultad].nombre],
       teclasNumericas: false, // si el teclado escribiera números, los símbolos no servirían de nada
@@ -80,7 +85,6 @@ export const pantallaBabel = {
         CAJAS.forEach((caja, numero) => caja.forEach((indice) => marcas[`alfabeto-${pelea.alfabetoDeCaja[numero]}`].add(indice)));
         return marcas;
       },
-      accionesExtra: [{ texto: 'Rendirse', alTocar: () => navegar(RUTA_INICIO) }],
       alJugar: () => {
         if (pelea.evoluciones === evolucionesAnunciadas) return;
         evolucionesAnunciadas = pelea.evoluciones;
