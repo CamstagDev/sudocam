@@ -62,18 +62,34 @@ export const JEFES = {
     emoji: '🔮',
     ataque1: {
       titulo: 'Visiones ilusorias',
+      emoji: '👁️',
+      imagen: 'hecate_vision',
       texto: 'Cada 15 segundos, Hecate encanta una celda vacía haciendo que parezca tener un número que en realidad no está ahí. La ilusión dura 10 segundos antes de desvanecerse; en esta versión normal parpadea lento, así que si prestas atención puedes notarla.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Hecate para desbloquear esto.',
     },
+    // La maldición y el aullido se desbloquean con lo mismo (antes eran una
+    // sola sección), así que investigar a Hecate pide lo mismo que siempre.
     ataque2: {
-      titulo: 'Fase 2: aullido paralizante y maldición de pesadilla',
-      texto: 'Cuando el tablero llega al 80% resuelto (o queda 1 minuto en el reloj), Hecate entra en fase 2: cada 20 segundos "convierte en piedra" un dígito del teclado (primero avisa, luego lo deja inutilizable un rato), y cada 10 segundos disfraza uno de tus números o notas con un valor falso durante 10 segundos.',
+      titulo: 'Maldición de pesadilla',
+      emoji: '🌑',
+      imagen: 'hecate_maldicion',
+      texto: 'Cuando el tablero llega al 80% resuelto (o queda 1 minuto en el reloj), Hecate entra en fase 2: cada 10 segundos disfraza uno de tus números o notas con un valor falso durante 10 segundos.',
+      seDesbloqueaCon: ganoEnMenosDe(600),
+      pista: 'Gana a Hecate en 10:00 o menos para desbloquear esto.',
+    },
+    pasiva: {
+      titulo: 'Aullido paralizante',
+      emoji: '🗿',
+      imagen: 'hecate_aullido',
+      texto: 'Durante toda la pelea, Hecate elige un número que todavía te falte y en 20 segundos lo "convierte en piedra": el botón avisa mientras se carga y luego queda inutilizable un rato (5 segundos, o 10 en fase 2). Después elige otro.',
       seDesbloqueaCon: ganoEnMenosDe(600),
       pista: 'Gana a Hecate en 10:00 o menos para desbloquear esto.',
     },
     secreto: {
-      titulo: 'Pasiva: Pesar Castigador',
+      titulo: 'Pesar Castigador',
+      emoji: '⏳',
+      imagen: 'hecate_pesar',
       texto: 'Cada error que cometas le resta 1 minuto al reloj; si eso lo hace llegar a 0, es derrota inmediata. Contra Hecate conviene jugar sobre seguro antes que rápido.',
       seDesbloqueaCon: sinErrores,
       pista: 'Gana a Hecate sin cometer ni un error para desbloquear esto.',

@@ -12,7 +12,7 @@ import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
+import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
@@ -23,6 +23,10 @@ const DESCRIPCION_FASE = {
   2: 'Fase 2: además de sus ilusiones y su aullido, Hecate disfraza tus propios números.',
 };
 const SEGUNDOS_RELOJ_CRITICO = 60;
+
+// Nombres, iconos y cartas de las habilidades: los de su página de
+// información (game/jefes/catalogo.js).
+const { ataque1: VISION, ataque2: MALDICION, pasiva: AULLIDO, secreto: PESAR } = JEFES.hecate;
 
 let limpiar = () => {};
 
@@ -46,10 +50,10 @@ export const pantallaHecate = {
       uber,
       reloj: true,
       habilidades: [
-        { id: 'vision', emoji: '👁️', nombre: 'Visiones ilusorias' },
-        { id: 'maldicion', emoji: '🌑', nombre: 'Maldición de pesadilla', oculta: true },
-        { id: 'aullido', emoji: '🗿', nombre: 'Aullido paralizante' },
-        { id: 'pesar', emoji: '⏳', nombre: 'Pesar Castigador' },
+        habilidadDeSeccion('vision', VISION),
+        habilidadDeSeccion('maldicion', MALDICION, { oculta: true }),
+        habilidadDeSeccion('aullido', AULLIDO),
+        habilidadDeSeccion('pesar', PESAR),
       ],
     });
     const { habilidades } = cabecera;

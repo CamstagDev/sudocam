@@ -179,6 +179,13 @@ describe('registro de jefes', () => {
     expect(estaCompletamenteInvestigado('uriel')).toBe(false); // faltan 3x3x3 y el secreto
   });
 
+  it('investigar a Hecate pide lo mismo de siempre: ganar en 10:00 o menos y sin errores', async () => {
+    await registrarVictoriaDeJefe('hecate', { segundos: 700, errores: 0, usoNotas: false });
+    expect(estaCompletamenteInvestigado('hecate')).toBe(false); // falta ganar en 10:00
+    await registrarVictoriaDeJefe('hecate', { segundos: 500, errores: 2, usoNotas: false });
+    expect(estaCompletamenteInvestigado('hecate')).toBe(true);
+  });
+
   it('cada habilidad con dibujo tiene también nombre y emoji de respaldo', () => {
     for (const jefe of Object.values(JEFES)) {
       for (const seccion of SECCIONES_INFORMACION.map((nombre) => jefe[nombre]).filter(Boolean)) {

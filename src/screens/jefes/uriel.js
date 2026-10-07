@@ -10,11 +10,11 @@ import { DIFICULTADES } from '../../game/sudoku/dificultades.js';
 import { generarPuzzle } from '../../game/sudoku/generador.js';
 import { LIENZO_9X9 } from '../../game/sudoku/lienzo.js';
 import { PeleaUriel, cajaDe, celdasARevisar, elegirCajaAlAzar } from '../../game/jefes/uriel.js';
-import { JEFES, imagenDeHabilidad } from '../../game/jefes/catalogo.js';
+import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
+import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
@@ -25,10 +25,6 @@ const TOQUES_SECRETO = 3; // toques al retrato para forzar la fase 2
 // Nombres, iconos y cartas de las habilidades: los mismos de su página de
 // información (game/jefes/catalogo.js).
 const { ataque1: FACIL, ataque2: DESCARTE, pasiva: PASIVA } = JEFES.uriel;
-
-function habilidad(id, seccion, extra = {}) {
-  return { id, emoji: seccion.emoji, nombre: seccion.titulo, imagen: imagenDeHabilidad(seccion.imagen), seccion, ...extra };
-}
 
 function descripcionDeFase(fase, { facil, descarte }) {
   return fase === 1
@@ -62,9 +58,9 @@ export const pantallaUriel = {
       uber,
       marcador: true,
       habilidades: [
-        habilidad('facil', FACIL),
-        habilidad('descarte', DESCARTE, { oculta: true }),
-        habilidad('pasiva', PASIVA),
+        habilidadDeSeccion('facil', FACIL),
+        habilidadDeSeccion('descarte', DESCARTE, { oculta: true }),
+        habilidadDeSeccion('pasiva', PASIVA),
       ],
     });
     const { habilidades, retrato } = cabecera;

@@ -23,7 +23,7 @@
 //   cabecera.mostrarPuntos({ jugador, jefe, total });
 //   cabecera.mostrarReloj(segundos, critico);
 
-import { JEFES } from '../game/jefes/catalogo.js';
+import { JEFES, imagenDeHabilidad } from '../game/jefes/catalogo.js';
 import { crearRetratoJefe } from './retrato-jefe.js';
 import { crearIconoHabilidad } from './icono-habilidad.js';
 import { crearCartaHabilidad } from './carta-habilidad.js';
@@ -64,6 +64,20 @@ function ajustarRetratoAlAlto(tarjeta, contenido) {
   });
   observador.observe(contenido);
   observador.observe(tarjeta);
+}
+
+// Una habilidad de la cabecera a partir de su sección del catálogo: mismo
+// nombre, emoji, dibujo y carta que en la página de información.
+//   habilidadDeSeccion('vision', JEFES.hecate.ataque1, { oculta: true })
+export function habilidadDeSeccion(id, seccion, extra = {}) {
+  return {
+    id,
+    emoji: seccion.emoji,
+    nombre: seccion.titulo,
+    imagen: seccion.imagen ? imagenDeHabilidad(seccion.imagen) : null,
+    seccion,
+    ...extra,
+  };
 }
 
 export function crearCabeceraJefe(contenedor, {

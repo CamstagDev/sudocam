@@ -9,6 +9,12 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Hecate y Uber Hecate tienen ilustración propia en su carta, su retrato
+  de la pelea e iconos para sus cuatro habilidades, iguales en la pelea y
+  en su página de información (con su carta al pasar el mouse o tocar). Su
+  antigua sección de fase 2 se separa en dos: "Maldición de pesadilla" y
+  "Aullido paralizante" (que actúa toda la pelea, no solo en fase 2); se
+  desbloquean con lo mismo que antes, así que Uber Hecate pide lo mismo.
 - Uber Uriel tiene su propio retrato para la miniatura redonda de la pelea
   (antes usaba el de Uriel).
 - Uriel se mueve antes: pasa a fase 2 con el 25 % del tablero lleno (antes

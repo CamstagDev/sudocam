@@ -81,11 +81,13 @@ Fases
   reloj, lo que pase primero. No vuelve atrás.
 
 Información del jefe
-- Visiones: ganarle 1 vez.   - Fase 2: ganarle en menos de 10:00.
+- Visiones ilusorias: ganarle 1 vez.
+- Maldición de pesadilla: ganarle en menos de 10:00.
+- Aullido paralizante: ganarle en menos de 10:00.
 - Secreto (Pesar Castigador): ganarle sin errores.
 
 HECATE (UBER)
-- Desbloqueo: las 3 secciones de Hecate desbloqueadas.
+- Desbloqueo: las 4 secciones de Hecate desbloqueadas.
 - Las visiones no parpadean (se ven idénticas a un número real).
 - Sin notas, sin registro de eventos, iconos sin indicadores.
 
