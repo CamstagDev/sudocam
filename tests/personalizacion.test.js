@@ -25,6 +25,21 @@ describe('temaCompleto', () => {
     expect(temaCompleto(personalizadoViejo).resaltado).toMatch(/^#[0-9a-f]{6}$/);
     expect(temaEnUso(personalizadoViejo)).toBe('personalizado');
   });
+
+  it('los números del jugador tienen su propio color, aparte del texto', () => {
+    const tema = temaCompleto({ ...TEMAS[5].colores, texto: '#000000', numeros: '#ff69b4' });
+    expect(tema.texto).toBe('#000000');
+    expect(tema.numeros).toBe('#ff69b4');
+  });
+
+  it('un guardado sin "numeros" los ve del color de su texto, como antes', () => {
+    const { numeros, ...papelViejo } = TEMAS[5].colores;
+    expect(temaCompleto(papelViejo).numeros).toBe(numeros);
+    expect(temaEnUso(papelViejo)).toBe('papel');
+
+    const personalizadoViejo = { ...papelViejo, texto: '#123456' };
+    expect(temaCompleto(personalizadoViejo).numeros).toBe('#123456');
+  });
 });
 
 describe('temaEnUso', () => {

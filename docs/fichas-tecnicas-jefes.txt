@@ -1,0 +1,179 @@
+FICHAS TÉCNICAS DE LOS JEFES DE SUDOCAM
+=======================================
+
+Para desarrollo: cómo funciona cada jefe, sin ambientación. Los textos que
+ve el jugador están en src/game/jefes/catalogo.js; las reglas de verdad, en
+src/game/jefes/<jefe>.js (si algo de aquí no coincide con el código, manda
+el código, y hay que actualizar este archivo).
+
+Notación: "s" = segundos. "Vacías" = casillas que empiezan sin número.
+
+Reglas comunes a todas las peleas (partida-de-jefe.js)
+------------------------------------------------------
+- En rojo solo se ven los números repetidos, no los que no coinciden con
+  la solución.
+- Cada número equivocado cuenta como error al escribirlo, aunque no se vea
+  (sirve para la "mejor marca", los logros y las secciones de información).
+- Victoria rápida = ganar en menos de 3:33 (213 s).
+- Todas las versiones uber: sin notas.
+
+
+URIEL  (src/game/jefes/uriel.js)
+================================
+Tablero: un sudoku fácil (40 pistas, 41 vacías).
+Objetivo: llenar más casillas que Uriel. Cada casilla es de quien la llena
+correctamente primero; las de Uriel quedan fijas. Al completarse el
+tablero gana quien tenga más; el empate es derrota.
+Desbloqueo: completar un sudoku fácil.
+
+Habilidades
+- 123... (búsqueda fácil). Cada 10 s, siempre. Elige al azar una caja de
+  3x3 con algo pendiente y busca una celda cuya fila, columna o caja tenga
+  solo esa celda pendiente. Si la encuentra, pone el número correcto y se
+  anota el punto. Un número equivocado del jugador cuenta como pendiente
+  (Uriel puede corregirlo).
+- 3x3x3 (búsqueda por descarte). Cada 20 s, solo en fase 2. En una caja al
+  azar busca un número que falte en la caja y que, por las filas y
+  columnas, solo quepa en una celda pendiente.
+- Predecible... (pasiva). Cada error del jugador hace que Uriel revise al
+  instante la caja del error: prueba la búsqueda fácil y, si no ve nada,
+  la de descarte. Funciona en las dos fases.
+- Las búsquedas van en fila: si se juntan, se hacen una después de otra.
+
+Fases
+- Fase 2 al llenarse el 25 % de las vacías (11 de 41; un número
+  equivocado también cuenta como "llenada"). No se vuelve a fase 1.
+- Secreto: tocar 3 veces el retrato durante la pelea fuerza la fase 2.
+
+Información del jefe (qué desbloquea cada sección)
+- 123...: ganarle 1 vez.            - 3x3x3: ganarle en menos de 5:00.
+- Predecible...: ganarle 1 vez.     - Secreto: 5 victorias, 1 rápida.
+
+URIEL (UBER)
+- Desbloqueo: las 4 secciones de Uriel desbloqueadas.
+- 123... cada 5 s y 3x3x3 cada 15 s; cada búsqueda periódica revisa 2
+  cajas distintas en vez de 1 (la pasiva sigue revisando solo la del error).
+- Sin notas, sin registro de eventos. Los iconos de habilidades se ven
+  todos desde el principio, sin indicadores (ni carga, ni destellos).
+
+
+HECATE  (src/game/jefes/hecate.js)
+==================================
+Tablero: un sudoku medio (32 pistas).
+Objetivo: resolverlo antes de que el reloj de 15:00 llegue a 0. Si llega a
+0, derrota.
+Desbloqueo: vencer a Uriel y completar un sudoku medio.
+
+Habilidades
+- Visiones ilusorias. Cada 15 s: una celda vacía muestra un número falso
+  durante 10 s, dibujado como pista. En la normal parpadea lento.
+- Aullido paralizante (pasiva, siempre). Elige un dígito que todavía falte
+  y lo va "convirtiendo en piedra" durante 20 s; después ese dígito no se
+  puede usar 5 s (10 s en fase 2). Luego elige otro. Si el dígito se
+  completa antes, cambia de objetivo.
+- Pesar Castigador (pasiva). Cada error resta 60 s al reloj; si llega a 0,
+  derrota inmediata.
+- Maldición de pesadilla. Cada 10 s, solo en fase 2: disfraza uno de los
+  números o notas del jugador con otro valor durante 10 s.
+
+Fases
+- Fase 2 al tener el 80 % de las vacías llenas o al quedar 60 s en el
+  reloj, lo que pase primero. No vuelve atrás.
+
+Información del jefe
+- Visiones: ganarle 1 vez.   - Fase 2: ganarle en menos de 10:00.
+- Secreto (Pesar Castigador): ganarle sin errores.
+
+HECATE (UBER)
+- Desbloqueo: las 3 secciones de Hecate desbloqueadas.
+- Las visiones no parpadean (se ven idénticas a un número real).
+- Sin notas, sin registro de eventos, iconos sin indicadores.
+
+
+JÖRMUNGANDR  (src/game/jefes/jormungandr.js)
+============================================
+Tablero: un sudoku difícil (26 pistas).
+Objetivo: resolverlo. No hay derrota por tiempo.
+Desbloqueo: vencer a Hecate y completar un sudoku difícil.
+
+Habilidades
+- Hambre. Cada 60 s, en fase 1: borra 1 número puesto por el jugador.
+- Ouroboros (pasiva). Contador del "vientre": +1 por cada número que come,
+  -1 cada vez que el jugador llena una celda vacía (solo la primera vez por
+  celda: borrar y reescribir no baja el contador).
+- Glotonería. En fase 2 reemplaza a Hambre (mismo reloj de 60 s): borra 1
+  pista original, que deja de ser fija; si ya no quedan pistas, borra 2
+  números del jugador.
+
+Fases
+- Fase 2 mientras el vientre tenga 10 o más. Entra y sale según el
+  contador.
+- Secreto: con una celda con número seleccionada, tocar el icono de
+  Ouroboros se la da de comer (una pista original cuenta doble).
+
+Información del jefe
+- Hambre: ganarle 1 vez.   - Glotonería: ganarle en menos de 15:00.
+- Secreto: 3 victorias.
+
+JÖRMUNGANDR (UBER)
+- Desbloqueo: las 3 secciones desbloqueadas.
+- Hambre come 2; Glotonería come 3 pistas (o 3 números si no quedan).
+- Sin notas. Los iconos sí muestran indicadores.
+
+
+BABEL  (src/game/jefes/babel.js)
+================================
+Tablero: un sudoku de la dificultad que elija el jugador (fácil 40, medio
+32 o difícil 26 pistas). Sin fases.
+Objetivo: resolverlo. No hay derrota.
+Desbloqueo: vencer a Jörmungandr.
+
+Habilidades
+- &%?# (pasiva). Cada dígito se ve como un símbolo al azar y los botones
+  del teclado están desordenados. El teclado físico no escribe números.
+- La lengua evoluciona (pasiva). Cada vez que el jugador completa una caja
+  de 3x3, cambian todos los símbolos y se vuelve a desordenar el teclado.
+- Logros según la dificultad elegida (fácil, medio, difícil).
+
+Información del jefe
+- &%?#: ganarle 1 vez.   - La lengua evoluciona: ganarle en menos de 15:00.
+- Secreto: ganarle sin errores.
+
+BABEL (UBER)
+- Desbloqueo: vencer a Babel en difícil.
+- Torre de Babel: 3 alfabetos a la vez; cada caja usa uno (se distingue
+  por su color). Teclado de 27 botones (3 filas de 9): la misma columna es
+  el mismo número en los 3 alfabetos, con las columnas desordenadas.
+- Sin notas. Los iconos sí muestran indicadores.
+
+
+TYPHON  (src/game/jefes/typhon.js)
+==================================
+Tablero: multi sudoku de 4 tableros en círculo, alternando difícil (26
+pistas) y extremo (20 pistas). Sin fases.
+Objetivo: resolver los 4. No hay derrota.
+Desbloqueo: vencer a Jörmungandr.
+
+Habilidades
+- Amalgamación (pasiva): la mezcla de dificultades del círculo.
+- Caos a la derecha: cada 45-60 s (al azar), gira el círculo entero de 1 a
+  4 veces hacia la derecha.
+- Caos a la izquierda: cada 30-45 s, lo mismo hacia la izquierda.
+- Si los dos tocan a la vez, se turnan un giro cada uno. Cada celda cae
+  sobre otra celda: los números no se pierden, cambia de dónde vienen.
+
+Información del jefe
+- Amalgamación: ganarle 1 vez.   - Caos: ganarle en menos de 30:00.
+- Secreto: ganarle sin errores.
+
+TYPHON (UBER)
+- Desbloqueo: las 3 secciones desbloqueadas.
+- Forma perfecta: 5 tableros en X, todos en extremo (20 pistas). Los dos
+  giros cada 20 s.
+- Padre de los monstruos: cada 120 s (60 s en fase 2) una caja de un
+  tablero exterior pulsa; si en 10 s no se escribe ahí un número correcto,
+  ese tablero exterior se reemplaza por uno nuevo (la caja que comparte
+  con el del medio se mantiene).
+- Fase 2 al llenarse el 50 % de las casillas que no eran pistas; una
+  regeneración puede devolverla a fase 1.
+- Sin notas. Los iconos sí muestran indicadores.

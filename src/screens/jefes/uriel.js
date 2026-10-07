@@ -30,10 +30,11 @@ function habilidad(id, seccion, extra = {}) {
   return { id, emoji: seccion.emoji, nombre: seccion.titulo, imagen: imagenDeHabilidad(seccion.imagen), seccion, ...extra };
 }
 
-const DESCRIPCION_FASE = {
-  1: `Uriel usa ${FACIL.titulo} cada 15 s. Llena más casillas que él antes de que se complete el tablero.`,
-  2: `Fase 2: cada 30 s Uriel también usa ${DESCARTE.titulo}, además de ${FACIL.titulo} cada 15 s.`,
-};
+function descripcionDeFase(fase, { facil, descarte }) {
+  return fase === 1
+    ? `Uriel usa ${FACIL.titulo} cada ${facil} s. Llena más casillas que él antes de que se complete el tablero.`
+    : `Fase 2: cada ${descarte} s Uriel también usa ${DESCARTE.titulo}, además de ${FACIL.titulo} cada ${facil} s.`;
+}
 
 const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
 
@@ -110,7 +111,7 @@ export const pantallaUriel = {
       cabecera.mostrarPuntos({ ...pelea.puntos, total: pelea.casillasALlenar });
 
       const fase = pelea.fase;
-      cabecera.mostrarFase(fase, DESCRIPCION_FASE[fase]
+      cabecera.mostrarFase(fase, descripcionDeFase(fase, pelea.tiempos)
         + (uber ? ' Uber Uriel lanza cada búsqueda sobre 2 cajas distintas.' : ''));
 
       if (fase === 2 && faseMostrada === 1) {
@@ -151,9 +152,7 @@ export const pantallaUriel = {
     }
 
     async function buscarEnCaja(tipoPedido, caja) {
-      // La pasiva usa la técnica de la fase en la que está Uriel ahora.
-      const tecnica = tipoPedido === 'pasiva' ? (pelea.fase === 2 ? 'descarte' : 'facil') : tipoPedido;
-      const jugada = pelea.buscarJugada(tecnica, caja);
+      const jugada = pelea.buscarJugada(tipoPedido, caja);
 
       busqueda.caja = new Set(caja);
       for (const indice of celdasARevisar(pelea.tablero, pelea.solucion, caja)) {
@@ -178,7 +177,7 @@ export const pantallaUriel = {
         registro.anotar(`${prefijo}Uriel no encontró nada esta vez.`, 'jugador');
       }
 
-      habilidades[tipoPedido === 'pasiva' ? 'pasiva' : tecnica].destello();
+      habilidades[tipoPedido].destello();
       actualizarCabecera();
       juego.dibujar();
     }

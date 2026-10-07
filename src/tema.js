@@ -22,6 +22,7 @@ export const CAMPOS_TEMA = [
   { id: 'resaltado', nombre: 'Fila, columna y caja' },
   { id: 'logo', nombre: 'Logo' },
   { id: 'pista', nombre: 'Números fijos (pistas)' },
+  { id: 'numeros', nombre: 'Tus números' },
   { id: 'acierto', nombre: 'Aciertos' },
   { id: 'error', nombre: 'Errores' },
   { id: 'jefe', nombre: 'Jugadas de los jefes' },
@@ -32,49 +33,49 @@ export const TEMAS = [
   {
     id: 'sudocam',
     nombre: 'SudoCam',
-    colores: { fondo: '#0d0e13', texto: '#f1f2f6', acento: '#8b7cf6', resaltado: '#23242c', logo: '#a898ff', pista: '#7ca8ff', acierto: '#4fd18a', error: '#ff6b6b', jefe: '#f5a623' },
+    colores: { fondo: '#0d0e13', texto: '#f1f2f6', numeros: '#f1f2f6', acento: '#8b7cf6', resaltado: '#23242c', logo: '#a898ff', pista: '#7ca8ff', acierto: '#4fd18a', error: '#ff6b6b', jefe: '#f5a623' },
     borde: 'linea',
   },
   {
     id: 'medianoche',
     nombre: 'Medianoche',
-    colores: { fondo: '#0b1220', texto: '#e6edf7', acento: '#3b82f6', resaltado: '#1a2a44', logo: '#60a5fa', pista: '#7dd3fc', acierto: '#34d399', error: '#f87171', jefe: '#fbbf24' },
+    colores: { fondo: '#0b1220', texto: '#e6edf7', numeros: '#e6edf7', acento: '#3b82f6', resaltado: '#1a2a44', logo: '#60a5fa', pista: '#7dd3fc', acierto: '#34d399', error: '#f87171', jefe: '#fbbf24' },
     borde: 'linea',
   },
   {
     id: 'bosque',
     nombre: 'Bosque',
-    colores: { fondo: '#0f1a14', texto: '#e7f2ea', acento: '#22c55e', resaltado: '#1d3326', logo: '#86efac', pista: '#fde68a', acierto: '#4ade80', error: '#f87171', jefe: '#fb923c' },
+    colores: { fondo: '#0f1a14', texto: '#e7f2ea', numeros: '#e7f2ea', acento: '#22c55e', resaltado: '#1d3326', logo: '#86efac', pista: '#fde68a', acierto: '#4ade80', error: '#f87171', jefe: '#fb923c' },
     borde: 'linea',
   },
   {
     id: 'atardecer',
     nombre: 'Atardecer',
-    colores: { fondo: '#1c1017', texto: '#f8e9ee', acento: '#f472b6', resaltado: '#3a1f2c', logo: '#fb7185', pista: '#c4b5fd', acierto: '#6ee7b7', error: '#ef4444', jefe: '#fbbf24' },
+    colores: { fondo: '#1c1017', texto: '#f8e9ee', numeros: '#f8e9ee', acento: '#f472b6', resaltado: '#3a1f2c', logo: '#fb7185', pista: '#c4b5fd', acierto: '#6ee7b7', error: '#ef4444', jefe: '#fbbf24' },
     borde: 'linea',
   },
   {
     id: 'sakura',
     nombre: 'Sakura',
-    colores: { fondo: '#fbe4ec', texto: '#3a1d2b', acento: '#d6457a', resaltado: '#f6c6d8', logo: '#b8325f', pista: '#6b4fa3', acierto: '#1f8f5a', error: '#d42a2a', jefe: '#c2610f' },
+    colores: { fondo: '#fbe4ec', texto: '#3a1d2b', numeros: '#3a1d2b', acento: '#d6457a', resaltado: '#f6c6d8', logo: '#b8325f', pista: '#6b4fa3', acierto: '#1f8f5a', error: '#d42a2a', jefe: '#c2610f' },
     borde: 'sakura',
   },
   {
     id: 'papel',
     nombre: 'Papel',
-    colores: { fondo: '#f5f1e8', texto: '#2b2a27', acento: '#8a5a2b', resaltado: '#e6dcc6', logo: '#6b4423', pista: '#2f5d8a', acierto: '#2e7d32', error: '#c62828', jefe: '#b8590e' },
+    colores: { fondo: '#f5f1e8', texto: '#2b2a27', numeros: '#2b2a27', acento: '#8a5a2b', resaltado: '#e6dcc6', logo: '#6b4423', pista: '#2f5d8a', acierto: '#2e7d32', error: '#c62828', jefe: '#b8590e' },
     borde: 'linea',
   },
   {
     id: 'monocromo',
     nombre: 'Monocromo',
-    colores: { fondo: '#ffffff', texto: '#000000', acento: '#000000', resaltado: '#e3e3e3', logo: '#000000', pista: '#000000', acierto: '#000000', error: '#000000', jefe: '#000000' },
+    colores: { fondo: '#ffffff', texto: '#000000', numeros: '#000000', acento: '#000000', resaltado: '#e3e3e3', logo: '#000000', pista: '#000000', acierto: '#000000', error: '#000000', jefe: '#000000' },
     borde: 'linea',
   },
   {
     id: 'alto-contraste',
     nombre: 'Alto contraste',
-    colores: { fondo: '#000000', texto: '#ffffff', acento: '#ffd400', resaltado: '#403800', logo: '#ffd400', pista: '#00e5ff', acierto: '#00ff6a', error: '#ff3b3b', jefe: '#ff9100' },
+    colores: { fondo: '#000000', texto: '#ffffff', numeros: '#ffffff', acento: '#ffd400', resaltado: '#403800', logo: '#ffd400', pista: '#00e5ff', acierto: '#00ff6a', error: '#ff3b3b', jefe: '#ff9100' },
     borde: 'linea',
   },
 ];
@@ -128,7 +129,7 @@ function textoLegibleSobre(hex) {
 // Todas las variables CSS que salen de los colores base. Los paneles y
 // bordes se tiñen con el color del texto (no con blanco fijo), así siguen
 // viéndose igual de bien sobre un fondo claro que sobre uno oscuro.
-function variablesDelTema({ fondo, texto, acento, resaltado, logo, pista, acierto, error, jefe, borde }) {
+function variablesDelTema({ fondo, texto, acento, resaltado, logo, pista, numeros, acierto, error, jefe, borde }) {
   return {
     // Las figuras del borde, en un tono del acento un poco apagado.
     '--borde-figura': imagenDeBorde(borde, mezclar(acento, fondo, 0.25)),
@@ -151,6 +152,9 @@ function variablesDelTema({ fondo, texto, acento, resaltado, logo, pista, aciert
     // elegido es exactamente el que se ve en el tablero.
     '--related-bg': resaltado,
 
+    // Los números que escribe el jugador en el tablero (aparte del texto).
+    '--player-number': numeros,
+
     '--neutral': pista,
     '--neutral-bg': translucido(pista, 0.12),
     '--neutral-border': translucido(pista, 0.35),
@@ -171,27 +175,35 @@ export function valoresDelTema({ colores, borde }) {
   return { ...colores, borde };
 }
 
-// El tema predefinido con estos colores (sin mirar el campo `ignorar`).
-function temaConColores(colores, ignorar) {
-  return TEMAS.find((tema) => CAMPOS_TEMA.every(({ id }) => id === ignorar || tema.colores[id] === colores[id]));
+// El tema predefinido con estos colores (sin mirar los campos de `ignorar`).
+function temaConColores(colores, ignorar = []) {
+  return TEMAS.find((tema) => CAMPOS_TEMA.every(({ id }) => ignorar.includes(id) || tema.colores[id] === colores[id]));
 }
+
+// Colores que los guardados viejos no traen, y cómo sacarlos de los demás
+// si el tema no es uno predefinido.
+const COLORES_NUEVOS = {
+  resaltado: (colores) => mezclar(colores.fondo, colores.texto, 0.1), // parecido al gris de antes
+  numeros: (colores) => colores.texto, // antes eran del color del texto
+};
 
 // El tema completo: lo guardado encima de los valores por defecto,
 // ignorando lo que no sea válido.
 //
-// Los guardados de antes de "resaltado" y del borde no los traen: si el
-// resto de colores es un tema predefinido se usan los de ese tema; si no,
-// un tono sacado del fondo y el texto (parecido al gris que había antes)
-// y el borde normal.
+// Los guardados viejos pueden no traer los colores nuevos ("resaltado",
+// "numeros") ni el borde: si el resto de colores es un tema predefinido se
+// usan los de ese tema; si no, los de COLORES_NUEVOS y el borde normal.
 export function temaCompleto(tema) {
   const resultado = {};
+  const faltan = [];
   for (const { id } of CAMPOS_TEMA) {
     const color = tema?.[id];
     if (COLOR_HEX.test(color ?? '')) resultado[id] = color.toLowerCase();
-    else if (id !== 'resaltado') resultado[id] = COLORES_POR_DEFECTO[id];
+    else if (COLORES_NUEVOS[id]) faltan.push(id);
+    else resultado[id] = COLORES_POR_DEFECTO[id];
   }
-  resultado.resaltado ??= temaConColores(resultado, 'resaltado')?.colores.resaltado
-    ?? mezclar(resultado.fondo, resultado.texto, 0.1);
+  const predefinido = faltan.length > 0 ? temaConColores(resultado, faltan) : null;
+  for (const id of faltan) resultado[id] = predefinido?.colores[id] ?? COLORES_NUEVOS[id](resultado);
   resultado.borde = esBordeValido(tema?.borde)
     ? tema.borde
     : temaConColores(resultado)?.borde ?? BORDE_POR_DEFECTO;

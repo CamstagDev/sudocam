@@ -86,28 +86,47 @@ describe('PeleaUriel', () => {
     expect(p.errores).toBe(1);
   });
 
-  it('pasa a fase 2 al llenar la mitad, o con el truco del retrato', () => {
-    const p = pelea([0, 1, 2, 9]);
-    expect(p.fase).toBe(1);
+  it('pasa a fase 2 al llenar el 25 %, o con el truco del retrato', () => {
+    const p = pelea([0, 1, 2, 9, 10, 11, 18, 19]);
     p.colocar(0, 5);
+    expect(p.fase).toBe(1); // 1 de 8
     p.colocar(1, 1); // equivocado, pero "llenada" igual
-    expect(p.fase).toBe(2);
+    expect(p.fase).toBe(2); // 2 de 8
 
     const otra = pelea();
     otra.faseForzada = true;
     expect(otra.fase).toBe(2);
   });
 
-  it('la búsqueda fácil toca cada 15 s y la de descarte cada 30 s, solo en fase 2', () => {
+  it('la búsqueda fácil toca cada 10 s y la de descarte cada 20 s, solo en fase 2', () => {
     const p = pelea();
     const disparos = [];
-    for (let s = 1; s <= 30; s++) disparos.push(...p.avanzarUnSegundo());
+    for (let s = 1; s <= 20; s++) disparos.push(...p.avanzarUnSegundo());
     expect(disparos).toEqual(['facil', 'facil']);
 
     p.faseForzada = true;
     const enFase2 = [];
-    for (let s = 1; s <= 30; s++) enFase2.push(...p.avanzarUnSegundo());
+    for (let s = 1; s <= 20; s++) enFase2.push(...p.avanzarUnSegundo());
     expect(enFase2).toEqual(['facil', 'facil', 'descarte']);
+  });
+
+  it('Uber Uriel busca más seguido: la fácil cada 5 s y la de descarte cada 15 s', () => {
+    const uber = new PeleaUriel({ tableroInicial: vaciar([0, 1, 2, 9, 10]), solucion: SOLUCION, uber: true });
+    uber.faseForzada = true;
+    const disparos = [];
+    for (let s = 1; s <= 15; s++) disparos.push(...uber.avanzarUnSegundo());
+    expect(disparos).toEqual(['facil', 'facil', 'facil', 'descarte']);
+  });
+
+  it('la pasiva usa las dos búsquedas, también en fase 1', () => {
+    // En la caja 0 de este tablero la búsqueda fácil no ve nada, pero la de
+    // descarte sí: el 8 solo cabe en la celda 20.
+    const vacias = [1, 3, 4, 5, 6, 8, 10, 11, 13, 20, 21, 22, 23, 24, 26, 28, 30, 32, 33, 35, 36, 37, 41,
+      43, 47, 48, 49, 51, 55, 56, 57, 59, 62, 68, 69, 72, 73, 74, 77, 80];
+    const p = pelea(vacias);
+    expect(p.fase).toBe(1);
+    expect(p.buscarJugada('facil', CAJAS[0])).toBeNull();
+    expect(p.buscarJugada('pasiva', CAJAS[0])).toEqual({ indice: 20, valor: 8 });
   });
 
   it('sin notas en la versión uber', () => {

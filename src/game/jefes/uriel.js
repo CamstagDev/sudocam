@@ -2,15 +2,16 @@
 // casillas vacías; gana quien se anote más.
 //
 // Uriel juega con dos búsquedas, cada una con su propio tiempo de espera
-// (entre comillas, su nombre en el juego):
-//  - Búsqueda fácil, "123..." (cada 15 s, siempre): en una caja de 3x3 al
-//    azar busca una fila, columna o caja a la que solo le falte un número.
-//  - Búsqueda por descarte, "3x3x3" (cada 30 s, desde la fase 2): un número
-//    que solo cabe en un hueco de la caja, cruzando filas y columnas.
-//  - Pasiva, "Predecible...": cada error del jugador hace que Uriel
-//    revise al instante la caja donde ocurrió.
-// La fase 2 empieza cuando se llena la mitad de las casillas que
-// empezaron vacías (o con el truco secreto del retrato).
+// (entre comillas, su nombre en el juego; los tiempos están en TIEMPOS):
+//  - Búsqueda fácil, "123..." (siempre): en una caja de 3x3 al azar busca
+//    una fila, columna o caja a la que solo le falte un número.
+//  - Búsqueda por descarte, "3x3x3" (desde la fase 2): un número que solo
+//    cabe en un hueco de la caja, cruzando filas y columnas.
+//  - Pasiva, "Predecible...": cada error del jugador hace que Uriel revise
+//    al instante la caja donde ocurrió, con las dos búsquedas (también en
+//    fase 1, para que se note desde el principio).
+// La fase 2 empieza cuando se llena el 25 % de las casillas que empezaron
+// vacías (o con el truco secreto del retrato).
 //
 // Aquí solo están las reglas (sin pantalla); la pelea en sí, con
 // cronómetros y animaciones, está en screens/jefes/uriel.js.
@@ -21,9 +22,12 @@ import { PartidaDeJefe } from './partida-de-jefe.js';
 
 export { CAJAS, cajaDe };
 
-export const SEGUNDOS_BUSQUEDA_FACIL = 15;
-export const SEGUNDOS_BUSQUEDA_DESCARTE = 30;
-const UMBRAL_FASE_2 = 0.5;
+// Segundos entre una búsqueda y la siguiente.
+export const TIEMPOS = {
+  normal: { facil: 10, descarte: 20 },
+  uber: { facil: 5, descarte: 15 },
+};
+export const UMBRAL_FASE_2 = 0.25;
 
 /* ---------- Lo que Uriel "ve" ---------- */
 
@@ -95,8 +99,9 @@ export class PeleaUriel extends PartidaDeJefe {
     this.faseForzada = false; // truco secreto del retrato
     this.alcanzoFase2 = false; // una vez en fase 2, no se vuelve atrás
 
-    this.esperaFacil = SEGUNDOS_BUSQUEDA_FACIL;
-    this.esperaDescarte = SEGUNDOS_BUSQUEDA_DESCARTE;
+    this.tiempos = uber ? TIEMPOS.uber : TIEMPOS.normal;
+    this.esperaFacil = this.tiempos.facil;
+    this.esperaDescarte = this.tiempos.descarte;
   }
 
   // Las casillas que ganó Uriel quedan fijas: son sus puntos.
@@ -131,7 +136,7 @@ export class PeleaUriel extends PartidaDeJefe {
     };
   }
 
-  // Fase 2 desde que se llena la mitad de las casillas que empezaron
+  // Fase 2 desde que se llena el 25 % de las casillas que empezaron
   // vacías (un número equivocado también cuenta como "llenada"). Aunque
   // después se borren números, Uriel se queda en fase 2.
   get fase() {
@@ -142,11 +147,14 @@ export class PeleaUriel extends PartidaDeJefe {
     return this.alcanzoFase2 ? 2 : 1;
   }
 
-  // Búsqueda que usa Uriel ahora: la fácil, o la de descarte desde la fase 2.
+  // tipo: 'facil', 'descarte' o 'pasiva' (prueba la fácil y, si no ve
+  // nada, la de descarte).
   buscarJugada(tipo, caja) {
-    return tipo === 'descarte'
-      ? buscarJugadaPorDescarte(this.tablero, this.solucion, caja)
-      : buscarJugadaFacil(this.tablero, this.solucion, caja);
+    const facil = () => buscarJugadaFacil(this.tablero, this.solucion, caja);
+    const descarte = () => buscarJugadaPorDescarte(this.tablero, this.solucion, caja);
+    if (tipo === 'facil') return facil();
+    if (tipo === 'descarte') return descarte();
+    return facil() ?? descarte();
   }
 
   // Avanza un segundo los tiempos de espera. Devuelve las búsquedas que
@@ -156,13 +164,13 @@ export class PeleaUriel extends PartidaDeJefe {
     this.esperaFacil--;
     if (this.esperaFacil <= 0) {
       tocan.push('facil');
-      this.esperaFacil = SEGUNDOS_BUSQUEDA_FACIL;
+      this.esperaFacil = this.tiempos.facil;
     }
     if (this.fase === 2) {
       this.esperaDescarte--;
       if (this.esperaDescarte <= 0) {
         tocan.push('descarte');
-        this.esperaDescarte = SEGUNDOS_BUSQUEDA_DESCARTE;
+        this.esperaDescarte = this.tiempos.descarte;
       }
     }
     return tocan;
@@ -171,8 +179,8 @@ export class PeleaUriel extends PartidaDeJefe {
   // Qué tan cargada está cada búsqueda, de 0 a 1 (para los anillos).
   get carga() {
     return {
-      facil: 1 - this.esperaFacil / SEGUNDOS_BUSQUEDA_FACIL,
-      descarte: 1 - this.esperaDescarte / SEGUNDOS_BUSQUEDA_DESCARTE,
+      facil: 1 - this.esperaFacil / this.tiempos.facil,
+      descarte: 1 - this.esperaDescarte / this.tiempos.descarte,
     };
   }
 }

@@ -58,7 +58,7 @@
   padding: 0;
   border: none;
   background: var(--surface-solid);
-  color: var(--text);
+  color: var(--player-number); /* los números que escribe el jugador */
   font-family: var(--font);
   font-size: clamp(16px, 5vw, 22px);
   font-weight: 600;

@@ -9,6 +9,17 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Uriel se mueve antes: pasa a fase 2 con el 25 % del tablero lleno (antes
+  la mitad), "123..." va cada 10 s (5 s en la uber) y "3x3x3" cada 20 s
+  (15 s en la uber). Su pasiva "Predecible..." ahora prueba las dos
+  búsquedas en la caja del error, así que también se nota en fase 1.
+- Nuevo color en Personalización: "Tus números", los que escribes en el
+  tablero, aparte del color del texto (por ejemplo, texto negro y números
+  rosados). Cada tema trae el suyo igual a su texto, y los guardados
+  anteriores lo toman del texto sin migrar nada.
+- Para desarrollo: `docs/fichas-tecnicas-jefes.txt`, la ficha técnica de
+  cada jefe (tiempos, fases, desbloqueos y cómo funciona cada habilidad).
+
 ## 0.3.0 (2026-10-07)
 
 - Uriel y Uber Uriel tienen ilustración propia en su carta del menú. Las

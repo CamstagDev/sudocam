@@ -28,6 +28,8 @@
   --error: #ff6b6b;
   --error-bg: rgba(255, 107, 107, 0.12);
   --error-border: rgba(255, 107, 107, 0.35);
+  /* "numeros": los números que escribe el jugador en el tablero */
+  --player-number: #f1f2f6;
   /* "pista": celdas fijas, dadas al generar el tablero */
   --neutral: #7ca8ff;
   --neutral-bg: rgba(124, 168, 255, 0.12);
