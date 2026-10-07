@@ -120,6 +120,23 @@ export const TEMAS_DE_JEFES = [
     colores: { fondo: '#1c1213', texto: '#f3e6e6', numeros: '#f3e6e6', acento: '#ef4444', resaltado: '#3a2224', logo: '#ff6b6b', pista: '#fca5a5', acierto: '#4ade80', error: '#fbbf24', jefe: '#ff3b30' },
     borde: 'linea',
   },
+  {
+    id: 'babel',
+    nombre: 'Babel',
+    jefe: 'babel',
+    // Piedra negra y el blanco dorado de sus signos encendidos.
+    colores: { fondo: '#151518', texto: '#ece7dc', numeros: '#ece7dc', acento: '#e3c27a', resaltado: '#2a2822', logo: '#f3dca0', pista: '#f0cf85', acierto: '#86d7a0', error: '#ff6b6b', jefe: '#f5b94a' },
+    borde: 'linea',
+  },
+  {
+    id: 'babel-uber',
+    nombre: 'Uber Babel',
+    jefe: 'babel_uber',
+    // Neón de sus tres alfabetos. Las cajas y el teclado de la uber se tiñen
+    // con pista, jefe y acierto: cian, magenta y dorado, como en su torre.
+    colores: { fondo: '#0f0d16', texto: '#eee9f5', numeros: '#eee9f5', acento: '#ff4fc3', resaltado: '#2a1f33', logo: '#3fe0ff', pista: '#3fe0ff', acierto: '#ffc94d', error: '#ff5a5a', jefe: '#ff4fc3' },
+    borde: 'linea',
+  },
 ];
 
 // Estilo extra del tablero en la pelea contra cada jefe, aparte de los
@@ -130,6 +147,7 @@ const ESTILOS_DE_PELEA = {
   hecate_uber: 'brillo',
   jormungandr: 'grueso', // líneas y números más gruesos, pistas torcidas
   jormungandr_uber: 'muy-grueso',
+  babel_uber: 'brillo',
 };
 
 // Todos los temas que se pueden reconocer como "en uso".

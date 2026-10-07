@@ -140,23 +140,30 @@ export const JEFES = {
   },
   babel: {
     nombre: 'Babel',
-    descripcion: 'La torre de los idiomas perdidos: no vas a reconocer un solo número.',
+    descripcion: 'Babel fue la primera torre que quiso escribir todos los números en un solo idioma. Cuando por fin tocó el cielo, los números olvidaron cómo se llamaban, y desde entonces cada uno habla una lengua distinta. La torre sigue en pie, y cambia de palabras cada vez que alguien empieza a entenderla.',
     emoji: '🗼',
+    // Los textos de las habilidades son de ambientación: insinúan cómo
+    // funciona cada una sin explicarla. Las reglas exactas están en
+    // game/jefes/babel.js y en docs/fichas-tecnicas-jefes.txt.
     ataque1: {
-      titulo: 'Pasiva: &%?#',
-      texto: 'Babel no usa los números del 1 al 9: al empezar la pelea le asigna a cada uno un símbolo al azar, y así se ven en el tablero y en los botones (que además no están en orden).',
+      titulo: '&%?#',
+      emoji: '🔣',
+      imagen: 'babel_simbolos',
+      texto: 'Aquí ningún número se llama como debería, y ni siquiera las teclas están donde las dejaste. Pero detrás de cada signo sigue escondido el mismo número de siempre, esperando que lo reconozcas.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Babel (en cualquier dificultad) para desbloquear esto.',
     },
     ataque2: {
-      titulo: 'Pasiva: La lengua evoluciona',
-      texto: 'Cada vez que completas una caja de 3x3, Babel se reinventa: asigna un nuevo juego de 9 símbolos al azar para todo el tablero y reordena los botones.',
+      titulo: 'La lengua evoluciona',
+      emoji: '🔀',
+      imagen: 'babel_evolucion',
+      texto: 'Cada vez que terminas de entender un rincón de la torre, la torre cambia de idioma. Lo que aprendiste hace un momento ya no te sirve de nada.',
       seDesbloqueaCon: ganoEnMenosDe(900),
       pista: 'Gana a Babel en 15:00 o menos para desbloquear esto.',
     },
     secreto: {
       titulo: '¿Secreto?',
-      texto: 'No hay ningún truco escondido contra Babel: su única piedad es que, debajo de los símbolos, sigue siendo un sudoku normal.',
+      texto: 'No hay truco contra Babel, solo una verdad: debajo de todas sus lenguas, sigue siendo el mismo acertijo de siempre.',
       seDesbloqueaCon: sinErrores,
       pista: 'Gana a Babel sin cometer ni un error para desbloquear esto.',
     },
@@ -220,8 +227,10 @@ export const JEFES = {
     emoji: '⚡',
     normal: 'babel',
     ataque1: {
-      titulo: 'Pasiva: Torre de Babel',
-      texto: 'En vez de un solo juego de 9 símbolos hay 3 a la vez, y cada caja de 3x3 usa uno de los tres al azar. El teclado tiene 27 botones (3 filas de 9): la misma columna siempre es el mismo número en los 3 juegos, pero el orden de las columnas está mezclado.',
+      titulo: 'Torre de Babel',
+      emoji: '🏛️',
+      imagen: 'babel_torre',
+      texto: 'Tres lenguas a la vez, cada una dueña de su rincón y de su color. Escúchalas con calma: aunque suenen distinto, dicen lo mismo cuando hablan desde la misma columna.',
     },
   },
   typhon_uber: {

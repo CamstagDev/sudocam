@@ -9,6 +9,16 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Babel y Uber Babel quedan al nivel de los demás jefes: ilustración en
+  su carta, retratos de pelea, iconos para &%?#, La lengua evoluciona y
+  Torre de Babel (con su carta en la pelea y en la página de
+  información), historia y textos de ambientación.
+- Temas de Babel (piedra negra y dorado claro) y Uber Babel (neón cian,
+  magenta y dorado, que también tiñen sus tres alfabetos), con los bordes
+  de las tarjetas del color del jefe. En la pelea contra Uber Babel las
+  líneas y los símbolos brillan.
+- Uber Babel ya no telegrafía nada: iconos silenciosos y sin registro de
+  eventos, como las demás uber.
 - En las peleas con tema de jefe, los bordes de las tarjetas (la cabecera
   del jefe, el tablero y lo demás) toman el color del jefe. El tema de
   Uriel pasa a ser naranja, como las luces de su ilustración.

@@ -13,13 +13,18 @@ import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
+import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
 export const DIFICULTADES_BABEL = ['facil', 'medio', 'dificil'];
+
+// Nombres, iconos y cartas de las habilidades: los de su página de
+// información (game/jefes/catalogo.js). La uber suma su Torre de Babel.
+const { ataque1: SIMBOLOS, ataque2: EVOLUCION } = JEFES.babel;
+const TORRE = JEFES.babel_uber.ataque1;
 
 let limpiar = () => {};
 
@@ -44,14 +49,14 @@ export const pantallaBabel = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
-      habilidadesSilenciosas: false,
       fases: false,
       habilidades: [
-        { id: 'simbolos', emoji: '&%', nombre: '&%?#' },
-        { id: 'evolucion', emoji: '🔀', nombre: 'La lengua evoluciona' },
+        habilidadDeSeccion('simbolos', SIMBOLOS),
+        habilidadDeSeccion('evolucion', EVOLUCION),
+        ...(uber ? [habilidadDeSeccion('torre', TORRE)] : []),
       ],
     });
-    cabecera.mostrarFase(1, `${JEFES.babel.descripcion} Dificultad: ${DIFICULTADES[dificultad].nombre}.`
+    cabecera.mostrarFase(1, `Resuelve el sudoku aunque los números se vean como símbolos. Dificultad: ${DIFICULTADES[dificultad].nombre}.`
       + (uber ? ' Torre de Babel: tres alfabetos a la vez; el color de cada caja dice cuál usa.' : ''));
     cabecera.habilidades.simbolos.cargar(1); // pasiva siempre activa
 
@@ -88,7 +93,9 @@ export const pantallaBabel = {
     });
     cuerpo.querySelector('.juego').classList.toggle('juego-babel-uber', uber);
 
-    const registro = crearRegistroEventos(cuerpo);
+    // La uber no telegrafía nada (como las demás): sin registro, y sus iconos
+    // son silenciosos (la cabecera lo hace sola con uber).
+    const registro = uber ? { anotar: () => {} } : crearRegistroEventos(cuerpo);
 
     async function ganar(segundos) {
       mostrarResultadoPelea({

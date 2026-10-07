@@ -150,7 +150,8 @@ BABEL (UBER)
 - Torre de Babel: 3 alfabetos a la vez; cada caja usa uno (se distingue
   por su color). Teclado de 27 botones (3 filas de 9): la misma columna es
   el mismo número en los 3 alfabetos, con las columnas desordenadas.
-- Sin notas. Los iconos sí muestran indicadores.
+- Sin notas, sin registro de eventos. Los iconos (&%?#, La lengua
+  evoluciona y Torre de Babel) se ven desde el principio, sin indicadores.
 
 
 TYPHON  (src/game/jefes/typhon.js)
