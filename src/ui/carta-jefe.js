@@ -75,7 +75,11 @@ function rotularBotonChico(boton, { icono, titulo }) {
 async function ponerIlustracion(cara, id) {
   const ruta = await buscarImagenDeJefe(id, imagenDeCarta);
   if (!ruta) return;
-  cara.style.setProperty('--ilustracion', `url("${ruta}")`);
+  // Ruta absoluta: un url() relativo dentro de una variable CSS se resuelve
+  // desde la hoja de estilos (dist/assets/) y en el build no encuentra la
+  // imagen.
+  const absoluta = new URL(ruta, document.baseURI).href;
+  cara.style.setProperty('--ilustracion', `url("${absoluta}")`);
   cara.classList.add('con-ilustracion');
 }
 
