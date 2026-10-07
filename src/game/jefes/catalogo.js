@@ -58,13 +58,16 @@ export const JEFES = {
   },
   hecate: {
     nombre: 'Hecate',
-    descripcion: 'La jefa de la magia y las ilusiones.',
+    descripcion: 'Hecate cuida los cruces del tablero, donde una fila, una columna y una caja se encuentran. Tiene tres caras y ninguna dice la verdad: dicen que fue la primera en notar que un número mal puesto se ve igual que uno bueno, y desde entonces juega con eso. Su reloj de arena nunca se detiene, y cada tropiezo tuyo lo hace correr más rápido.',
+    // Los textos de las habilidades son de ambientación: insinúan cómo
+    // funciona cada una sin explicarla. Las reglas exactas están en
+    // game/jefes/hecate.js y en docs/fichas-tecnicas-jefes.txt.
     emoji: '🔮',
     ataque1: {
       titulo: 'Visiones ilusorias',
       emoji: '👁️',
       imagen: 'hecate_vision',
-      texto: 'Cada 15 segundos, Hecate encanta una celda vacía haciendo que parezca tener un número que en realidad no está ahí. La ilusión dura 10 segundos antes de desvanecerse; en esta versión normal parpadea lento, así que si prestas atención puedes notarla.',
+      texto: 'No todo lo que ves en el tablero está ahí. De vez en cuando un número aparece donde no debería y se va tan callado como llegó... aunque, si lo miras bien, tiembla un poco.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Hecate para desbloquear esto.',
     },
@@ -74,7 +77,7 @@ export const JEFES = {
       titulo: 'Maldición de pesadilla',
       emoji: '🌑',
       imagen: 'hecate_maldicion',
-      texto: 'Cuando el tablero llega al 80% resuelto (o queda 1 minuto en el reloj), Hecate entra en fase 2: cada 10 segundos disfraza uno de tus números o notas con un valor falso durante 10 segundos.',
+      texto: 'Cuando el final se acerca, Hecate deja de inventar y empieza a torcer lo que ya es tuyo. Por un rato, lo que escribiste puede no ser lo que ves.',
       seDesbloqueaCon: ganoEnMenosDe(600),
       pista: 'Gana a Hecate en 10:00 o menos para desbloquear esto.',
     },
@@ -82,7 +85,7 @@ export const JEFES = {
       titulo: 'Aullido paralizante',
       emoji: '🗿',
       imagen: 'hecate_aullido',
-      texto: 'Durante toda la pelea, Hecate elige un número que todavía te falte y en 20 segundos lo "convierte en piedra": el botón avisa mientras se carga y luego queda inutilizable un rato (5 segundos, o 10 en fase 2). Después elige otro.',
+      texto: 'Sus lobos le aúllan a un número que todavía te falta. Cuando el aullido termina, ese número se vuelve piedra y no hay mano que lo mueva... hasta que el eco se apaga.',
       seDesbloqueaCon: ganoEnMenosDe(600),
       pista: 'Gana a Hecate en 10:00 o menos para desbloquear esto.',
     },
@@ -90,7 +93,7 @@ export const JEFES = {
       titulo: 'Pesar Castigador',
       emoji: '⏳',
       imagen: 'hecate_pesar',
-      texto: 'Cada error que cometas le resta 1 minuto al reloj; si eso lo hace llegar a 0, es derrota inmediata. Contra Hecate conviene jugar sobre seguro antes que rápido.',
+      texto: 'El reloj de Hecate se alimenta de tus tropiezos. Cada error le regala un pedazo de tu tiempo, y cuando ya no te queda nada, ella no perdona.',
       seDesbloqueaCon: sinErrores,
       pista: 'Gana a Hecate sin cometer ni un error para desbloquear esto.',
     },
@@ -181,7 +184,7 @@ export const JEFES = {
     normal: 'hecate',
     ataque1: {
       titulo: 'Pasiva: Ilusiones perfectas',
-      texto: 'Sus visiones ilusorias ya no parpadean: se ven idénticas a un número real, sin ninguna pista visual que las delate.',
+      texto: 'Sus mentiras ya no tiemblan. Lo falso y lo verdadero se ven exactamente igual.',
     },
   },
   jormungandr_uber: {

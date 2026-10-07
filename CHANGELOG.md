@@ -9,6 +9,10 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Hecate tiene historia: su descripción cuenta quién es la de las tres
+  caras. Los textos de sus habilidades, su secreto y su versión uber pasan
+  a ser de ambientación, y en la pelea arriba sale una frase corta en vez
+  de la historia.
 - Hecate y Uber Hecate tienen ilustración propia en su carta, su retrato
   de la pelea e iconos para sus cuatro habilidades, iguales en la pelea y
   en su página de información (con su carta al pasar el mouse o tocar). Su

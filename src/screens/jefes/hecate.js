@@ -7,7 +7,7 @@
 import { RUTA_INICIO, navegar } from '../../router.js';
 import { DIFICULTADES } from '../../game/sudoku/dificultades.js';
 import { generarPuzzle } from '../../game/sudoku/generador.js';
-import { PeleaHecate, SEGUNDOS_TOTALES } from '../../game/jefes/hecate.js';
+import { PeleaHecate, SEGUNDOS_PENALIZACION, SEGUNDOS_TOTALES } from '../../game/jefes/hecate.js';
 import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
@@ -19,7 +19,7 @@ import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
 const DESCRIPCION_FASE = {
-  1: JEFES.hecate.descripcion,
+  1: `Resuelve el tablero antes de que se acabe el reloj. Cada error te cuesta ${SEGUNDOS_PENALIZACION / 60} minuto.`,
   2: 'Fase 2: además de sus ilusiones y su aullido, Hecate disfraza tus propios números.',
 };
 const SEGUNDOS_RELOJ_CRITICO = 60;
