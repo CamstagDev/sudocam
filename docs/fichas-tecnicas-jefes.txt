@@ -114,11 +114,13 @@ Fases
   Ouroboros se la da de comer (una pista original cuenta doble).
 
 Información del jefe
-- Hambre: ganarle 1 vez.   - Glotonería: ganarle en menos de 15:00.
+- Hambre: ganarle 1 vez.
+- Glotonería: ganarle en menos de 15:00.
+- Ouroboros: ganarle en menos de 15:00.
 - Secreto: 3 victorias.
 
 JÖRMUNGANDR (UBER)
-- Desbloqueo: las 3 secciones desbloqueadas.
+- Desbloqueo: las 4 secciones desbloqueadas.
 - Hambre come 2; Glotonería come 3 pistas (o 3 números si no quedan).
 - Sin notas. Los iconos sí muestran indicadores.
 

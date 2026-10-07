@@ -1,30 +1,37 @@
 // Pantalla de la pelea contra Jörmungandr (y la uber con ?uber=1).
 //
 // Las reglas viven en game/jefes/jormungandr.js. Aquí: la cabecera con
-// Hambre/Glotonería y Ouroboros (con el vientre como numerito), el reloj
-// de los bocados, el registro y el secreto de darle de comer.
+// Hambre o Glotonería (un icono por fase, comparten el mismo reloj) y
+// Ouroboros (con el vientre como numerito), el reloj de los bocados, el
+// registro y el secreto de darle de comer.
 
 import { RUTA_INICIO, navegar } from '../../router.js';
 import { DIFICULTADES } from '../../game/sudoku/dificultades.js';
 import { generarPuzzle } from '../../game/sudoku/generador.js';
-import { PeleaJormungandr } from '../../game/jefes/jormungandr.js';
+import { PeleaJormungandr, SEGUNDOS_HAMBRE } from '../../game/jefes/jormungandr.js';
+import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
+import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 import { formatearSegundos } from '../../ui/cronometro.js';
 
+// Nombres, iconos y cartas de las habilidades: los de su página de
+// información (game/jefes/catalogo.js).
+const { ataque1: HAMBRE, ataque2: GLOTONERIA, pasiva: OUROBOROS } = JEFES.jormungandr;
+
+// Qué icono come en cada fase, y la frase de arriba.
 const POR_FASE = {
   1: {
-    habilidad: { emoji: '🍴', nombre: 'Hambre' },
-    descripcion: 'Hambre: cada 60 segundos devora un número que hayas puesto, como si nunca lo hubieras escrito.',
+    icono: 'hambre',
+    descripcion: `${HAMBRE.titulo}: cada ${SEGUNDOS_HAMBRE} segundos devora un número que hayas puesto, como si nunca lo hubieras escrito.`,
   },
   2: {
-    habilidad: { emoji: '🍽️', nombre: 'Glotonería' },
-    descripcion: 'Fase 2, Glotonería: cada 60 segundos devora pistas originales del tablero (o números tuyos si ya no quedan).',
+    icono: 'glotoneria',
+    descripcion: `Fase 2, ${GLOTONERIA.titulo}: cada ${SEGUNDOS_HAMBRE} segundos devora pistas originales del tablero (o números tuyos si ya no quedan).`,
   },
 };
 
@@ -58,8 +65,9 @@ export const pantallaJormungandr = {
       uber,
       habilidadesSilenciosas: false,
       habilidades: [
-        { id: 'comer', ...POR_FASE[1].habilidad },
-        { id: 'ouroboros', emoji: '🐍', nombre: 'Ouroboros' },
+        habilidadDeSeccion('hambre', HAMBRE),
+        habilidadDeSeccion('glotoneria', GLOTONERIA, { oculta: true }),
+        habilidadDeSeccion('ouroboros', OUROBOROS),
       ],
     });
     const { habilidades } = cabecera;
@@ -83,17 +91,19 @@ export const pantallaJormungandr = {
     /* ---------- Cabecera ---------- */
 
     let faseMostrada = 1;
+    const iconoQueCome = () => habilidades[POR_FASE[pelea.fase].icono];
 
     function actualizarCabecera() {
       const fase = pelea.fase;
       cabecera.mostrarFase(fase, POR_FASE[fase].descripcion + (uber ? ' Uber: come más de golpe.' : ''));
       habilidades.ouroboros.ponerContador(pelea.vientre);
       habilidades.ouroboros.cargar(pelea.carga.vientre);
-      habilidades.comer.cargar(pelea.carga.comer);
+      iconoQueCome().cargar(pelea.carga.comer);
 
       if (fase !== faseMostrada) {
         faseMostrada = fase;
-        habilidades.comer.cambiar(POR_FASE[fase].habilidad);
+        habilidades.hambre.elemento.classList.toggle('hidden', fase === 2);
+        habilidades.glotoneria.elemento.classList.toggle('hidden', fase === 1);
         registro.anotar(fase === 2
           ? '¡El vientre de Jörmungandr se llenó! Ahora usa Glotonería.'
           : 'El vientre de Jörmungandr bajó: vuelve a usar Hambre.', fase === 2 ? 'jefe' : 'jugador');
@@ -119,8 +129,8 @@ export const pantallaJormungandr = {
       const comida = pelea.avanzarUnSegundo();
       if (comida) {
         registro.anotar(describirBocados(comida), 'jefe');
-        habilidades.comer.reiniciar();
-        habilidades.comer.destello();
+        iconoQueCome().reiniciar();
+        iconoQueCome().destello();
         habilidades.ouroboros.destello();
         juego.dibujar();
       }

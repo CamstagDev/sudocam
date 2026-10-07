@@ -100,23 +100,40 @@ export const JEFES = {
   },
   jormungandr: {
     nombre: 'Jörmungandr',
-    descripcion: 'La serpiente que rodea el tablero: se lo va tragando de a poco.',
+    descripcion: 'Jörmungandr nació mordiéndose la cola alrededor del primer tablero y nunca se ha soltado. Todo lo que escribes termina, tarde o temprano, en su vientre: para ella un sudoku no se resuelve, se digiere. Dicen que el día que se coma la última cifra, el ciclo volverá a empezar desde cero.',
     emoji: '🐍',
+    // Los textos de las habilidades son de ambientación: insinúan cómo
+    // funciona cada una sin explicarla. Las reglas exactas están en
+    // game/jefes/jormungandr.js y en docs/fichas-tecnicas-jefes.txt.
     ataque1: {
       titulo: 'Hambre',
-      texto: 'Cada 60 segundos, Jörmungandr devora un número que hayas puesto: la celda queda vacía otra vez, como si nunca lo hubieras escrito.',
+      emoji: '🍴',
+      imagen: 'jormungandr_hambre',
+      texto: 'La serpiente no tiene afán. Cada tanto abre la boca y se lleva algo que escribiste, como si nunca hubiera estado ahí.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Jörmungandr para desbloquear esto.',
     },
+    // Glotonería y Ouroboros se desbloquean con lo mismo (antes eran una
+    // sola sección), así que investigar a Jörmungandr pide lo mismo que siempre.
     ataque2: {
-      titulo: 'Fase 2: Glotonería (pasiva: Ouroboros)',
-      texto: 'Ouroboros cuenta cuántos números tiene Jörmungandr en el vientre: sube cada vez que come y baja cada vez que colocas un número nuevo. Al llegar a 10, Hambre se convierte en Glotonería: devora una pista original del tablero (dejándola editable), y si ya no quedan, devora 2 números tuyos de golpe. Como el vientre sube y baja, puede entrar y salir de la fase 2 varias veces.',
+      titulo: 'Glotonería',
+      emoji: '🍽️',
+      imagen: 'jormungandr_glotoneria',
+      texto: 'Cuando ya no le cabe nada más, deja de conformarse con lo tuyo y empieza a morder los cimientos del tablero. Ni siquiera lo que estaba escrito desde el principio está a salvo.',
+      seDesbloqueaCon: ganoEnMenosDe(900),
+      pista: 'Gana a Jörmungandr en 15:00 o menos para desbloquear esto.',
+    },
+    pasiva: {
+      titulo: 'Ouroboros',
+      emoji: '🐍',
+      imagen: 'jormungandr_ouroboros',
+      texto: 'Todo lo que entra tiene que salir. Lo que ella come la llena, y lo que tú escribes la vacía. Mientras el vientre sube y baja, el ciclo nunca se rompe.',
       seDesbloqueaCon: ganoEnMenosDe(900),
       pista: 'Gana a Jörmungandr en 15:00 o menos para desbloquear esto.',
     },
     secreto: {
       titulo: '¿Secreto?',
-      texto: 'Selecciona una celda con un número (tuyo o una pista original) y toca el icono de Ouroboros para dárselo de comer tú mismo. Si es una pista original, cuenta doble.',
+      texto: 'La serpiente nunca rechaza un bocado, venga de quien venga. Elige un número y ofréceselo al anillo: lo que nunca fue tuyo le sabe el doble.',
       seDesbloqueaCon: (stats) => stats.victorias >= 3,
       pista: 'Gana a Jörmungandr 3 veces para desbloquear esto.',
     },
@@ -194,7 +211,7 @@ export const JEFES = {
     normal: 'jormungandr',
     ataque1: {
       titulo: 'Hambre voraz',
-      texto: 'Come más de golpe: Hambre devora 2 números tuyos en vez de 1, y Glotonería (fase 2) devora 3.',
+      texto: 'Ya no muerde: traga. Cada bocado se lleva más de lo que debería.',
     },
   },
   babel_uber: {

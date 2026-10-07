@@ -186,6 +186,14 @@ describe('registro de jefes', () => {
     expect(estaCompletamenteInvestigado('hecate')).toBe(true);
   });
 
+  it('investigar a Jörmungandr pide lo mismo de siempre: ganar en 15:00 o menos y 3 victorias', async () => {
+    await registrarVictoriaDeJefe('jormungandr', { segundos: 800, errores: 1, usoNotas: false });
+    await registrarVictoriaDeJefe('jormungandr', { segundos: 1000, errores: 1, usoNotas: false });
+    expect(estaCompletamenteInvestigado('jormungandr')).toBe(false); // faltan 3 victorias
+    await registrarVictoriaDeJefe('jormungandr', { segundos: 1000, errores: 1, usoNotas: false });
+    expect(estaCompletamenteInvestigado('jormungandr')).toBe(true);
+  });
+
   it('cada habilidad con dibujo tiene también nombre y emoji de respaldo', () => {
     for (const jefe of Object.values(JEFES)) {
       for (const seccion of SECCIONES_INFORMACION.map((nombre) => jefe[nombre]).filter(Boolean)) {
