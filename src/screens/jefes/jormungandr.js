@@ -63,7 +63,6 @@ export const pantallaJormungandr = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
-      habilidadesSilenciosas: false,
       habilidades: [
         habilidadDeSeccion('hambre', HAMBRE),
         habilidadDeSeccion('glotoneria', GLOTONERIA, { oculta: true }),
@@ -86,7 +85,9 @@ export const pantallaJormungandr = {
       alGanar: ganar,
     });
 
-    const registro = crearRegistroEventos(cuerpo);
+    // La uber no telegrafía nada (como las de Uriel y Hecate): sin registro y
+    // con los iconos silenciosos, todos a la vista desde el principio.
+    const registro = uber ? { anotar: () => {} } : crearRegistroEventos(cuerpo);
 
     /* ---------- Cabecera ---------- */
 
@@ -102,8 +103,10 @@ export const pantallaJormungandr = {
 
       if (fase !== faseMostrada) {
         faseMostrada = fase;
-        habilidades.hambre.elemento.classList.toggle('hidden', fase === 2);
-        habilidades.glotoneria.elemento.classList.toggle('hidden', fase === 1);
+        if (!uber) {
+          habilidades.hambre.elemento.classList.toggle('hidden', fase === 2);
+          habilidades.glotoneria.elemento.classList.toggle('hidden', fase === 1);
+        }
         registro.anotar(fase === 2
           ? '¡El vientre de Jörmungandr se llenó! Ahora usa Glotonería.'
           : 'El vientre de Jörmungandr bajó: vuelve a usar Hambre.', fase === 2 ? 'jefe' : 'jugador');

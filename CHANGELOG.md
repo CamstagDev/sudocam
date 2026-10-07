@@ -9,12 +9,14 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
-- Jörmungandr tiene ilustración en su carta (la uber usa la misma por
-  ahora), retratos de pelea para la normal y la uber, e iconos para Hambre,
+- Jörmungandr y Uber Jörmungandr tienen ilustración en su carta, retratos de pelea para la normal y la uber, e iconos para Hambre,
   Glotonería y Ouroboros, con su carta en la pelea y en la página de
   información. En la pelea, Hambre y Glotonería son dos iconos: se ve el
   de la fase en la que está. Su antigua sección de fase 2 se separa en
   "Glotonería" y "Ouroboros", que se desbloquean con lo mismo que antes.
+- Uber Jörmungandr ya no telegrafía nada, como Uber Uriel y Uber Hecate:
+  sus iconos se ven todos desde el principio pero sin carga, destellos ni
+  el contador del vientre, y no hay registro de eventos.
 - Jörmungandr tiene historia, y los textos de sus habilidades, su secreto
   y su versión uber pasan a ser de ambientación.
 - Hecate tiene historia: su descripción cuenta quién es la de las tres

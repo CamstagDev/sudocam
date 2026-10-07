@@ -122,7 +122,9 @@ Información del jefe
 JÖRMUNGANDR (UBER)
 - Desbloqueo: las 4 secciones desbloqueadas.
 - Hambre come 2; Glotonería come 3 pistas (o 3 números si no quedan).
-- Sin notas. Los iconos sí muestran indicadores.
+- Sin notas, sin registro de eventos. Los iconos se ven todos desde el
+  principio, sin indicadores (ni carga, ni destellos, ni el contador del
+  vientre). Darle de comer a Ouroboros sigue funcionando.
 
 
 BABEL  (src/game/jefes/babel.js)
