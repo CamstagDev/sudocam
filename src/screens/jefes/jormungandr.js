@@ -52,6 +52,7 @@ export const pantallaJormungandr = {
   jefe: (params) => (params.get('uber') === '1' ? 'jormungandr_uber' : 'jormungandr'),
   // Salir a mitad de la pelea (rendirse) pide confirmación.
   antesDeSalir: confirmarRendicion,
+  volverA: 'jefes',
   subtitulo: 'Resuelve antes de que se lo coma todo',
 
   render(contenedor, params) {

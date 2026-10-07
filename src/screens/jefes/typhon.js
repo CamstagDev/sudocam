@@ -52,6 +52,7 @@ export const pantallaTyphon = {
   jefe: (params) => (params.get('uber') === '1' ? 'typhon_uber' : 'typhon'),
   // Salir a mitad de la pelea (rendirse) pide confirmación.
   antesDeSalir: confirmarRendicion,
+  volverA: 'jefes',
   subtitulo: 'Resuelve los tableros mientras giran',
 
   async render(contenedor, params) {

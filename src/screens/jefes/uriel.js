@@ -43,6 +43,7 @@ export const pantallaUriel = {
   jefe: (params) => (params.get('uber') === '1' ? 'uriel_uber' : 'uriel'),
   // Salir a mitad de la pelea (rendirse) pide confirmación.
   antesDeSalir: confirmarRendicion,
+  volverA: 'jefes',
   subtitulo: 'Llena más casillas que Uriel',
 
   render(contenedor, params) {

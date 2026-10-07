@@ -1,12 +1,10 @@
-import { navegar } from '../router.js';
+import { RUTA_INICIO, navegar } from '../router.js';
 import { VERSION_APP } from '../version.js';
 import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
 import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { ultimosLogros } from '../game/logros/logros.js';
-import { ORDEN_JEFES } from '../game/jefes/catalogo.js';
-import { jefeDesbloqueado } from '../game/jefes/registro.js';
-import { crearCarruselJefes } from '../ui/carrusel-jefes.js';
+import { tituloDeModo } from '../ui/modos.js';
 
 const JUEGOS = [
   { ruta: 'sudoku', icono: '🔢', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
@@ -41,25 +39,6 @@ function vitrinaDeLogros() {
   `;
 }
 
-// Solo los jefes ya desbloqueados: los demás no se insinúan de ninguna
-// forma. Sin ninguno, la sección "Jefes" entera no aparece.
-function seccionDeJefes() {
-  const desbloqueados = ORDEN_JEFES.filter((id) => jefeDesbloqueado(id));
-  if (desbloqueados.length === 0) return null;
-
-  const seccion = document.createElement('section');
-  seccion.className = 'menu-seccion';
-  // El título es una ilustración; el texto queda para los lectores de pantalla.
-  seccion.innerHTML = `
-    <h2 class="titulo-jefes">
-      <img src="./img/titulos/jefes.png" alt="" />
-      <span class="solo-lectores">Jefes</span>
-    </h2>
-  `;
-  seccion.appendChild(crearCarruselJefes(desbloqueados));
-  return seccion;
-}
-
 // Los juegos piden sus opciones antes de empezar; el resto abre directo.
 const SELECTORES = {
   sudoku: elegirDificultadSudoku,
@@ -80,11 +59,9 @@ export const pantallaMenu = {
   render(contenedor) {
     contenedor.innerHTML = `
       <section class="menu-seccion">
-        <h2 class="section-title">Juegos</h2>
+        ${tituloDeModo(RUTA_INICIO)}
         <div class="game-grid">${JUEGOS.map(cartaJuego).join('')}</div>
       </section>
-
-      <div id="jefes"></div>
 
       ${vitrinaDeLogros()}
 
@@ -100,11 +77,6 @@ export const pantallaMenu = {
     contenedor.querySelectorAll('[data-ruta]').forEach((boton) => {
       boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
     });
-
-    const jefes = seccionDeJefes();
-    const lugarDeJefes = contenedor.querySelector('#jefes');
-    if (jefes) lugarDeJefes.replaceWith(jefes);
-    else lugarDeJefes.remove();
 
     dibujarPartidasEnPausa(contenedor.querySelector('#partidas-en-pausa'));
   },

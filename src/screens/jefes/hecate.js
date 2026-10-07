@@ -37,6 +37,7 @@ export const pantallaHecate = {
   jefe: (params) => (params.get('uber') === '1' ? 'hecate_uber' : 'hecate'),
   // Salir a mitad de la pelea (rendirse) pide confirmación.
   antesDeSalir: confirmarRendicion,
+  volverA: 'jefes',
   subtitulo: 'Resuelve el tablero antes de que acabe el reloj',
 
   render(contenedor, params) {

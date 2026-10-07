@@ -261,6 +261,25 @@ body {
   font-size: 16px;
 }
 
+.dropdown-separador {
+  width: 100%;
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* Opciones del menú de modos: el nombre o la ilustración del modo. */
+.opcion-modo {
+  justify-content: center;
+  font-weight: 700;
+}
+
+.opcion-modo img {
+  display: block;
+  width: 150px;
+  height: auto;
+}
+
 /* Iconos sueltos en PC, agrupados en ☰ en el teléfono. */
 .solo-movil {
   display: none;

@@ -35,6 +35,7 @@ export const pantallaBabel = {
   jefe: (params) => (params.get('uber') === '1' ? 'babel_uber' : 'babel'),
   // Salir a mitad de la pelea (rendirse) pide confirmación.
   antesDeSalir: confirmarRendicion,
+  volverA: 'jefes',
   subtitulo: 'Resuelve el sudoku en un idioma que no conoces',
 
   render(contenedor, params) {

@@ -96,13 +96,15 @@
 
 /* ---------- Carrusel de jefes del menú ---------- */
 
-/* El título "Jefes" es una ilustración con fondo transparente. */
-.titulo-jefes {
+/* El título de arriba de la página de un modo (ver ui/modos.js): su
+   nombre o, si tiene, su ilustración con fondo transparente. */
+.titulo-modo {
   margin: 0;
+  font-size: clamp(20px, 5vw, 26px);
   text-align: center;
 }
 
-.titulo-jefes img {
+.titulo-modo img {
   display: block;
   width: min(100%, clamp(220px, 70vw, 460px));
   height: auto;

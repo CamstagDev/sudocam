@@ -34,6 +34,7 @@ async function ponerImagenDeCabecera(cabecera, id) {
 
 export const pantallaJefeInfo = {
   titulo: 'Información del jefe',
+  volverA: 'jefes',
 
   render(contenedor, params) {
     const id = params.get('id');

@@ -12,6 +12,7 @@
 //     jefe(params),               id del jefe si es una pelea (opcional; para su tema)
 //     antesDeSalir(),             true si se puede salir, o una promesa con la
 //                                 respuesta del jugador (opcional; ver abajo)
+//     volverA,                    ruta del botón "volver" (opcional; si no, el inicio)
 //   }
 // `params` son los parámetros que vienen después del "?" en el hash, como
 // URLSearchParams.

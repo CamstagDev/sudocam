@@ -9,6 +9,13 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- El menú principal se separa en modos, cada uno con su página: Clásico
+  (la de inicio: sudoku 9x9, multi sudoku, tutorial, últimos logros y
+  partidas guardadas) y Jefes (el carrusel). Se cambia de modo con el menú
+  "Modos" de la barra de arriba (en el teléfono, arriba del menú ☰), donde
+  Jefes se ve con su ilustración. Jefes no aparece hasta desbloquear a
+  Uriel. Desde la información de un jefe, una pelea o su resultado, volver
+  lleva a la página de jefes.
 - El título "Jefes" del menú es ahora una ilustración (letras de piedra con
   luces), con fondo transparente para que quede bien con cualquier tema.
 - En PC el carrusel de jefes es un 50 % más grande (carta y miniaturas), y

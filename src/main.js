@@ -10,6 +10,7 @@ import './styles/tutorial.css';
 import { RUTA_INICIO, iniciarRouter, registrarPantalla } from './router.js';
 import { crearShell } from './ui/shell.js';
 import { pantallaMenu } from './screens/menu.js';
+import { pantallaJefes } from './screens/jefes.js';
 import { pantallaSudoku } from './screens/sudoku.js';
 import { pantallaMultiSudoku } from './screens/multisudoku.js';
 import { pantallaTutorial } from './screens/tutorial.js';
@@ -30,6 +31,7 @@ import { mostrarAviso } from './ui/modal.js';
 import { aplicarTemaDePantalla, aplicarTemaGuardado } from './tema.js';
 
 registrarPantalla(RUTA_INICIO, pantallaMenu);
+registrarPantalla('jefes', pantallaJefes);
 registrarPantalla('sudoku', pantallaSudoku);
 registrarPantalla('multisudoku', pantallaMultiSudoku);
 registrarPantalla('tutorial', pantallaTutorial);

@@ -1,5 +1,6 @@
 import { RUTA_INICIO, navegar } from '../router.js';
 import { descartarModales } from './modal.js';
+import { MODOS, buscarModo, contenidoDelModo } from './modos.js';
 
 // Accesos globales de la barra superior. En PC se ven como iconos sueltos;
 // en el teléfono se agrupan detrás del botón ☰ (ver .solo-pc / .solo-movil
@@ -10,26 +11,46 @@ const ACCESOS = [
   { ruta: 'guardado', icono: '💾', titulo: 'Datos de guardado' },
 ];
 
+// Una opción del menú de modos (ver ui/modos.js).
+function opcionDeModo(modo) {
+  return `
+    <button type="button" class="dropdown-item opcion-modo ${modo.imagen ? 'con-imagen' : ''}"
+      data-ruta="${modo.ruta}" data-modo="${modo.ruta}">${contenidoDelModo(modo)}</button>
+  `;
+}
+
+const OPCIONES_DE_MODOS = MODOS.map(opcionDeModo).join('');
+
 // Cascarón común a todas las pantallas: barra superior (logo, título de
-// la pantalla y accesos) y el <main> donde cada pantalla se dibuja.
+// la pantalla, menú de modos y accesos) y el <main> donde cada pantalla se
+// dibuja.
+//
+// El menú "Modos" lleva a la página de cada modo de juego. En PC es un
+// botón propio; en el teléfono los modos van arriba del menú ☰.
 export function crearShell(raiz) {
   raiz.innerHTML = `
     <header class="navbar">
       <div class="navbar-left">
-        <a href="#/${RUTA_INICIO}" class="navbar-logo" aria-label="Ir al menú">Sudo<span>Cam</span></a>
+        <a href="#/${RUTA_INICIO}" class="navbar-logo" aria-label="Ir al inicio">Sudo<span>Cam</span></a>
         <div class="navbar-title" id="navbar-title">
           <p class="navbar-titulo" id="navbar-titulo"></p>
           <p class="navbar-sub" id="navbar-sub"></p>
         </div>
       </div>
       <div class="navbar-acciones">
-        <button type="button" class="icon-btn hidden" id="btn-volver" title="Volver al menú" aria-label="Volver al menú">←</button>
+        <button type="button" class="icon-btn hidden" id="btn-volver"></button>
+        <div class="dropdown solo-pc">
+          <button type="button" class="btn btn-secondary btn-sm" data-abre="menu-modos" aria-expanded="false">Modos ▾</button>
+          <div class="dropdown-menu" id="menu-modos">${OPCIONES_DE_MODOS}</div>
+        </div>
         ${ACCESOS.map(({ ruta, icono, titulo }) => `
           <button type="button" class="icon-btn solo-pc" data-ruta="${ruta}" title="${titulo}" aria-label="${titulo}">${icono}</button>
         `).join('')}
         <div class="dropdown solo-movil">
-          <button type="button" class="icon-btn" id="btn-menu-movil" title="Menú" aria-label="Menú" aria-expanded="false">☰</button>
+          <button type="button" class="icon-btn" data-abre="menu-movil" title="Menú" aria-label="Menú" aria-expanded="false">☰</button>
           <div class="dropdown-menu" id="menu-movil">
+            ${OPCIONES_DE_MODOS}
+            <hr class="dropdown-separador" />
             ${ACCESOS.map(({ ruta, icono, titulo }) => `
               <button type="button" class="dropdown-item" data-ruta="${ruta}">
                 <span class="dropdown-item-icon">${icono}</span> ${titulo}
@@ -46,52 +67,76 @@ export function crearShell(raiz) {
   const titulo = raiz.querySelector('#navbar-titulo');
   const subtitulo = raiz.querySelector('#navbar-sub');
   const btnVolver = raiz.querySelector('#btn-volver');
-  const btnMenuMovil = raiz.querySelector('#btn-menu-movil');
-  const menuMovil = raiz.querySelector('#menu-movil');
   const contenido = raiz.querySelector('#contenido');
+  const botonesQueAbren = [...raiz.querySelectorAll('[data-abre]')];
+  let pantallaActual = null;
 
-  function cerrarMenuMovil() {
-    menuMovil.classList.remove('visible');
-    btnMenuMovil.setAttribute('aria-expanded', 'false');
+  function cerrarMenus() {
+    botonesQueAbren.forEach((boton) => {
+      raiz.querySelector(`#${boton.dataset.abre}`).classList.remove('visible');
+      boton.setAttribute('aria-expanded', 'false');
+    });
   }
 
-  btnVolver.addEventListener('click', () => navegar(RUTA_INICIO));
-
-  btnMenuMovil.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const abrir = !menuMovil.classList.contains('visible');
-    menuMovil.classList.toggle('visible', abrir);
-    btnMenuMovil.setAttribute('aria-expanded', String(abrir));
+  botonesQueAbren.forEach((boton) => {
+    boton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = raiz.querySelector(`#${boton.dataset.abre}`);
+      const abrir = !menu.classList.contains('visible');
+      cerrarMenus();
+      menu.classList.toggle('visible', abrir);
+      boton.setAttribute('aria-expanded', String(abrir));
+    });
   });
-  document.addEventListener('click', cerrarMenuMovil);
+  document.addEventListener('click', cerrarMenus);
+
+  // Volver: a la página de donde se llegó (pantalla.volverA, p. ej. las de
+  // jefes vuelven a la página de jefes) o al inicio.
+  btnVolver.addEventListener('click', () => navegar(pantallaActual?.volverA ?? RUTA_INICIO));
 
   raiz.querySelectorAll('.navbar [data-ruta]').forEach((boton) => {
     boton.addEventListener('click', () => {
-      cerrarMenuMovil();
+      cerrarMenus();
       navegar(boton.dataset.ruta);
     });
   });
 
+  // Los modos que todavía no existen para el jugador no se ven (Jefes,
+  // hasta desbloquear al primero), y se marca el modo en el que está.
+  function actualizarModos(ruta) {
+    const modoActual = buscarModo(ruta)?.ruta ?? pantallaActual?.volverA;
+    raiz.querySelectorAll('[data-modo]').forEach((opcion) => {
+      opcion.classList.toggle('hidden', !buscarModo(opcion.dataset.modo).disponible());
+      opcion.classList.toggle('activo', opcion.dataset.modo === modoActual);
+    });
+  }
+
   return {
     mostrarPantalla(ruta, pantalla, params) {
-      // El menú no lleva título: el logo ya dice dónde estás.
+      pantallaActual = pantalla;
+      // Las páginas de los modos no llevan título: el suyo va en la página.
       bloqueTitulo.classList.toggle('hidden', !pantalla.titulo);
       titulo.textContent = pantalla.titulo ?? '';
       const textoSubtitulo = typeof pantalla.subtitulo === 'function' ? pantalla.subtitulo(params) : pantalla.subtitulo;
       subtitulo.textContent = textoSubtitulo ?? '';
       subtitulo.classList.toggle('hidden', !textoSubtitulo);
-      btnVolver.classList.toggle('hidden', ruta === RUTA_INICIO);
+
+      // Entre las páginas de los modos se va con el menú, no con "volver".
+      btnVolver.classList.toggle('hidden', Boolean(buscarModo(ruta)));
       // En una pelea, "volver" es rendirse (y pide confirmación: ver
       // antesDeSalir en router.js).
-      const etiqueta = pantalla.jefe ? 'Rendirse' : 'Volver al menú';
+      const etiqueta = pantalla.jefe ? 'Rendirse' : 'Volver';
       btnVolver.textContent = pantalla.jefe ? '🏳️' : '←';
       btnVolver.title = etiqueta;
       btnVolver.setAttribute('aria-label', etiqueta);
-      raiz.querySelectorAll('.navbar [data-ruta]').forEach((boton) => {
+
+      raiz.querySelectorAll('.navbar [data-ruta]:not([data-modo])').forEach((boton) => {
         boton.classList.toggle('activo', boton.dataset.ruta === ruta);
       });
+      actualizarModos(ruta);
+
       document.title = pantalla.titulo ? `SudoCam · ${pantalla.titulo}` : 'SudoCam';
-      cerrarMenuMovil();
+      cerrarMenus();
       descartarModales();
       contenido.replaceChildren();
       pantalla.render(contenido, params);
