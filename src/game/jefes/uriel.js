@@ -1,12 +1,13 @@
 // Uriel, el primer jefe: el jugador y Uriel compiten por llenar las
 // casillas vacías; gana quien se anote más.
 //
-// Uriel juega con dos búsquedas, cada una con su propio tiempo de espera:
-//  - Búsqueda fácil (cada 15 s, siempre): en una caja de 3x3 al azar busca
-//    una fila, columna o caja a la que solo le falte un número.
-//  - Búsqueda por descarte (cada 30 s, desde la fase 2): un número que
-//    solo cabe en un hueco de la caja, cruzando filas y columnas.
-//  - Pasiva "Purga del Débil": cada error del jugador hace que Uriel
+// Uriel juega con dos búsquedas, cada una con su propio tiempo de espera
+// (entre comillas, su nombre en el juego):
+//  - Búsqueda fácil, "123..." (cada 15 s, siempre): en una caja de 3x3 al
+//    azar busca una fila, columna o caja a la que solo le falte un número.
+//  - Búsqueda por descarte, "3x3x3" (cada 30 s, desde la fase 2): un número
+//    que solo cabe en un hueco de la caja, cruzando filas y columnas.
+//  - Pasiva, "Predictable...": cada error del jugador hace que Uriel
 //    revise al instante la caja donde ocurrió.
 // La fase 2 empieza cuando se llena la mitad de las casillas que
 // empezaron vacías (o con el truco secreto del retrato).

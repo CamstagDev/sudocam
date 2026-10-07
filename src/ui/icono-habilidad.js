@@ -2,13 +2,16 @@
 // como un reloj mientras la habilidad se carga, y un destello cuando se
 // dispara.
 //
-//   const icono = crearIconoHabilidad({ emoji: '🔍', nombre: 'Búsqueda fácil' });
+//   const icono = crearIconoHabilidad({ emoji: '🔍', nombre: '123...', imagen });
 //   fila.appendChild(icono.elemento);
 //   icono.cargar(0.4);    0 a 1; con animación suave
 //   icono.reiniciar();    vuelve a 0 sin animación (se acaba de disparar)
 //   icono.destello();
 //   icono.cambiar({ emoji, nombre });   otro aspecto (p. ej. al cambiar de fase)
 //   icono.ponerContador(7);             numerito en la esquina (null lo quita)
+//
+// `imagen` (opcional) es la ruta de un dibujo para el centro del icono; se
+// ve el emoji hasta que carga, o si no existe.
 //
 // El anillo es un <circle> de SVG cuyo trazo se "destapa" con
 // stroke-dashoffset (más nítido que un conic-gradient en algunos
@@ -18,7 +21,19 @@ const RADIO = 19; // en un viewBox de 42x42
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO;
 const DURACION_MS = 1000;
 
-export function crearIconoHabilidad({ emoji, nombre }) {
+// El dibujo va debajo del anillo, para que la carga se siga viendo encima.
+function ponerImagen(elemento, ruta) {
+  const dibujo = new Image();
+  dibujo.className = 'icono-habilidad-imagen';
+  dibujo.alt = '';
+  dibujo.addEventListener('load', () => {
+    elemento.prepend(dibujo);
+    elemento.classList.add('con-imagen');
+  });
+  dibujo.src = ruta;
+}
+
+export function crearIconoHabilidad({ emoji, nombre, imagen = null }) {
   const elemento = document.createElement('div');
   elemento.className = 'icono-habilidad';
   elemento.title = nombre;
@@ -32,6 +47,7 @@ export function crearIconoHabilidad({ emoji, nombre }) {
   `;
   const trazo = elemento.querySelector('.icono-habilidad-carga');
   trazo.style.strokeDasharray = String(CIRCUNFERENCIA);
+  if (imagen) ponerImagen(elemento, imagen);
 
   let cargaActual = 0;
   let animacion = null;

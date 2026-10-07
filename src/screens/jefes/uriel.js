@@ -10,7 +10,7 @@ import { DIFICULTADES } from '../../game/sudoku/dificultades.js';
 import { generarPuzzle } from '../../game/sudoku/generador.js';
 import { LIENZO_9X9 } from '../../game/sudoku/lienzo.js';
 import { PeleaUriel, cajaDe, celdasARevisar, elegirCajaAlAzar } from '../../game/jefes/uriel.js';
-import { JEFES } from '../../game/jefes/catalogo.js';
+import { JEFES, imagenDeHabilidad } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
@@ -22,9 +22,17 @@ import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
 const MS_POR_CELDA_REVISADA = 160; // velocidad de la animación de búsqueda
 const TOQUES_SECRETO = 3; // toques al retrato para forzar la fase 2
 
+// Nombres e iconos de las habilidades: los mismos de su página de
+// información (game/jefes/catalogo.js).
+const { ataque1: FACIL, ataque2: DESCARTE, pasiva: PASIVA } = JEFES.uriel;
+
+function habilidad(id, seccion, extra = {}) {
+  return { id, emoji: seccion.emoji, nombre: seccion.titulo, imagen: imagenDeHabilidad(seccion.imagen), ...extra };
+}
+
 const DESCRIPCION_FASE = {
   1: JEFES.uriel.descripcion,
-  2: 'Fase 2: cada 30 s Uriel también busca por descarte, además de su búsqueda fácil de cada 15 s.',
+  2: `Fase 2: cada 30 s Uriel también usa ${DESCARTE.titulo}, además de ${FACIL.titulo} cada 15 s.`,
 };
 
 const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
@@ -53,9 +61,9 @@ export const pantallaUriel = {
       uber,
       marcador: true,
       habilidades: [
-        { id: 'facil', emoji: '🔍', nombre: 'Búsqueda fácil' },
-        { id: 'descarte', emoji: '🧮', nombre: 'Búsqueda por descarte', oculta: true },
-        { id: 'purga', emoji: '⚖️', nombre: 'Purga del Débil' },
+        habilidad('facil', FACIL),
+        habilidad('descarte', DESCARTE, { oculta: true }),
+        habilidad('pasiva', PASIVA),
       ],
     });
     const { habilidades, retrato } = cabecera;
@@ -82,7 +90,7 @@ export const pantallaUriel = {
         'jefe-buscando': busqueda.celda,
         'jefe-relacionada': busqueda.relacionadas,
       }),
-      // Pasiva "Purga del Débil": cada error hace que Uriel revise esa caja.
+      // Pasiva: cada error hace que Uriel revise esa caja.
       alJugar: ({ indice, correcto }) => {
         actualizarCabecera();
         if (!correcto) encolarBusqueda('pasiva', [cajaDe(indice)]);
@@ -108,7 +116,7 @@ export const pantallaUriel = {
       if (fase === 2 && faseMostrada === 1) {
         faseMostrada = 2;
         habilidades.descarte.elemento.classList.remove('hidden');
-        registro.anotar('¡Uriel subió a fase 2! Ahora también busca por descarte.', 'jefe');
+        registro.anotar(`¡Uriel subió a fase 2! Ahora también usa ${DESCARTE.titulo}.`, 'jefe');
       }
     }
 
@@ -161,7 +169,7 @@ export const pantallaUriel = {
       busqueda.relacionadas = new Set();
       if (terminada) return;
 
-      const prefijo = tipoPedido === 'pasiva' ? 'Purga del Débil: ' : '';
+      const prefijo = tipoPedido === 'pasiva' ? `${PASIVA.titulo} ` : '';
       // Mientras se animaba, el jugador pudo haber puesto ese mismo número.
       if (jugada && pelea.tablero[jugada.indice] !== jugada.valor) {
         pelea.jugadaDelJefe(jugada);
@@ -170,7 +178,7 @@ export const pantallaUriel = {
         registro.anotar(`${prefijo}Uriel no encontró nada esta vez.`, 'jugador');
       }
 
-      habilidades[tipoPedido === 'pasiva' ? 'purga' : tecnica].destello();
+      habilidades[tipoPedido === 'pasiva' ? 'pasiva' : tecnica].destello();
       actualizarCabecera();
       juego.dibujar();
     }

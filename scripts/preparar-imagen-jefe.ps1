@@ -2,19 +2,22 @@
 # centrada al formato que corresponde y la guarda como JPEG, así la app no
 # carga imágenes de varios MB.
 #
-#   powershell -ExecutionPolicy Bypass -File scripts/preparar-imagen-jefe.ps1 <imagen> <id> [carta|retrato]
+#   powershell -ExecutionPolicy Bypass -File scripts/preparar-imagen-jefe.ps1 <imagen> <id> [carta|retrato|habilidad]
 #
 # - carta (por defecto): la ilustración completa, 600x800 (3:4), para la
 #   carta del menú y la página de información -> public/img/cartas/<id>.jpg
 # - retrato: la miniatura redonda de la pelea, 256x256 (el círculo la
 #   recorta) -> public/img/jefes/<id>.jpg
+# - habilidad: el icono redondo de una habilidad, 128x128
+#   -> public/img/habilidades/<id>.jpg
 #
-# <id> es el del catálogo de jefes: uriel, uriel_uber, hecate...
+# <id> es el del catálogo de jefes (uriel, uriel_uber, hecate...) o, para
+# una habilidad, el `imagen` de su sección (uriel_facil, uriel_pasiva...).
 
 param(
     [Parameter(Mandatory = $true)][string]$Origen,
     [Parameter(Mandatory = $true)][string]$Id,
-    [ValidateSet('carta', 'retrato')][string]$Tipo = 'carta'
+    [ValidateSet('carta', 'retrato', 'habilidad')][string]$Tipo = 'carta'
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -22,6 +25,7 @@ Add-Type -AssemblyName System.Drawing
 $FORMATOS = @{
     carta   = @{ Ancho = 600; Alto = 800; Carpeta = 'public/img/cartas' }
     retrato = @{ Ancho = 256; Alto = 256; Carpeta = 'public/img/jefes' }
+    habilidad = @{ Ancho = 128; Alto = 128; Carpeta = 'public/img/habilidades' }
 }
 $CALIDAD = 85
 

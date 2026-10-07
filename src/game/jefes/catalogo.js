@@ -1,11 +1,16 @@
 // Catálogo de jefes: nombre, descripción y lo que muestra su página de
 // información (Información del jefe).
 //
-// Cada sección de la página (ataque1, ataque2, secreto) se desbloquea
-// según las estadísticas del jugador contra ese jefe (ver registro.js):
+// Cada sección de la página (ataque1, ataque2, pasiva, secreto; no todos
+// los jefes las tienen todas) se desbloquea según las estadísticas del
+// jugador contra ese jefe (ver registro.js):
 //   { victorias, mejorTiempo, victoriasRapidas, mejorMarca }
-// Un jefe está "completamente investigado" cuando sus tres secciones están
+// Un jefe está "completamente investigado" cuando todas sus secciones están
 // desbloqueadas; eso habilita su versión uber.
+//
+// Las secciones que son habilidades de la pelea pueden traer `emoji` e
+// `imagen` (ver imagenDeHabilidad): la pelea usa el mismo nombre e icono
+// para su icono de habilidad.
 
 // Ganar por debajo de esto cuenta como "victoria rápida" (3:33).
 export const SEGUNDOS_VICTORIA_RAPIDA = 213;
@@ -18,17 +23,31 @@ export const JEFES = {
     nombre: 'Uriel',
     descripcion: 'El jefe de los patrones: el más fácil de SudoCam... por ahora.',
     emoji: '👹',
+    // Los textos son de ambientación: insinúan cómo funciona cada habilidad
+    // sin explicarla. Las reglas exactas están en game/jefes/uriel.js.
     ataque1: {
-      titulo: 'Ataque básico: búsqueda fácil',
-      texto: 'Cada 15 segundos, Uriel elige al azar una caja de 3x3 incompleta y busca una fila, columna o caja a la que solo le falte un número. Si la encuentra, la completa y se anota el punto.',
+      titulo: '123...',
+      emoji: '🔍',
+      imagen: 'uriel_facil',
+      texto: 'Uno, dos, tres... Uriel cuenta sin descanso, y cada tanto posa la mirada en una caja cualquiera. Lo que está a un solo número de quedar completo nunca escapa a sus ojos.',
       seDesbloqueaCon: (stats) => stats.victorias >= 1,
       pista: 'Gana una vez a Uriel para desbloquear esto.',
     },
     ataque2: {
-      titulo: 'Ataque secundario: búsqueda por descarte',
-      texto: 'Cuando se llena la mitad del tablero, Uriel entra en fase 2: cada 30 segundos, además de su búsqueda fácil, busca por descarte. Si un número ya aparece en dos de las tres filas o columnas de una caja, deduce que solo puede ir en la que queda libre.',
+      titulo: '3x3x3',
+      emoji: '🧮',
+      imagen: 'uriel_descarte',
+      texto: 'Cuando la mitad del tablero ya está escrita, Uriel aprende a mirar de a tres: tres filas, tres columnas, tres cajas. Si un número ya pasó por dos de ellas, sabe en qué hueco tiene que caer el último.',
       seDesbloqueaCon: ganoEnMenosDe(300),
       pista: 'Gana a Uriel en menos de 5:00 para desbloquear esto.',
+    },
+    pasiva: {
+      titulo: 'Predictable...',
+      emoji: '⚖️',
+      imagen: 'uriel_pasiva',
+      texto: 'Cada tropiezo deja un rastro, y Uriel no se cansa de seguirlo. Allí donde te equivocas, él mira primero.',
+      seDesbloqueaCon: (stats) => stats.victorias >= 1,
+      pista: 'Gana una vez a Uriel para desbloquear esto.',
     },
     secreto: {
       titulo: '¿Secreto?',
@@ -136,7 +155,7 @@ export const JEFES = {
     normal: 'uriel',
     ataque1: {
       titulo: 'Ataque doblado',
-      texto: 'Igual que el Uriel normal, pero cada búsqueda periódica (la fácil de cada 15 s o la de descarte de cada 30 s, desde la fase 2) apunta a 2 cajas de 3x3 al azar en vez de 1.',
+      texto: 'Uriel ya no se conforma con una sola caja: 123... y 3x3x3 miran dos a la vez.',
     },
   },
   hecate_uber: {
@@ -184,7 +203,7 @@ export const JEFES = {
 // Jefes normales en el orden en que se desbloquean (Babel y Typhon a la par).
 export const ORDEN_JEFES = ['uriel', 'hecate', 'jormungandr', 'babel', 'typhon'];
 
-export const SECCIONES_INFORMACION = ['ataque1', 'ataque2', 'secreto'];
+export const SECCIONES_INFORMACION = ['ataque1', 'ataque2', 'pasiva', 'secreto'];
 
 // Las imágenes de los jefes se preparan con scripts/preparar-imagen-jefe.ps1.
 // Si un jefe no tiene alguna, las pantallas usan su emoji.
@@ -198,4 +217,10 @@ export function imagenDeJefe(id) {
 // (public/img/cartas/<id>.jpg).
 export function imagenDeCarta(id) {
   return `./img/cartas/${id}.jpg`;
+}
+
+// Icono de una habilidad (public/img/habilidades/<id>.jpg); el id es el
+// `imagen` de su sección, p. ej. 'uriel_facil'.
+export function imagenDeHabilidad(id) {
+  return `./img/habilidades/${id}.jpg`;
 }

@@ -4,7 +4,7 @@
 //
 //   const cabecera = crearCabeceraJefe(contenedor, {
 //     id: 'uriel', uber: false,
-//     habilidades: [{ id: 'facil', emoji: '🔍', nombre: 'Búsqueda fácil', oculta: false }],
+//     habilidades: [{ id: 'facil', emoji: '🔍', nombre: '123...', imagen, oculta: false }],
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
 //     fases: true,         false si el jefe no tiene fases (Babel)

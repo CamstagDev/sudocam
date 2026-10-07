@@ -200,6 +200,26 @@ button.retrato-jefe {
   opacity: 0.8;
 }
 
+/* Con dibujo: un poco más grande, y el dibujo llena el círculo por dentro
+   del anillo de carga. */
+.icono-habilidad.con-imagen {
+  width: 48px;
+  height: 48px;
+}
+
+.icono-habilidad-imagen {
+  position: absolute;
+  inset: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.icono-habilidad.con-imagen .icono-habilidad-emoji {
+  display: none;
+}
+
 .icono-habilidad.disparada {
   animation: habilidad-disparada 0.6s ease;
 }
@@ -376,6 +396,24 @@ button.retrato-jefe {
 
 .estadisticas-jefe {
   margin-top: 14px;
+}
+
+/* Los nombres de las habilidades se ven tal cual se escriben ("3x3x3"),
+   sin pasar a mayúsculas como el resto de los títulos de sección. */
+.titulo-seccion-jefe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: none;
+}
+
+.icono-seccion-jefe {
+  flex-shrink: 0;
+  width: clamp(36px, 9vw, 44px);
+  height: clamp(36px, 9vw, 44px);
+  border: 1px solid var(--boss-border);
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .seccion-jefe p {

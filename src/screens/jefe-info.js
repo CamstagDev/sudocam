@@ -7,7 +7,7 @@
 // Arriba va la ilustración completa del jefe (la de su carta) o, si todavía
 // no tiene, su retrato redondo al lado del nombre.
 
-import { JEFES, SECCIONES_INFORMACION, imagenDeCarta } from '../game/jefes/catalogo.js';
+import { JEFES, SECCIONES_INFORMACION, imagenDeCarta, imagenDeHabilidad } from '../game/jefes/catalogo.js';
 import { estadisticasDeJefe, jefeDesbloqueado } from '../game/jefes/registro.js';
 import { crearRetratoJefe } from '../ui/retrato-jefe.js';
 import { buscarImagenDeJefe } from '../ui/imagen-de-jefe.js';
@@ -18,6 +18,16 @@ function textoDeEstadisticas(jefe, stats) {
   return `Victorias: ${stats.victorias} · Mejor tiempo: ${formatearSegundos(stats.mejorTiempo)}`;
 }
 
+// El mismo dibujo que la habilidad tiene en la pelea; si no existe, se quita.
+function iconoDeSeccion(id) {
+  const icono = new Image();
+  icono.className = 'icono-seccion-jefe';
+  icono.alt = '';
+  icono.addEventListener('error', () => icono.remove());
+  icono.src = imagenDeHabilidad(id);
+  return icono;
+}
+
 function tarjetaSeccion(seccion, stats) {
   // Las secciones de los uber no tienen condición: se ven siempre.
   const desbloqueada = !seccion.seDesbloqueaCon || seccion.seDesbloqueaCon(stats);
@@ -25,9 +35,10 @@ function tarjetaSeccion(seccion, stats) {
   tarjeta.className = `card seccion-jefe ${desbloqueada ? '' : 'bloqueada'}`;
 
   if (desbloqueada) {
-    tarjeta.innerHTML = '<h2 class="section-title"></h2><p></p>';
-    tarjeta.querySelector('h2').textContent = seccion.titulo;
+    tarjeta.innerHTML = '<h2 class="section-title titulo-seccion-jefe"><span></span></h2><p></p>';
+    tarjeta.querySelector('h2 span').textContent = seccion.titulo;
     tarjeta.querySelector('p').textContent = seccion.texto;
+    if (seccion.imagen) tarjeta.querySelector('h2').prepend(iconoDeSeccion(seccion.imagen));
   } else {
     tarjeta.innerHTML = `
       <h2 class="section-title">???</h2>

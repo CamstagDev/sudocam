@@ -12,6 +12,7 @@ import { PeleaJormungandr } from '../src/game/jefes/jormungandr.js';
 import { PeleaBabel } from '../src/game/jefes/babel.js';
 import { CONFIGURACION, PeleaTyphon } from '../src/game/jefes/typhon.js';
 import { generarMultiSudoku } from '../src/game/multisudoku/generador.js';
+import { JEFES, SECCIONES_INFORMACION } from '../src/game/jefes/catalogo.js';
 import {
   estadisticasDeJefe,
   estaCompletamenteInvestigado,
@@ -151,6 +152,20 @@ describe('registro de jefes', () => {
     }
     expect(estaCompletamenteInvestigado('uriel')).toBe(true);
     expect(jefeDesbloqueado('uriel_uber')).toBe(true);
+  });
+
+  it('la pasiva de Uriel se ve con la primera victoria y no endurece el desbloqueo de la uber', async () => {
+    await registrarVictoriaDeJefe('uriel', { segundos: 400, errores: 3, usoNotas: true, puntosJefe: 2 });
+    expect(JEFES.uriel.pasiva.seDesbloqueaCon(estadisticasDeJefe('uriel'))).toBe(true);
+    expect(estaCompletamenteInvestigado('uriel')).toBe(false); // faltan 3x3x3 y el secreto
+  });
+
+  it('cada habilidad con dibujo tiene también nombre y emoji de respaldo', () => {
+    for (const jefe of Object.values(JEFES)) {
+      for (const seccion of SECCIONES_INFORMACION.map((nombre) => jefe[nombre]).filter(Boolean)) {
+        if (seccion.imagen) expect(seccion).toMatchObject({ titulo: expect.any(String), emoji: expect.any(String) });
+      }
+    }
   });
 });
 

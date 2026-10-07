@@ -16,6 +16,13 @@ sube cuando cambia la forma del archivo de guardado.
   arriba, en vez del retrato redondo (los que todavía no tienen
   ilustración siguen con el retrato).
 - Uriel tiene un retrato nuevo para la miniatura redonda de la pelea.
+- Las habilidades de Uriel tienen nombre e icono propios, iguales en la
+  pelea y en su página de información: "123..." (antes Búsqueda fácil),
+  "3x3x3" (antes Búsqueda por descarte) y su pasiva "Predictable..."
+  (antes Purga del Débil), que ahora también tiene su sección en la
+  página de información (se ve con la primera victoria). Los textos de
+  esas secciones pasan a ser de ambientación: insinúan cómo funciona cada
+  habilidad sin explicarla paso a paso.
 - El botón de la uber ya no empieza la pelea: da vuelta la carta para
   mostrar a la uber, y tocar la cara que se ve empieza la pelea contra
   ese jefe. Se puede ir y volver entre normal y uber; el botón ℹ abre la
@@ -23,8 +30,9 @@ sube cuando cambia la forma del archivo de guardado.
   no tienen ilustración muestran su emoji).
 - Nuevo script `scripts/preparar-imagen-jefe.ps1`: achica la imagen de un
   jefe y la guarda como JPEG, como ilustración de carta (600x800, en
-  `public/img/cartas/<id>.jpg`) o como retrato (256x256, en
-  `public/img/jefes/<id>.jpg`).
+  `public/img/cartas/<id>.jpg`), como retrato (256x256, en
+  `public/img/jefes/<id>.jpg`) o como icono de habilidad (128x128, en
+  `public/img/habilidades/<id>.jpg`).
 
 ## 0.2.0 (2026-10-05)
 
