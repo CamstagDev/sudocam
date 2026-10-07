@@ -90,8 +90,10 @@ export const TEMAS_DE_JEFES = [
     id: 'uriel',
     nombre: 'Uriel',
     jefe: 'uriel',
-    // Grises oscuros de piedra y el brillo dorado de sus patrones.
-    colores: { fondo: '#141416', texto: '#eee8da', numeros: '#eee8da', acento: '#d4a017', resaltado: '#2a2824', logo: '#f7b733', pista: '#f5ba3c', acierto: '#8fd694', error: '#ff5a5a', jefe: '#ff7a1a' },
+    // Grises oscuros de piedra y el naranja ámbar de sus luces; las pistas
+    // con el durazno claro de sus números encendidos, y sus jugadas en un
+    // naranja más rojizo para que no se confundan con ellas.
+    colores: { fondo: '#141416', texto: '#f2ece4', numeros: '#f2ece4', acento: '#ff8a1e', resaltado: '#2b241d', logo: '#ffa040', pista: '#ffc58a', acierto: '#8fd694', error: '#ff4d6a', jefe: '#ff5a14' },
     borde: 'linea',
   },
   {
@@ -126,7 +128,7 @@ export const TEMAS_DE_JEFES = [
 const ESTILOS_DE_PELEA = {
   uriel_uber: 'brillo', // líneas y números que brillan
   hecate_uber: 'brillo',
-  jormungandr: 'grueso', // líneas y números más gruesos
+  jormungandr: 'grueso', // líneas y números más gruesos, pistas torcidas
   jormungandr_uber: 'muy-grueso',
 };
 
@@ -315,9 +317,15 @@ export function aplicarTemaDePantalla(pantalla, params) {
   const delJefe = idJefe && !leerPreferencias().sobrescribirTemasDeJefes ? temaDeJefe(idJefe) : null;
   aplicarTema(delJefe ? valoresDelTema(delJefe) : obtenerGuardado().perfil.tema);
 
+  // data-tema-de-jefe: los bordes de las tarjetas toman el color del jefe,
+  // para que se note que es su pantalla (ver styles/jefes.css).
+  const raiz = document.documentElement;
+  if (delJefe) raiz.dataset.temaDeJefe = delJefe.id;
+  else delete raiz.dataset.temaDeJefe;
+
   const estilo = delJefe ? ESTILOS_DE_PELEA[idJefe] : null;
-  if (estilo) document.documentElement.dataset.estiloPelea = estilo;
-  else delete document.documentElement.dataset.estiloPelea;
+  if (estilo) raiz.dataset.estiloPelea = estilo;
+  else delete raiz.dataset.estiloPelea;
 }
 
 export async function guardarTema(tema) {

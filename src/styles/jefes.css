@@ -679,25 +679,61 @@ button.retrato-jefe {
 /* Algunos jefes cambian el aspecto del tablero en su pelea, además de los
    colores (tema.js pone data-estilo-pelea en <html>). */
 
+/* Con el tema de un jefe (data-tema-de-jefe), los bordes de las tarjetas y
+   del tablero toman su color: así se nota que es su pantalla. */
+[data-tema-de-jefe] .app-content .card,
+[data-tema-de-jefe] .tablero {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
 /* Jörmungandr: líneas de las cajas y números más gruesos; su uber, todavía
    más. */
 [data-estilo-pelea="grueso"] {
-  --grosor-caja: 5px;
+  --grosor-caja: 7px;
   --peso-numeros: 800;
 }
 
 [data-estilo-pelea="muy-grueso"] {
-  --grosor-caja: 7px;
+  --grosor-caja: 10px;
   --peso-numeros: 900;
 }
 
-/* En estos estilos las líneas de las cajas se dibujan como una capa encima
-   del borde de cada celda que además tapa el hueco de 1px hasta la celda
-   vecina: así se ven continuas aunque sean gruesas, y pueden brillar sin
-   que las celdas de al lado las tapen. */
+/* Y el caos de la serpiente: algunas pistas aparecen torcidas. Cuáles
+   depende de su posición (nth-child), y como las pistas cambian en cada
+   tablero, parece al azar. En la uber, más torcidas. */
+[data-estilo-pelea$="grueso"] .celda.fija .celda-valor {
+  display: inline-block;
+}
+
+[data-estilo-pelea$="grueso"] .celda.fija:nth-child(7n + 3) .celda-valor {
+  transform: rotate(-14deg);
+}
+
+[data-estilo-pelea$="grueso"] .celda.fija:nth-child(5n + 1) .celda-valor {
+  transform: rotate(11deg);
+}
+
+[data-estilo-pelea$="grueso"] .celda.fija:nth-child(11n + 6) .celda-valor {
+  transform: rotate(-7deg);
+}
+
+[data-estilo-pelea="muy-grueso"] .celda.fija:nth-child(7n + 3) .celda-valor {
+  transform: rotate(-24deg);
+}
+
+[data-estilo-pelea="muy-grueso"] .celda.fija:nth-child(5n + 1) .celda-valor {
+  transform: rotate(19deg);
+}
+
+/* En estos estilos las líneas de las cajas no son el borde de la celda
+   (un borde grueso le quitaría espacio y esa columna quedaría más angosta):
+   son una capa encima, centrada en el hueco de 1px entre celdas, mitad
+   sobre cada una. Así todas las celdas miden lo mismo, las líneas se ven
+   continuas y pueden brillar sin que las celdas vecinas las tapen. */
 [data-estilo-pelea] .celda.borde-caja-derecha,
 [data-estilo-pelea] .celda.borde-caja-abajo {
   position: relative;
+  border-width: 0;
 }
 
 [data-estilo-pelea] .celda.borde-caja-derecha::after,
@@ -711,14 +747,14 @@ button.retrato-jefe {
 
 [data-estilo-pelea] .celda.borde-caja-derecha::after {
   top: 0;
-  right: calc(-1 * var(--grosor-caja, 3px));
+  right: calc((var(--grosor-caja, 3px) + 1px) / -2);
   bottom: -1px;
   width: var(--grosor-caja, 3px);
 }
 
 [data-estilo-pelea] .celda.borde-caja-abajo::before {
   right: -1px;
-  bottom: calc(-1 * var(--grosor-caja, 3px));
+  bottom: calc((var(--grosor-caja, 3px) + 1px) / -2);
   left: 0;
   height: var(--grosor-caja, 3px);
 }
