@@ -9,6 +9,13 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Los jefes del menú ahora son un carrusel: se ve un jefe a la vez, con
+  el anterior y el siguiente inclinados y semitransparentes a los costados
+  (tocarlos lleva a ese jefe), y arriba una fila de miniaturas para saltar
+  a cualquiera. En el teléfono también se puede deslizar. La carta sigue
+  dándose vuelta a la uber, y entonces su miniatura también cambia a la de
+  la uber. Mientras la app está abierta, el menú recuerda el último jefe
+  mirado y cuáles estaban volteados.
 - Peleas de jefes con más espacio para el tablero: sin el botón
   "Rendirse" (en la barra de arriba la flecha de volver se cambia por una
   bandera 🏳️ para rendirse), y el tiempo de la partida va arriba a la

@@ -10,6 +10,10 @@
 // todavía no tiene, su emoji. Un jefe que todavía no está hecho en esta
 // versión se ve "próximamente" y no se puede tocar.
 //
+//   crearCartaJefe('uriel', { volteada: true, alVoltear: (uber) => ... })
+//   volteada: empieza mostrando la uber; alVoltear avisa cada vez que se da
+//   vuelta (el carrusel del menú cambia su miniatura).
+//
 // Los botones chicos van al lado de las caras, no dentro (un botón no puede
 // ir dentro de otro).
 
@@ -102,7 +106,7 @@ function crearCara(id, { pelear, clase }) {
   return cara;
 }
 
-export function crearCartaJefe(id) {
+export function crearCartaJefe(id, { volteada: empezarVolteada = false, alVoltear = () => {} } = {}) {
   const idUber = `${id}_uber`;
   const ruta = RUTAS_DE_PELEA[id];
   const conUber = Boolean(ruta) && jefeDesbloqueado(idUber);
@@ -129,7 +133,13 @@ export function crearCartaJefe(id) {
   const dorso = crearCara(idUber, { clase: 'carta-dorso', pelear: () => irAPelear(id, ruta, { uber: 1 }) });
   giro.appendChild(dorso);
 
-  const botonUber = botonChico({ clase: 'carta-boton-uber', alTocar: () => mostrarCara(!volteada) });
+  const botonUber = botonChico({
+    clase: 'carta-boton-uber',
+    alTocar: () => {
+      mostrarCara(!volteada);
+      alVoltear(volteada);
+    },
+  });
   envoltura.appendChild(botonUber);
 
   // La cara que no se ve queda inerte: no se puede tocar ni enfocar.
@@ -145,6 +155,7 @@ export function crearCartaJefe(id) {
     rotularBotonChico(botonUber, { icono: otra.emoji, titulo: `Dar vuelta: ${otra.nombre}` });
   }
 
-  mostrarCara(false);
+  // Todavía no está en la página, así que empezar volteada no se anima.
+  mostrarCara(empezarVolteada);
   return envoltura;
 }

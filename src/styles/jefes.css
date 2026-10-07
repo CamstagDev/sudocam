@@ -94,6 +94,99 @@
   left: 10px;
 }
 
+/* ---------- Carrusel de jefes del menú ---------- */
+
+.carrusel-jefes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 3vw, 18px);
+}
+
+.carrusel-miniaturas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 12px);
+}
+
+.carrusel-miniatura {
+  opacity: 0.55;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.carrusel-miniatura:hover {
+  opacity: 0.85;
+}
+
+.carrusel-miniatura.activa {
+  opacity: 1;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* La carta del jefe al medio y, a los costados, los vecinos inclinados. */
+.carrusel-escena {
+  --ancho-carta: clamp(190px, 58vw, 300px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  perspective: 900px;
+}
+
+.carrusel-actual {
+  flex: 0 0 var(--ancho-carta);
+  z-index: 1;
+  animation: carrusel-entra 0.25s ease;
+}
+
+@keyframes carrusel-entra {
+  from { opacity: 0; transform: scale(0.96); }
+}
+
+.carrusel-vecino {
+  flex: 0 0 calc(var(--ancho-carta) * 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--ilustracion, var(--surface)) center / cover no-repeat;
+  font-size: clamp(28px, 8vw, 40px);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.carrusel-vecino:hover {
+  opacity: 0.65;
+}
+
+/* Con ilustración no hace falta el emoji. */
+.carrusel-vecino[style*="--ilustracion"] .carrusel-vecino-emoji {
+  display: none;
+}
+
+/* Se meten un poco detrás de la carta del medio, girados hacia ella. */
+.carrusel-vecino.anterior {
+  margin-right: calc(var(--ancho-carta) * -0.22);
+  transform: rotateY(35deg);
+}
+
+.carrusel-vecino.siguiente {
+  margin-left: calc(var(--ancho-carta) * -0.22);
+  transform: rotateY(-35deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrusel-actual {
+    animation: none;
+  }
+}
+
 /* ---------- Retrato ---------- */
 
 .retrato-jefe {
@@ -113,6 +206,12 @@
 
 button.retrato-jefe {
   cursor: pointer;
+}
+
+.retrato-jefe.retrato-mini {
+  width: clamp(34px, 9vw, 44px);
+  height: clamp(34px, 9vw, 44px);
+  font-size: clamp(16px, 4.5vw, 20px);
 }
 
 .retrato-jefe.retrato-grande {

@@ -6,7 +6,7 @@ import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-parti
 import { ultimosLogros } from '../game/logros/logros.js';
 import { ORDEN_JEFES } from '../game/jefes/catalogo.js';
 import { jefeDesbloqueado } from '../game/jefes/registro.js';
-import { crearCartaJefe } from '../ui/carta-jefe.js';
+import { crearCarruselJefes } from '../ui/carrusel-jefes.js';
 
 const JUEGOS = [
   { ruta: 'sudoku', icono: '🔢', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
@@ -49,9 +49,8 @@ function seccionDeJefes() {
 
   const seccion = document.createElement('section');
   seccion.className = 'menu-seccion';
-  seccion.innerHTML = '<h2 class="section-title">Jefes</h2><div class="game-grid"></div>';
-  const grilla = seccion.querySelector('.game-grid');
-  desbloqueados.forEach((id) => grilla.appendChild(crearCartaJefe(id)));
+  seccion.innerHTML = '<h2 class="section-title">Jefes</h2>';
+  seccion.appendChild(crearCarruselJefes(desbloqueados));
   return seccion;
 }
 
