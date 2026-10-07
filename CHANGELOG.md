@@ -9,6 +9,19 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Typhon y Uber Typhon quedan al nivel de los demás jefes: ilustración en
+  su carta, retratos de pelea, iconos para Amalgamación y los dos Caos
+  (con su carta en la pelea y en la página de información), historia y
+  textos de ambientación. Su antigua sección "Caos a la derecha / Caos a
+  la izquierda" se separa en dos, que se desbloquean con lo mismo que
+  antes, y la uber suma la carta de Padre de los monstruos.
+- Temas de Typhon (negro y plata fría) y Uber Typhon (negro profundo y
+  blanco), con los bordes de las tarjetas del color del jefe. En la pelea
+  contra Uber Typhon las líneas y los números brillan.
+- Uber Typhon ya no telegrafía nada: iconos silenciosos y sin registro de
+  eventos. Ya ninguna uber muestra indicadores.
+- `scripts/preparar-imagen-jefe.ps1` puede recortar desde arriba
+  (opción "arriba"), para no cortar el título de una carta más alta que 3:4.
 - Babel y Uber Babel quedan al nivel de los demás jefes: ilustración en
   su carta, retratos de pelea, iconos para &%?#, La lengua evoluciona y
   Torre de Babel (con su carta en la pelea y en la página de

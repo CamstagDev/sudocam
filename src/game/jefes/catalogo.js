@@ -170,23 +170,41 @@ export const JEFES = {
   },
   typhon: {
     nombre: 'Typhon',
-    descripcion: 'El jefe de los multi sudoku: cuatro tableros enganchados en círculo, y ninguno se queda quieto.',
+    descripcion: 'Typhon es el ojo de la tormenta donde terminan los tableros que nadie quiso resolver. Los fue amarrando unos con otros hasta formar un círculo que no deja de girar, y en el centro abrió un remolino que se traga cualquier certeza. Dicen que el caos también resuelve... si aguantas lo suficiente para verlo.',
     emoji: '🌪️',
+    // Los textos de las habilidades son de ambientación: insinúan cómo
+    // funciona cada una sin explicarla. Las reglas exactas están en
+    // game/jefes/typhon.js y en docs/fichas-tecnicas-jefes.txt.
+    //
+    // Los dos Caos se desbloquean con lo mismo (antes eran una sola sección),
+    // así que investigar a Typhon pide lo mismo que siempre.
     ataque1: {
-      titulo: 'Pasiva: Amalgamación',
-      texto: 'El círculo de Typhon junta 2 tableros en difícil y 2 en extremo. Cerca de las esquinas donde dos tableros se tocan, las dificultades se manchan un poco entre sí.',
-      seDesbloqueaCon: (stats) => stats.victorias >= 1,
-      pista: 'Gana una vez a Typhon para desbloquear esto.',
-    },
-    ataque2: {
-      titulo: 'Caos a la derecha / Caos a la izquierda',
-      texto: 'Cada 45-60 segundos, Typhon gira el círculo entero de 1 a 4 veces hacia la derecha; cada 30-45 segundos, hacia la izquierda. Si coinciden, se turnan una rotación a la vez. Los números nunca quedan de lado, pero de dónde vino cada uno sí cambia.',
+      titulo: 'Caos a la derecha',
+      emoji: '↻',
+      imagen: 'typhon_derecha',
+      texto: 'Cuando menos lo esperas, el círculo entero da la vuelta. Los números no se pierden, pero nada queda donde lo dejaste.',
       seDesbloqueaCon: ganoEnMenosDe(1800),
       pista: 'Gana a Typhon en 30:00 o menos para desbloquear esto.',
     },
+    ataque2: {
+      titulo: 'Caos a la izquierda',
+      emoji: '↺',
+      imagen: 'typhon_izquierda',
+      texto: 'La tormenta también sopla hacia el otro lado, y con más impaciencia. Cuando los dos vientos se cruzan, se turnan para marearte.',
+      seDesbloqueaCon: ganoEnMenosDe(1800),
+      pista: 'Gana a Typhon en 30:00 o menos para desbloquear esto.',
+    },
+    pasiva: {
+      titulo: 'Amalgamación',
+      emoji: '🌀',
+      imagen: 'typhon_amalgamacion',
+      texto: 'Cuatro tableros amarrados por las esquinas, ninguno igual al otro. Donde se tocan, lo fácil y lo difícil se confunden.',
+      seDesbloqueaCon: (stats) => stats.victorias >= 1,
+      pista: 'Gana una vez a Typhon para desbloquear esto.',
+    },
     secreto: {
       titulo: '¿Secreto?',
-      texto: 'No hay ningún truco escondido contra Typhon: lo único que ayuda es acostumbrarte a que el tablero se mueva bajo tus pies.',
+      texto: 'Contra la tormenta no hay truco: solo aprender a mantenerte de pie mientras todo da vueltas.',
       seDesbloqueaCon: sinErrores,
       pista: 'Gana a Typhon sin cometer ni un error para desbloquear esto.',
     },
@@ -239,8 +257,14 @@ export const JEFES = {
     emoji: '👁️',
     normal: 'typhon',
     ataque1: {
-      titulo: 'Pasiva: Forma perfecta',
-      texto: 'Las 5 grillas (en forma de X) son extremo, y los giros bajan su espera a 20 segundos. Aparece "Padre de los monstruos": cada 2 minutos (1 en fase 2) una caja de una grilla exterior empieza a pulsar; tienes 10 segundos para completar un número ahí, o esa grilla entera se reemplaza por una nueva.',
+      titulo: 'Forma perfecta',
+      emoji: '💠',
+      texto: 'Cinco tableros, un solo horizonte. La tormenta ya no descansa entre vuelta y vuelta.',
+    },
+    ataque2: {
+      titulo: 'Padre de los monstruos',
+      emoji: '👁️',
+      texto: 'De vez en cuando, una parte de la tormenta empieza a latir. Si la dejas sola, se deshace y vuelve a nacer distinta.',
     },
   },
 };

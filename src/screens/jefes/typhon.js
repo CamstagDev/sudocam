@@ -14,7 +14,7 @@ import { JEFES } from '../../game/jefes/catalogo.js';
 import { jefeDesbloqueado, registrarVictoriaDeJefe } from '../../game/jefes/registro.js';
 import { leerPreferencias } from '../../preferencias.js';
 import { crearJuegoSudoku } from '../../ui/juego-sudoku.js';
-import { crearCabeceraJefe } from '../../ui/cabecera-jefe.js';
+import { crearCabeceraJefe, habilidadDeSeccion } from '../../ui/cabecera-jefe.js';
 import { crearRegistroEventos } from '../../ui/registro-eventos.js';
 import { mostrarResultadoPelea } from '../../ui/resultado-pelea.js';
 import { mostrarLogrosNuevos } from '../../ui/aviso-logro.js';
@@ -23,9 +23,15 @@ import { formatearSegundos } from '../../ui/cronometro.js';
 const MS_GIRO = 500; // igual que --duracion-giro en jefes.css
 
 const DESCRIPCION = {
-  normal: JEFES.typhon.descripcion,
+  normal: 'Resuelve los cuatro tableros mientras el círculo gira de un lado a otro.',
   uber: 'Forma perfecta: 5 tableros en X, todos en extremo. Giros cada 20 s, y si una caja pulsa, complétala en 10 s o ese tablero se regenera.',
 };
+
+// Nombres, iconos y cartas de las habilidades: los de su página de
+// información (game/jefes/catalogo.js). La uber cambia la pasiva por su
+// Forma perfecta y suma a Padre de los monstruos.
+const { ataque1: DERECHA, ataque2: IZQUIERDA, pasiva: AMALGAMACION } = JEFES.typhon;
+const { ataque1: FORMA_PERFECTA, ataque2: PADRE } = JEFES.typhon_uber;
 
 const ANUNCIOS = {
   caos: ({ sentido, veces }) => `Caos a la ${sentido}: el tablero gira ${veces} ${veces === 1 ? 'vez' : 'veces'}.`,
@@ -65,15 +71,12 @@ export const pantallaTyphon = {
     const cabecera = crearCabeceraJefe(contenedor, {
       id: idJefe,
       uber,
-      habilidadesSilenciosas: false,
       fases: uber,
       habilidades: [
-        uber
-          ? { id: 'pasiva', emoji: '💠', nombre: 'Forma perfecta' }
-          : { id: 'pasiva', emoji: '🌀', nombre: 'Amalgamación' },
-        { id: 'derecha', emoji: '↻', nombre: 'Caos a la derecha' },
-        { id: 'izquierda', emoji: '↺', nombre: 'Caos a la izquierda' },
-        ...(uber ? [{ id: 'padre', emoji: '👁️', nombre: 'Padre de los monstruos' }] : []),
+        habilidadDeSeccion('pasiva', uber ? FORMA_PERFECTA : AMALGAMACION),
+        habilidadDeSeccion('derecha', DERECHA),
+        habilidadDeSeccion('izquierda', IZQUIERDA),
+        ...(uber ? [habilidadDeSeccion('padre', PADRE)] : []),
       ],
     });
     const { habilidades } = cabecera;
@@ -95,7 +98,9 @@ export const pantallaTyphon = {
     });
     const tablero = cuerpo.querySelector('.tablero');
     tablero.classList.add('tablero-que-gira');
-    const registro = crearRegistroEventos(cuerpo);
+    // La uber no telegrafía nada (como las demás): sin registro, y sus iconos
+    // son silenciosos (la cabecera lo hace sola con uber).
+    const registro = uber ? { anotar: () => {} } : crearRegistroEventos(cuerpo);
 
     /* ---------- Cabecera ---------- */
 

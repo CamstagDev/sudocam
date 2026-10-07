@@ -170,11 +170,13 @@ Habilidades
   sobre otra celda: los números no se pierden, cambia de dónde vienen.
 
 Información del jefe
-- Amalgamación: ganarle 1 vez.   - Caos: ganarle en menos de 30:00.
+- Caos a la derecha: ganarle en menos de 30:00.
+- Caos a la izquierda: ganarle en menos de 30:00.
+- Amalgamación: ganarle 1 vez.
 - Secreto: ganarle sin errores.
 
 TYPHON (UBER)
-- Desbloqueo: las 3 secciones desbloqueadas.
+- Desbloqueo: las 4 secciones desbloqueadas.
 - Forma perfecta: 5 tableros en X, todos en extremo (20 pistas). Los dos
   giros cada 20 s.
 - Padre de los monstruos: cada 120 s (60 s en fase 2) una caja de un
@@ -183,4 +185,5 @@ TYPHON (UBER)
   con el del medio se mantiene).
 - Fase 2 al llenarse el 50 % de las casillas que no eran pistas; una
   regeneración puede devolverla a fase 1.
-- Sin notas. Los iconos sí muestran indicadores.
+- Sin notas, sin registro de eventos. Los iconos (Forma perfecta, los dos
+  Caos y Padre de los monstruos) se ven desde el principio, sin indicadores.

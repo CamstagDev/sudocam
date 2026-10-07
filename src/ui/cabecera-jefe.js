@@ -8,11 +8,10 @@
 //     marcador: true,      tira y afloja jugador vs. jefe (Uriel)
 //     reloj: false,        cuenta regresiva grande (Hecate)
 //     fases: true,         false si el jefe no tiene fases (Babel)
-//     habilidadesSilenciosas: por defecto en los uber (Uriel, Hecate,
-//                          Jörmungandr, Babel), que no telegrafían nada: se ven
-//                          todos los iconos desde el principio, pero sin carga,
-//                          destellos, contadores ni cambios (ver
-//                          icono-habilidad.js). Typhon uber pasa false.
+//     habilidadesSilenciosas: por defecto en todos los uber, que no
+//                          telegrafían nada: se ven todos los iconos desde el
+//                          principio, pero sin carga, destellos, contadores ni
+//                          cambios (ver icono-habilidad.js).
 //   });
 //   Con `seccion` (la del catálogo), pasar el mouse por el icono muestra la
 //   carta de esa habilidad (ver carta-habilidad.js), tal como se ve en la

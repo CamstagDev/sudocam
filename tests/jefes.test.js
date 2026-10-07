@@ -194,6 +194,13 @@ describe('registro de jefes', () => {
     expect(estaCompletamenteInvestigado('jormungandr')).toBe(true);
   });
 
+  it('investigar a Typhon pide lo mismo de siempre: ganar en 30:00 o menos y sin errores', async () => {
+    await registrarVictoriaDeJefe('typhon', { segundos: 2000, errores: 0, usoNotas: false });
+    expect(estaCompletamenteInvestigado('typhon')).toBe(false); // falta ganar en 30:00
+    await registrarVictoriaDeJefe('typhon', { segundos: 1500, errores: 3, usoNotas: false });
+    expect(estaCompletamenteInvestigado('typhon')).toBe(true);
+  });
+
   it('cada habilidad con dibujo tiene también nombre y emoji de respaldo', () => {
     for (const jefe of Object.values(JEFES)) {
       for (const seccion of SECCIONES_INFORMACION.map((nombre) => jefe[nombre]).filter(Boolean)) {

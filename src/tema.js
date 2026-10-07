@@ -137,6 +137,22 @@ export const TEMAS_DE_JEFES = [
     colores: { fondo: '#0f0d16', texto: '#eee9f5', numeros: '#eee9f5', acento: '#ff4fc3', resaltado: '#2a1f33', logo: '#3fe0ff', pista: '#3fe0ff', acierto: '#ffc94d', error: '#ff5a5a', jefe: '#ff4fc3' },
     borde: 'linea',
   },
+  {
+    id: 'typhon',
+    nombre: 'Typhon',
+    jefe: 'typhon',
+    // Piedra negra y el plata frío de sus tableros encendidos.
+    colores: { fondo: '#111216', texto: '#e8eaef', numeros: '#e8eaef', acento: '#b8c4d8', resaltado: '#262931', logo: '#dce4f2', pista: '#9fb7e0', acierto: '#7fd6a4', error: '#ff6b6b', jefe: '#8fb4ff' },
+    borde: 'linea',
+  },
+  {
+    id: 'typhon-uber',
+    nombre: 'Uber Typhon',
+    jefe: 'typhon_uber',
+    // El mismo plata llevado al blanco puro, sobre un negro más profundo.
+    colores: { fondo: '#08080b', texto: '#f4f6fa', numeros: '#f4f6fa', acento: '#f2f6ff', resaltado: '#20222a', logo: '#ffffff', pista: '#b9cdf5', acierto: '#7fd6a4', error: '#ff5a6e', jefe: '#a9c4ff' },
+    borde: 'linea',
+  },
 ];
 
 // Estilo extra del tablero en la pelea contra cada jefe, aparte de los
@@ -148,6 +164,7 @@ const ESTILOS_DE_PELEA = {
   jormungandr: 'grueso', // líneas y números más gruesos, pistas torcidas
   jormungandr_uber: 'muy-grueso',
   babel_uber: 'brillo',
+  typhon_uber: 'brillo',
 };
 
 // Todos los temas que se pueden reconocer como "en uso".

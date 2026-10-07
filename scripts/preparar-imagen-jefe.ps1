@@ -2,7 +2,7 @@
 # centrada al formato que corresponde y la guarda como JPEG, así la app no
 # carga imágenes de varios MB.
 #
-#   powershell -ExecutionPolicy Bypass -File scripts/preparar-imagen-jefe.ps1 <imagen> <id> [carta|retrato|habilidad]
+#   powershell -ExecutionPolicy Bypass -File scripts/preparar-imagen-jefe.ps1 <imagen> <id> [carta|retrato|habilidad] [centro|arriba]
 #
 # - carta (por defecto): la ilustración completa, 600x800 (3:4), para la
 #   carta del menú y la página de información -> public/img/cartas/<id>.jpg
@@ -13,11 +13,16 @@
 #
 # <id> es el del catálogo de jefes (uriel, uriel_uber, hecate...) o, para
 # una habilidad, el `imagen` de su sección (uriel_facil, uriel_pasiva...).
+#
+# Si la imagen no tiene el formato justo, se recorta: centrada (por
+# defecto) o, con "arriba", quitando solo de abajo (sirve para no cortar
+# el título de una carta más alta que 3:4).
 
 param(
     [Parameter(Mandatory = $true)][string]$Origen,
     [Parameter(Mandatory = $true)][string]$Id,
-    [ValidateSet('carta', 'retrato', 'habilidad')][string]$Tipo = 'carta'
+    [ValidateSet('carta', 'retrato', 'habilidad')][string]$Tipo = 'carta',
+    [ValidateSet('centro', 'arriba')][string]$Recorte = 'centro'
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -40,12 +45,12 @@ $destino = Join-Path $carpeta "$Id.jpg"
 
 $imagen = [System.Drawing.Image]::FromFile((Resolve-Path $Origen))
 
-# Recorte centrado al formato de destino.
+# Recorte al formato de destino (centrado, o desde arriba).
 $escala = [Math]::Max($ancho / $imagen.Width, $alto / $imagen.Height)
 $anchoEscalado = $imagen.Width * $escala
 $altoEscalado = $imagen.Height * $escala
 $x = ($ancho - $anchoEscalado) / 2
-$y = ($alto - $altoEscalado) / 2
+$y = if ($Recorte -eq 'arriba') { 0 } else { ($alto - $altoEscalado) / 2 }
 
 $lienzo = New-Object System.Drawing.Bitmap $ancho, $alto
 $grafico = [System.Drawing.Graphics]::FromImage($lienzo)

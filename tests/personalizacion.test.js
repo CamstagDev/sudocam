@@ -127,7 +127,9 @@ describe('temas de jefes', () => {
     expect(temaDeJefe('jormungandr_uber').id).toBe('jormungandr-uber');
     expect(temaDeJefe('babel').id).toBe('babel');
     expect(temaDeJefe('babel_uber').id).toBe('babel-uber');
-    expect(temaDeJefe('typhon')).toBeNull();
+    expect(temaDeJefe('typhon').id).toBe('typhon');
+    expect(temaDeJefe('typhon_uber').id).toBe('typhon-uber');
+    expect(temaDeJefe('no_existe')).toBeNull();
   });
 
   it('solo se pueden elegir los de los jefes vencidos al menos una vez', () => {
