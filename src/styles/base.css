@@ -275,3 +275,14 @@ body {
     display: block;
   }
 }
+
+/* Texto que solo leen los lectores de pantalla (p. ej. el de un título
+   que se ve como imagen). */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

@@ -96,8 +96,17 @@
 
 /* ---------- Carrusel de jefes del menú ---------- */
 
+/* El título "Jefes" es una ilustración con fondo transparente. */
 .titulo-jefes {
+  margin: 0;
   text-align: center;
+}
+
+.titulo-jefes img {
+  display: block;
+  width: min(100%, clamp(220px, 70vw, 460px));
+  height: auto;
+  margin-inline: auto;
 }
 
 .carrusel-jefes {

@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- El título "Jefes" del menú es ahora una ilustración (letras de piedra con
+  luces), con fondo transparente para que quede bien con cualquier tema.
 - En PC el carrusel de jefes es un 50 % más grande (carta y miniaturas), y
   el título "Jefes" va centrado sobre él.
 - Los jefes del menú ahora son un carrusel: se ve un jefe a la vez, con
