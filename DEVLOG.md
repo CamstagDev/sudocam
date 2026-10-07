@@ -3,6 +3,42 @@
 Una nota por versión, contada para quien juega. La lista completa y
 detallada de cambios está en CHANGELOG.md.
 
+## 0.3.0 — Uriel cobra vida (2026-10-07)
+
+Esta actualización se la dedicamos a los jefes, empezando por Uriel.
+
+**Uriel tiene cara e historia.** Uriel y Uber Uriel estrenan ilustración
+propia en su carta del menú, y la página de información del jefe ahora
+abre con la imagen completa. Uriel también tiene un retrato nuevo para la
+pelea y, por fin, una historia: su descripción cuenta de dónde salió la
+máquina de patrones.
+
+**Habilidades con nombre propio.** Las habilidades de Uriel se renovaron:
+"123...", "3x3x3" y su pasiva "Predecible...", cada una con su icono. Sus
+textos ya no explican paso a paso cómo funcionan; dan pistas para que tú
+lo descubras peleando.
+
+**Cartas de habilidad.** Cada habilidad tiene ahora su carta, con icono,
+nombre y texto. En la página de información aparecen apiladas debajo de
+la historia del jefe, y en plena pelea basta con pasar el mouse (o tocar
+en el teléfono) por un icono para ver su carta. Lo que todavía no has
+investigado sigue bloqueado.
+
+**Peleas con nueva cara.** La cabecera de las peleas cambió: el retrato
+del jefe va a la izquierda, a toda la altura, y su nombre, fase,
+habilidades y marcador al lado. Uber Uriel y Uber Hecate ahora muestran
+los iconos de sus habilidades, pero sin ningún aviso de cuándo van a
+atacar.
+
+**Normal o uber, tú eliges.** El botón de la uber ya no empieza la pelea
+de una: le da vuelta a la carta para mostrar a la uber. Toca la cara que
+se ve para pelear contra ese jefe, y vuelve a darle la vuelta cuando
+quieras.
+
+Por dentro también actualizamos las herramientas con las que se arman el
+instalador de Windows y la app de Android. Tus partidas y tu progreso se
+conservan al actualizar.
+
 ## 0.2.0 — Tutorial, Monocromo y pétalos (2026-10-05)
 
 ¡Llega la primera actualización de SudoCam!
