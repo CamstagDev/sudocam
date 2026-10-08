@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+## 0.4.0 (2026-10-08)
+
 - En el teléfono, los juegos del modo Clásico van en un carrusel: la carta
   elegida al medio y la mitad de la anterior y de la siguiente a los
   lados. Tocar un lado o deslizar cambia de juego; tocar la del medio lo
