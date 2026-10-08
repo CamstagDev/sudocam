@@ -3,6 +3,57 @@
 Una nota por versión, contada para quien juega. La lista completa y
 detallada de cambios está en CHANGELOG.md.
 
+## 0.4.0 — Todos los jefes, a la altura (2026-10-08)
+
+La actualización más grande hasta ahora: los cinco jefes ya tienen cara,
+historia y estilo propio, y el menú cambió por completo.
+
+**Un menú por modos.** El juego ahora se divide en modos, cada uno con
+su página: **Clásico** (sudoku 9x9, multi sudoku, tutorial y tus
+partidas guardadas) y **Jefes**. Cambias de modo desde el nuevo menú
+"Modos" de arriba. Los juegos del modo Clásico estrenan ilustraciones, y
+en el teléfono van en un carrusel que se desliza con el dedo. Los últimos
+logros ahora están arriba en la pantalla de Logros.
+
+**Carrusel de jefes.** Los jefes se ven de a uno, con el anterior y el
+siguiente asomándose a los lados y una fila de miniaturas arriba para
+saltar a cualquiera. La carta del medio brilla con un neón del color del
+jefe, y al darle vuelta a la uber cambia de color. El título "Jefes"
+también es una ilustración nueva.
+
+**Hecate, Jörmungandr, Babel y Typhon, completos.** Igual que Uriel en
+la versión anterior, los otros cuatro jefes (y sus uber) tienen ahora
+ilustración en su carta, retratos para la pelea, iconos y cartas para
+cada habilidad, historia y textos de ambientación que dan pistas sin
+explicarlo todo. Algunas secciones de su página de información se
+separaron en dos, pero se desbloquean con lo mismo de antes.
+
+**Cada jefe con su tema.** Cada pelea se pinta con los colores de su
+jefe: Uriel naranja, Hecate morado, Jörmungandr azul turquesa, Babel
+dorado, Typhon plata... Las uber brillan, las líneas de Jörmungandr se
+ponen más gruesas y sus pistas se tuercen. Después de vencer a un jefe
+puedes usar su tema en toda la app, y si prefieres tus colores, activa
+"Sobrescribir temas de jefes" en Personalización.
+
+**Peleas más cómodas.** El tablero tiene más espacio: rendirse pasa a la
+bandera 🏳️ de arriba (y pide confirmación, igual que salir a mitad de la
+pelea), el tiempo va en la cabecera del jefe, y en pantallas anchas la
+cabecera y el registro van a un costado para que los tableros grandes
+quepan enteros.
+
+**Las uber ya no avisan.** Ninguna uber muestra cuándo va a atacar: sus
+habilidades se ven, pero sin carga, destellos ni registro.
+
+**Uriel más rápido.** Uriel pasa antes a la fase 2 y sus búsquedas son
+más seguidas (más todavía en la uber). Su pasiva ahora también se nota
+en la fase 1.
+
+**Tus números, tu color.** Nuevo color en Personalización, "Tus
+números", para los números que escribes en el tablero, aparte del color
+del texto.
+
+Tus partidas y tu progreso se conservan al actualizar.
+
 ## 0.3.0 — Uriel cobra vida (2026-10-07)
 
 Esta actualización se la dedicamos a los jefes, empezando por Uriel.
