@@ -41,6 +41,43 @@
   box-shadow: 0 0 0 2px var(--accent);
 }
 
+/* En el teléfono, los juegos van en carrusel en vez de en grilla (.game-grid
+   tiene su propio display, que le ganaría a .solo-pc). */
+@media (max-width: 640px) {
+  .game-grid.solo-pc {
+    display: none;
+  }
+}
+
+/* Carrusel de juegos del teléfono (ver ui/carrusel-juegos.js): la carta
+   del medio ocupa la mitad del ancho y las de los lados, un cuarto cada
+   una (se ve la mitad de cada una; el resto queda cortado). */
+.carrusel-juegos {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.carrusel-juegos-carta.anterior,
+.carrusel-juegos-carta.siguiente {
+  width: 200%;
+  opacity: 0.45;
+  transform: scale(0.9);
+}
+
+/* La de la izquierda muestra su mitad derecha. */
+.carrusel-juegos-carta.anterior {
+  margin-left: -100%;
+}
+
+.carrusel-juegos-carta.actual {
+  z-index: 1;
+  box-shadow: 0 0 0 2px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent);
+  animation: carrusel-entra 0.25s ease;
+}
+
 .game-card:hover {
   border-color: var(--accent);
   background: var(--surface-strong);

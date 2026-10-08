@@ -4,6 +4,7 @@ import { elegirDificultadSudoku } from '../ui/selector-dificultad.js';
 import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { tituloDeModo } from '../ui/modos.js';
+import { crearCarruselJuegos } from '../ui/carrusel-juegos.js';
 
 // Cada juego con su ilustración (public/img/cartas/<ruta>.jpg, 3:4; se
 // prepara con scripts/preparar-imagen-jefe.ps1). La ilustración ya trae el
@@ -15,12 +16,13 @@ const JUEGOS = [
 ];
 
 function cartaJuego({ ruta, titulo, desc }) {
-  return `
-    <button type="button" class="game-card carta-juego" data-ruta="${ruta}"
-      style="--ilustracion: url('./img/cartas/${ruta}.jpg')">
-      <span class="solo-lectores">${titulo}: ${desc}</span>
-    </button>
-  `;
+  const carta = document.createElement('button');
+  carta.type = 'button';
+  carta.className = 'game-card carta-juego';
+  carta.style.setProperty('--ilustracion', `url('./img/cartas/${ruta}.jpg')`);
+  carta.innerHTML = '<span class="solo-lectores"></span>';
+  carta.querySelector('.solo-lectores').textContent = `${titulo}: ${desc}`;
+  return carta;
 }
 
 // Los juegos piden sus opciones antes de empezar; el resto abre directo.
@@ -44,7 +46,9 @@ export const pantallaMenu = {
     contenedor.innerHTML = `
       <section class="menu-seccion">
         ${tituloDeModo(RUTA_INICIO)}
-        <div class="game-grid">${JUEGOS.map(cartaJuego).join('')}</div>
+        <!-- En PC, las tres cartas en una fila; en el teléfono, un carrusel. -->
+        <div class="game-grid solo-pc" data-id="grilla-juegos"></div>
+        <div class="solo-movil" data-id="carrusel-juegos"></div>
       </section>
 
       <section class="card">
@@ -56,9 +60,16 @@ export const pantallaMenu = {
       <p class="version-app">SudoCam v${VERSION_APP}</p>
     `;
 
-    contenedor.querySelectorAll('[data-ruta]').forEach((boton) => {
-      boton.addEventListener('click', () => abrirJuego(boton.dataset.ruta));
+    const grilla = contenedor.querySelector('[data-id="grilla-juegos"]');
+    JUEGOS.forEach((juego) => {
+      const carta = cartaJuego(juego);
+      carta.addEventListener('click', () => abrirJuego(juego.ruta));
+      grilla.appendChild(carta);
     });
+    contenedor.querySelector('[data-id="carrusel-juegos"]').appendChild(crearCarruselJuegos(JUEGOS, {
+      crearCarta: cartaJuego,
+      alElegir: (juego) => abrirJuego(juego.ruta),
+    }));
 
     dibujarPartidasEnPausa(contenedor.querySelector('#partidas-en-pausa'));
   },

@@ -9,6 +9,10 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- En el teléfono, los juegos del modo Clásico van en un carrusel: la carta
+  elegida al medio y la mitad de la anterior y de la siguiente a los
+  lados. Tocar un lado o deslizar cambia de juego; tocar la del medio lo
+  abre. En PC siguen las tres en una fila.
 - Sudoku 9x9, Multi Sudoku y Tutorial tienen ilustración propia en sus
   cartas del modo Clásico (solo la imagen, que ya trae el nombre).
 - El modo Clásico tiene su ilustración, en el menú "Modos" y como título
