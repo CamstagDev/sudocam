@@ -5,18 +5,20 @@ import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { tituloDeModo } from '../ui/modos.js';
 
+// Cada juego con su ilustración (public/img/cartas/<ruta>.jpg, 3:4; se
+// prepara con scripts/preparar-imagen-jefe.ps1). La ilustración ya trae el
+// nombre, así que el texto queda solo para los lectores de pantalla.
 const JUEGOS = [
-  { ruta: 'sudoku', icono: '🔢', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
-  { ruta: 'multisudoku', icono: '🧬', titulo: 'Multi Sudoku', desc: 'Varios tableros de 9x9 entrelazados por sus cajas de las esquinas' },
-  { ruta: 'tutorial', icono: '🎓', titulo: 'Tutorial', desc: 'Aprende a resolver un sudoku paso a paso' },
+  { ruta: 'sudoku', titulo: 'Sudoku 9x9', desc: 'El clásico rompecabezas de números' },
+  { ruta: 'multisudoku', titulo: 'Multi Sudoku', desc: 'Varios tableros de 9x9 entrelazados por sus cajas de las esquinas' },
+  { ruta: 'tutorial', titulo: 'Tutorial', desc: 'Aprende a resolver un sudoku paso a paso' },
 ];
 
-function cartaJuego({ ruta, icono, titulo, desc }) {
+function cartaJuego({ ruta, titulo, desc }) {
   return `
-    <button type="button" class="game-card" data-ruta="${ruta}">
-      <span class="game-card-icon">${icono}</span>
-      <span class="game-card-title">${titulo}</span>
-      <span class="game-card-desc">${desc}</span>
+    <button type="button" class="game-card carta-juego" data-ruta="${ruta}"
+      style="--ilustracion: url('./img/cartas/${ruta}.jpg')">
+      <span class="solo-lectores">${titulo}: ${desc}</span>
     </button>
   `;
 }

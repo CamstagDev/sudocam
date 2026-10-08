@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Sudoku 9x9, Multi Sudoku y Tutorial tienen ilustración propia en sus
+  cartas del modo Clásico (solo la imagen, que ya trae el nombre).
 - El modo Clásico tiene su ilustración, en el menú "Modos" y como título
   de su página.
 - La carta del medio del carrusel de jefes brilla con un borde de neón del

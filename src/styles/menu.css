@@ -29,6 +29,18 @@
   transition: border-color 0.15s, background 0.15s;
 }
 
+/* Juegos del modo Clásico: solo su ilustración (3:4), que ya trae el nombre. */
+.game-card.carta-juego,
+.game-card.carta-juego:hover {
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  background: var(--ilustracion) center / cover no-repeat;
+}
+
+.game-card.carta-juego:hover {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
 .game-card:hover {
   border-color: var(--accent);
   background: var(--surface-strong);
