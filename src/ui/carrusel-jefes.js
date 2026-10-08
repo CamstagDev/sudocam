@@ -15,6 +15,7 @@ import { JEFES, imagenDeCarta } from '../game/jefes/catalogo.js';
 import { crearCartaJefe } from './carta-jefe.js';
 import { crearRetratoJefe } from './retrato-jefe.js';
 import { buscarImagenDeJefe } from './imagen-de-jefe.js';
+import { ponerIlustracion } from './ilustracion.js';
 import { temaDeJefe } from '../tema.js';
 
 const DESLIZAMIENTO_MINIMO = 50; // px para que un deslizamiento cuente
@@ -54,7 +55,7 @@ function crearVecino(id, lado, alTocar) {
   vecino.innerHTML = `<span class="carrusel-vecino-emoji">${JEFES[idVisible(id)].emoji}</span>`;
   vecino.addEventListener('click', alTocar);
   buscarImagenDeJefe(idVisible(id), imagenDeCarta).then((ruta) => {
-    if (ruta) vecino.style.setProperty('--ilustracion', `url("${ruta}")`);
+    if (ruta) ponerIlustracion(vecino, ruta);
   });
   return vecino;
 }

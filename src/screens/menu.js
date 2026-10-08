@@ -5,6 +5,7 @@ import { elegirMultiSudoku } from '../ui/selector-multisudoku.js';
 import { TEXTO_LIMITE_PARTIDAS, dibujarPartidasEnPausa } from '../ui/lista-partidas-en-pausa.js';
 import { tituloDeModo } from '../ui/modos.js';
 import { crearCarruselJuegos } from '../ui/carrusel-juegos.js';
+import { ponerIlustracion } from '../ui/ilustracion.js';
 
 // Cada juego con su ilustración (public/img/cartas/<ruta>.jpg, 3:4; se
 // prepara con scripts/preparar-imagen-jefe.ps1). La ilustración ya trae el
@@ -19,7 +20,7 @@ function cartaJuego({ ruta, titulo, desc }) {
   const carta = document.createElement('button');
   carta.type = 'button';
   carta.className = 'game-card carta-juego';
-  carta.style.setProperty('--ilustracion', `url('./img/cartas/${ruta}.jpg')`);
+  ponerIlustracion(carta, `./img/cartas/${ruta}.jpg`);
   carta.innerHTML = '<span class="solo-lectores"></span>';
   carta.querySelector('.solo-lectores').textContent = `${titulo}: ${desc}`;
   return carta;

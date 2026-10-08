@@ -22,6 +22,7 @@ import { JEFES, imagenDeCarta } from '../game/jefes/catalogo.js';
 import { jefeDesbloqueado } from '../game/jefes/registro.js';
 import { elegirDificultadDeJefe } from './selector-dificultad-jefe.js';
 import { buscarImagenDeJefe } from './imagen-de-jefe.js';
+import { ponerIlustracion } from './ilustracion.js';
 
 // Ruta de la pelea de cada jefe ya construido (la uber usa la misma, con
 // ?uber=1).
@@ -76,14 +77,10 @@ function rotularBotonChico(boton, { icono, titulo }) {
 
 // Pone la ilustración del jefe de fondo en la cara; sin ilustración, la
 // cara se queda con el emoji y el texto.
-async function ponerIlustracion(cara, id) {
+async function ponerIlustracionDeJefe(cara, id) {
   const ruta = await buscarImagenDeJefe(id, imagenDeCarta);
   if (!ruta) return;
-  // Ruta absoluta: un url() relativo dentro de una variable CSS se resuelve
-  // desde la hoja de estilos (dist/assets/) y en el build no encuentra la
-  // imagen.
-  const absoluta = new URL(ruta, document.baseURI).href;
-  cara.style.setProperty('--ilustracion', `url("${absoluta}")`);
+  ponerIlustracion(cara, ruta);
   cara.classList.add('con-ilustracion');
 }
 
@@ -102,7 +99,7 @@ function crearCara(id, { pelear, clase }) {
     </span>
   `;
   if (pelear) cara.addEventListener('click', pelear);
-  ponerIlustracion(cara, id);
+  ponerIlustracionDeJefe(cara, id);
   return cara;
 }
 
