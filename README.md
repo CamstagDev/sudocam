@@ -15,6 +15,10 @@ partida.
 
 ## Comandos
 
+En Windows, `Iniciar SudoCam.bat` (doble clic) hace lo mismo que
+`npm run dev` y abre el navegador; si ya estaba prendido, solo abre el
+navegador. Se apaga cerrando su ventana.
+
 | Comando | Qué hace |
 |---|---|
 | `npm run dev` | Abre el juego en el navegador en http://localhost:5173, con recarga al guardar |
