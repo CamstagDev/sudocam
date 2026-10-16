@@ -5,6 +5,11 @@
 //
 // Para otras peleas (el Duelo): `alRevancha: null` quita ese botón,
 // `icono` cambia el 🏆/💀 y `volver: { texto, ruta }` el otro botón.
+// Devuelve con qué cambiar la ventana mientras está abierta (el Duelo
+// avisa así si el rival pide la revancha o se va):
+//   const ventana = mostrarResultadoPelea({ ... });
+//   ventana.avisar('Tu rival quiere la revancha.');
+//   ventana.quitarRevancha();
 
 import { navegar } from '../router.js';
 import { abrirModal } from './modal.js';
@@ -24,6 +29,7 @@ export function mostrarResultadoPelea({
   contenido.innerHTML = `
     <span class="resultado-pelea-icono">${icono}</span>
     <p class="modal-texto"></p>
+    <p class="resultado-pelea-aviso hidden"></p>
     <div class="fila-acciones">
       ${alRevancha ? '<button type="button" class="btn btn-primary" data-accion="revancha">Revancha</button>' : ''}
       <button type="button" class="btn btn-secondary" data-accion="volver"></button>
@@ -44,4 +50,15 @@ export function mostrarResultadoPelea({
       modal.cerrar();
     });
   });
+
+  return {
+    avisar(texto) {
+      const aviso = contenido.querySelector('.resultado-pelea-aviso');
+      aviso.textContent = texto;
+      aviso.classList.remove('hidden');
+    },
+    quitarRevancha() {
+      contenido.querySelector('[data-accion="revancha"]')?.remove();
+    },
+  };
 }

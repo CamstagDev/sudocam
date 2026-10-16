@@ -17,6 +17,10 @@ sube cuando cambia la forma del archivo de guardado.
   aparece en desarrollo (`npm run dev`), jugando entre dos pestañas del
   navegador; la conexión real entre teléfonos (Nearby Connections) viene
   después.
+- Revancha en el Duelo: al terminar con el tablero lleno, cualquiera la
+  pide desde la ventana del resultado y, cuando los dos aceptan, empieza
+  otro sudoku de la misma dificultad sin volver a conectarse. Si el rival
+  se va mientras tanto, se avisa.
 
 ## 0.4.0 (2026-10-08)
 

@@ -72,3 +72,19 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+/* Tras pedir la revancha, mientras el rival no acepta. */
+.espera-revancha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: clamp(12px, 3vw, 18px);
+  border-color: var(--accent);
+}
+
+.espera-revancha p {
+  margin: 0;
+  font-weight: 700;
+}

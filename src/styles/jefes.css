@@ -601,6 +601,15 @@ button.retrato-jefe {
   font-size: 42px;
 }
 
+/* Lo que pasa mientras la ventana está abierta (Duelo: el rival pide la
+   revancha o se va). */
+.resultado-pelea-aviso {
+  margin: -8px 0 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 /* ---------- Información del jefe ---------- */
 
 .ilustracion-jefe {

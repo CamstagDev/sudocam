@@ -27,6 +27,8 @@ async function crearDuelo() {
     alEmpezar: () => eventos[rol].push('empezar'),
     alCambiar: () => eventos[rol].push('cambio'),
     alTerminar: (fin) => eventos[rol].push(fin),
+    alRivalPideRevancha: () => eventos[rol].push('rival pide revancha'),
+    alRivalSeFue: () => eventos[rol].push('rival se fue'),
   });
   const anfitrion = crearSesionDuelo({ conexion: conexionA, ...opciones('anfitrion') });
   const invitado = crearSesionDuelo({ conexion: conexionB, ...opciones('invitado') });
@@ -132,5 +134,65 @@ describe('sesión de duelo', () => {
     conexionB.enviar({ tipo: 'hola', version: VERSION_PROTOCOLO + 1 });
     await esperarMensajes();
     expect(fines).toEqual(['version', 'invitado: version']);
+  });
+
+  describe('revancha', () => {
+    // Una ronda completa: el invitado se anota todo.
+    async function jugarRonda({ invitado }) {
+      for (const [indice, valor] of [[0, 5], [1, 3], [2, 4]]) jugar(invitado, indice, valor);
+      await esperarMensajes();
+    }
+
+    it('cuando los dos la piden, empieza otra ronda sobre la misma conexión', async () => {
+      const duelo = await crearDuelo();
+      const { anfitrion, invitado, eventos } = duelo;
+      await jugarRonda(duelo);
+      const primerSudoku = invitado.partida;
+
+      invitado.pedirRevancha();
+      await esperarMensajes();
+      expect(eventos.anfitrion.at(-1)).toBe('rival pide revancha');
+      expect(invitado.partida).toBe(primerSudoku); // falta que el anfitrión acepte
+
+      anfitrion.pedirRevancha();
+      await esperarMensajes();
+      expect(eventos.anfitrion.at(-1)).toBe('empezar');
+      expect(eventos.invitado.at(-1)).toBe('empezar');
+      expect(invitado.partida).not.toBe(primerSudoku);
+      expect(invitado.partida.puntos).toEqual({ yo: 0, rival: 0 });
+
+      // Y la ronda nueva se juega igual.
+      await jugarRonda(duelo);
+      expect(eventos.anfitrion.at(-1)).toEqual({ motivo: 'completo', puntos: { yo: 0, rival: 3 } });
+    });
+
+    it('si los dos la piden a la vez, empieza una sola ronda', async () => {
+      const duelo = await crearDuelo();
+      await jugarRonda(duelo);
+      duelo.anfitrion.pedirRevancha();
+      duelo.invitado.pedirRevancha();
+      await esperarMensajes();
+      const rondas = (rol) => duelo.eventos[rol].filter((e) => e === 'empezar').length;
+      expect([rondas('anfitrion'), rondas('invitado')]).toEqual([2, 2]);
+    });
+
+    it('si el rival se va entre rondas, ya no hay revancha', async () => {
+      const duelo = await crearDuelo();
+      await jugarRonda(duelo);
+      duelo.anfitrion.abandonar();
+      await esperarMensajes();
+      expect(duelo.eventos.invitado.at(-1)).toBe('rival se fue');
+
+      duelo.invitado.pedirRevancha();
+      await esperarMensajes();
+      expect(duelo.eventos.invitado.filter((e) => e === 'empezar')).toHaveLength(1);
+    });
+
+    it('a mitad de una ronda no se puede pedir', async () => {
+      const { invitado, eventos } = await crearDuelo();
+      invitado.pedirRevancha();
+      await esperarMensajes();
+      expect(eventos.anfitrion).not.toContain('rival pide revancha');
+    });
   });
 });

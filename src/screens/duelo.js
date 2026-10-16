@@ -6,6 +6,9 @@
 // donde uno crea el duelo y el otro se une; al conectarse, la pelea, en
 // esta misma pantalla.
 //
+// Al terminar una ronda con el tablero lleno, cualquiera puede pedir la
+// revancha: cuando los dos la piden empieza otra, sin volver a conectarse.
+//
 // Las reglas y los mensajes entre los dos teléfonos están en
 // game/duelo/; aquí solo se dibuja. Sin un transporte disponible (ver
 // game/duelo/transporte.js) el modo no existe y se vuelve al inicio.
@@ -98,6 +101,8 @@ export const pantallaDuelo = {
     let sesion = null;
     let juego = null;
     let redibujar = () => {}; // tablero y marcador, una vez empezada la pelea
+    let ventanaResultado = null; // abierta entre rondas, hasta que el jugador elige
+    let esperaRevancha = null; // tarjeta "esperando a tu rival" tras pedir la revancha
 
     contenedor.innerHTML = `<section class="menu-seccion">${tituloDeModo('duelo')}</section>`;
     const sala = crearSalaDuelo(contenedor, { transporte, alConectarse: empezarDuelo });
@@ -115,11 +120,16 @@ export const pantallaDuelo = {
         alEmpezar: dibujarPelea,
         alCambiar: () => redibujar(),
         alTerminar: terminar,
+        alRivalPideRevancha: () => ventanaResultado?.avisar('Tu rival quiere la revancha.'),
+        alRivalSeFue: rivalSeFue,
       });
     }
 
     function dibujarPelea(partida) {
       empezarPelea(); // desde aquí, salir pide confirmar la rendición
+      juego?.destruir(); // la ronda anterior, si hubo revancha
+      ventanaResultado = null;
+      esperaRevancha = null;
       contenedor.innerHTML = '';
       const marcador = crearMarcador(contenedor, { dificultad: partida.dificultad });
       const actualizarMarcador = () => marcador.mostrar(partida.puntos, partida.casillasALlenar);
@@ -149,7 +159,39 @@ export const pantallaDuelo = {
     function terminar(fin) {
       juego?.detenerCronometro();
       redibujar();
-      mostrarResultadoPelea({ ...resultado(fin), alRevancha: null, volver: VOLVER_A_LA_SALA });
+      // Solo tras un tablero lleno sigue habiendo alguien con quien jugar.
+      const hayRevancha = fin.motivo === 'completo';
+      ventanaResultado = mostrarResultadoPelea({
+        ...resultado(fin),
+        alRevancha: hayRevancha ? pedirRevancha : null,
+        volver: VOLVER_A_LA_SALA,
+      });
+    }
+
+    /* ---------- Revancha ---------- */
+
+    // La ventana del resultado ya se cerró: mientras el rival no acepte,
+    // una tarjeta arriba del tablero lo dice.
+    function pedirRevancha() {
+      ventanaResultado = null;
+      esperaRevancha = document.createElement('section');
+      esperaRevancha.className = 'card espera-revancha';
+      esperaRevancha.innerHTML = `
+        <p data-id="texto">Pediste la revancha. Esperando a tu rival…</p>
+        <button type="button" class="btn btn-secondary btn-sm">Salir del duelo</button>
+      `;
+      esperaRevancha.querySelector('button').addEventListener('click', () => navegar('duelo'));
+      contenedor.prepend(esperaRevancha);
+      sesion.pedirRevancha();
+    }
+
+    function rivalSeFue() {
+      ventanaResultado?.quitarRevancha();
+      ventanaResultado?.avisar('Tu rival salió del duelo.');
+      if (esperaRevancha) {
+        esperaRevancha.querySelector('[data-id="texto"]').textContent = 'Tu rival salió del duelo.';
+        esperaRevancha.querySelector('button').textContent = 'Volver al duelo';
+      }
     }
 
     limpiar = () => {
