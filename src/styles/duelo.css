@@ -1,0 +1,74 @@
+/* ============================================================
+   SudoCam — modo Duelo (ver screens/duelo.js y ui/sala-duelo.js)
+   ============================================================ */
+
+/* ---------- Sala ---------- */
+
+.sala-duelo {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 18px);
+}
+
+.sala-duelo .chip-picker {
+  margin: 12px 0 4px;
+}
+
+.aviso-prueba {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px dashed var(--boss-border);
+  border-radius: var(--radius-sm);
+  background: var(--boss-bg);
+  color: var(--text);
+  font-size: clamp(12px, 3.4vw, 13px);
+}
+
+/* El código que identifica un duelo: lo ven igual los dos teléfonos. */
+.codigo-duelo {
+  margin: 8px 0;
+  font-size: clamp(22px, 7vw, 30px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+
+.lista-duelos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.duelo-encontrado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.duelo-encontrado .codigo-duelo {
+  margin: 0;
+  font-size: clamp(18px, 5vw, 22px);
+}
+
+/* ---------- Pelea ---------- */
+
+.cabecera-duelo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: clamp(12px, 3vw, 18px);
+}
+
+.cabecera-duelo-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}

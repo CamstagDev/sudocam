@@ -144,12 +144,14 @@
   color: var(--success);
 }
 
-/* En una pelea: quién se anotó cada casilla. */
+/* En una pelea: quién se anotó cada casilla (el rival de un duelo se ve
+   como un jefe). */
 .celda.jugador {
   background: var(--success-bg);
 }
 
-.celda.jefe {
+.celda.jefe,
+.celda.rival {
   background: var(--boss-bg);
   color: var(--boss);
   font-weight: 700;

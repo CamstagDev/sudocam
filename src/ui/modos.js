@@ -1,5 +1,5 @@
 // Los modos de juego, cada uno con su página: Clásico (la de inicio:
-// sudoku, multi sudoku y tutorial) y Jefes. Se eligen en el menú "Modos" de
+// sudoku, multi sudoku y tutorial), Jefes y Duelo. Se eligen en el menú "Modos" de
 // la barra de arriba (ver shell.js), y cada página lleva su título arriba.
 //
 // Un modo con `imagen` se muestra con ella (en el menú y como título de su
@@ -8,6 +8,8 @@
 
 import { RUTA_INICIO } from '../router.js';
 import { hayJefesDesbloqueados } from '../game/jefes/registro.js';
+import { NOMBRE_DUELO } from '../game/duelo/reglas.js';
+import { transporteDisponible } from '../game/duelo/transporte.js';
 
 export const MODOS = [
   {
@@ -22,6 +24,13 @@ export const MODOS = [
     imagen: './img/titulos/jefes.png',
     // Mientras no haya ningún jefe desbloqueado, el modo no existe.
     disponible: hayJefesDesbloqueados,
+  },
+  {
+    ruta: 'duelo',
+    nombre: NOMBRE_DUELO,
+    // Solo si este dispositivo tiene cómo conectarse con otro (por ahora,
+    // solo en desarrollo; ver game/duelo/transporte.js).
+    disponible: () => transporteDisponible() !== null,
   },
 ];
 

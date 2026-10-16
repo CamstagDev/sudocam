@@ -9,6 +9,15 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Primer paso del modo Duelo (teléfono contra teléfono, sin internet):
+  los dos llenan el mismo sudoku y cada casilla es de quien ponga primero
+  el número correcto, como contra Uriel. Quien crea el duelo elige la
+  dificultad y hace de árbitro. Sala para crear o unirse, marcador, y
+  final por tablero lleno, rendición o conexión perdida. Por ahora solo
+  aparece en desarrollo (`npm run dev`), jugando entre dos pestañas del
+  navegador; la conexión real entre teléfonos (Nearby Connections) viene
+  después.
+
 ## 0.4.0 (2026-10-08)
 
 - En el teléfono, los juegos del modo Clásico van en un carrusel: la carta
