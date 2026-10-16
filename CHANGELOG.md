@@ -13,10 +13,13 @@ sube cuando cambia la forma del archivo de guardado.
   los dos llenan el mismo sudoku y cada casilla es de quien ponga primero
   el número correcto, como contra Uriel. Quien crea el duelo elige la
   dificultad y hace de árbitro. Sala para crear o unirse, marcador, y
-  final por tablero lleno, rendición o conexión perdida. Por ahora solo
-  aparece en desarrollo (`npm run dev`), jugando entre dos pestañas del
-  navegador; la conexión real entre teléfonos (Nearby Connections) viene
-  después.
+  final por tablero lleno, rendición o conexión perdida.
+- El Duelo en Android: los teléfonos se conectan entre sí con Nearby
+  Connections de Google (Bluetooth y Wi-Fi del teléfono, sin internet ni
+  router). La primera vez pide el permiso de dispositivos cercanos (y la
+  ubicación); si falta un permiso, el Bluetooth está apagado o el teléfono
+  no tiene los servicios de Google Play, la sala lo explica. En desarrollo
+  (`npm run dev`) se sigue pudiendo probar entre dos pestañas.
 - Revancha en el Duelo: al terminar con el tablero lleno, cualquiera la
   pide desde la ventana del resultado y, cuando los dos aceptan, empieza
   otro sudoku de la misma dificultad sin volver a conectarse. Si el rival

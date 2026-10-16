@@ -36,6 +36,8 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
   sala.className = 'sala-duelo';
   sala.innerHTML = `
     ${esTransporteDePrueba(transporte) ? AVISO_DE_PRUEBA : ''}
+    <p class="banner error" data-id="error"></p>
+
     <section class="card" data-id="crear">
       <h2 class="section-title">Crear un duelo</h2>
       <p class="campo-ayuda tarjeta-ayuda">
@@ -73,6 +75,19 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
   let dejarDeBuscar = null;
   let uniendose = false;
 
+  /* ---------- Errores del teléfono ---------- */
+
+  // Lo que le falta al teléfono para conectarse (permisos, Bluetooth...):
+  // se avisa arriba y la sala vuelve a como estaba, para reintentar.
+  function mostrarError(mensaje) {
+    parte('error').textContent = mensaje;
+    parte('error').classList.add('visible');
+  }
+
+  function ocultarError() {
+    parte('error').classList.remove('visible');
+  }
+
   /* ---------- Crear y esperar ---------- */
 
   function marcarDificultad() {
@@ -80,6 +95,7 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
   }
 
   function esperarRival() {
+    ocultarError();
     const codigo = nuevoCodigo();
     parte('codigo').textContent = codigo;
     parte('crear').classList.add('hidden');
@@ -87,10 +103,17 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
     parte('esperando').classList.remove('hidden');
     detenerBusqueda(); // mientras espera, no se une a otros
 
-    dejarDeEsperar = transporte.esperarRival({ codigo }, (conexion) => {
-      dejarDeEsperar = null;
-      alConectarse({ conexion, rol: 'anfitrion', dificultad });
-    });
+    dejarDeEsperar = transporte.esperarRival(
+      { codigo },
+      (conexion) => {
+        dejarDeEsperar = null;
+        alConectarse({ conexion, rol: 'anfitrion', dificultad });
+      },
+      (mensaje) => {
+        cancelarEspera();
+        mostrarError(mensaje);
+      },
+    );
   }
 
   function cancelarEspera() {
@@ -103,6 +126,20 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
   }
 
   /* ---------- Buscar y unirse ---------- */
+
+  // Si el teléfono no puede buscar, la lista lo dice y deja reintentar.
+  function busquedaFallida(mensaje) {
+    detenerBusqueda();
+    mostrarError(mensaje);
+    parte('lista').innerHTML = `
+      <p class="empty-state">No se están buscando duelos.</p>
+      <button type="button" class="btn btn-secondary btn-sm" data-id="reintentar">Buscar otra vez</button>
+    `;
+    parte('reintentar').addEventListener('click', () => {
+      ocultarError();
+      buscar();
+    });
+  }
 
   function dibujarLista(duelos) {
     const lista = parte('lista');
@@ -122,7 +159,7 @@ export function crearSalaDuelo(contenedor, { transporte, alConectarse }) {
   }
 
   function buscar() {
-    if (!dejarDeBuscar) dejarDeBuscar = transporte.buscarDuelos(dibujarLista);
+    if (!dejarDeBuscar) dejarDeBuscar = transporte.buscarDuelos(dibujarLista, busquedaFallida);
   }
 
   function detenerBusqueda() {

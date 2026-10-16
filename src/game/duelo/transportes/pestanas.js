@@ -4,11 +4,13 @@
 // el teléfono el transporte será Nearby Connections, con los mismos pasos.
 //
 // Un transporte tiene tres operaciones, las mismas que ofrece Nearby:
-//   esperarRival({ codigo }, alConectarse)   anunciarse y esperar a que alguien se una;
-//                                            devuelve detener()
-//   buscarDuelos(alCambiarLista)             lista de duelos cercanos [{ id, codigo }];
+//   esperarRival({ codigo }, alConectarse, alFallar)   anunciarse y esperar a que alguien
+//                                            se una; devuelve detener()
+//   buscarDuelos(alCambiarLista, alFallar)   lista de duelos cercanos [{ id, codigo }];
 //                                            devuelve detener()
 //   unirse(id)                               promesa con la conexión (ver memoria.js)
+// `alFallar(mensaje)` es para lo que falte en el teléfono (permisos,
+// Bluetooth...): entre pestañas nunca falta nada, así que no se usa.
 //
 // Por dentro: todas las pestañas escuchan la "sala" común, donde los
 // anfitriones se anuncian y los invitados piden unirse. Al aceptarse, la
