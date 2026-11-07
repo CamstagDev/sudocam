@@ -9,6 +9,8 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+## 0.5.0 (2026-11-07)
+
 - Primer paso del modo Duelo (teléfono contra teléfono, sin internet):
   los dos llenan el mismo sudoku y cada casilla es de quien ponga primero
   el número correcto, como contra Uriel. Quien crea el duelo elige la
