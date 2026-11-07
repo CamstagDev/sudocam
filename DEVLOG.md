@@ -3,6 +3,32 @@
 Una nota por versión, contada para quien juega. La lista completa y
 detallada de cambios está en CHANGELOG.md.
 
+## 0.5.0 — Duelo, teléfono contra teléfono (2026-11-07)
+
+Por primera vez se puede jugar contra otra persona: llega el modo
+**Duelo**.
+
+**Cara a cara, sin internet.** Dos teléfonos con Android se conectan
+directamente entre sí, por Bluetooth y Wi-Fi, sin necesidad de internet
+ni de router. Uno crea el duelo y elige la dificultad, el otro se une
+desde la sala, y los dos llenan el mismo sudoku al tiempo.
+
+**Cada casilla es de quien llegue primero.** Igual que contra Uriel, la
+casilla es de quien ponga primero el número correcto. El marcador
+muestra cómo va cada uno, y el duelo termina cuando se llena el
+tablero, cuando alguien se rinde o si se pierde la conexión.
+
+**Revancha.** Al terminar, cualquiera de los dos puede pedir la revancha
+desde la ventana del resultado; cuando los dos aceptan, empieza otro
+sudoku de la misma dificultad sin tener que volver a conectarse.
+
+**La primera vez.** El teléfono pide permiso para buscar dispositivos
+cercanos (y la ubicación). Si falta un permiso, el Bluetooth está apagado
+o el teléfono no tiene los servicios de Google Play, la sala te dice qué
+pasa. Por ahora el Duelo es solo para Android.
+
+Tus partidas y tu progreso se conservan al actualizar.
+
 ## 0.4.0 — Todos los jefes, a la altura (2026-10-08)
 
 La actualización más grande hasta ahora: los cinco jefes ya tienen cara,
