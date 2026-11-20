@@ -17,6 +17,12 @@ sube cuando cambia la forma del archivo de guardado.
   se ve en el tablero), al ganar y cuando un jefe dispara una habilidad
   (los uber que no telegrafían sus ataques tampoco vibran). Se apaga en
   Personalización → Preferencias; en PC no aparece.
+- Pantalla de Estadísticas (📊 en la barra de arriba): sudokus completados
+  por dificultad con el mejor tiempo y el promedio, los multi sudokus por
+  cantidad de tableros, y victorias, mejor tiempo, errores y victorias
+  rápidas de cada jefe desbloqueado. Desde ahora el guardado anota el
+  tiempo de cada sudoku ganado; las partidas de antes siguen contando como
+  completadas, pero sin tiempo.
 
 ## 0.5.0 (2026-11-07)
 

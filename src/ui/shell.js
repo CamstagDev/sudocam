@@ -7,6 +7,7 @@ import { MODOS, buscarModo, contenidoDelModo } from './modos.js';
 // en base.css).
 const ACCESOS = [
   { ruta: 'logros', icono: '🏆', titulo: 'Logros' },
+  { ruta: 'estadisticas', icono: '📊', titulo: 'Estadísticas' },
   { ruta: 'personalizacion', icono: '🎨', titulo: 'Personalización' },
   { ruta: 'guardado', icono: '💾', titulo: 'Datos de guardado' },
 ];

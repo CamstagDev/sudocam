@@ -9,7 +9,10 @@
 //     creado / actualizado:        fechas ISO
 //     perfil: { tema, preferencias },          null = valores por defecto
 //     partidasEnPausa: [ ... ],                ver game/sudoku/partidas-en-pausa.js
-//     estadisticas: { sudokusCompletados: { facil, medio, dificil, personalizado } },
+//     estadisticas: {
+//       sudokusCompletados: { facil, medio, dificil, personalizado },
+//       tiempos: { },                          ver game/estadisticas.js
+//     },
 //     jefes: { },                              llegarán con los jefes
 //     logros: { },                             id del logro -> fecha
 //   }
@@ -34,6 +37,7 @@ export function crearGuardadoNuevo() {
     partidasEnPausa: [],
     estadisticas: {
       sudokusCompletados: { facil: 0, medio: 0, dificil: 0, personalizado: 0 },
+      tiempos: {},
     },
     jefes: {},
     logros: {},
@@ -69,6 +73,8 @@ export function normalizarGuardado(datos) {
         ...base.estadisticas.sudokusCompletados,
         ...(esObjeto(datos.estadisticas?.sudokusCompletados) ? datos.estadisticas.sudokusCompletados : {}),
       },
+      // Los guardados de antes de 0.6 no tienen tiempos: empiezan vacíos.
+      tiempos: esObjeto(datos.estadisticas?.tiempos) ? datos.estadisticas.tiempos : {},
     },
     jefes: esObjeto(datos.jefes) ? datos.jefes : {},
     logros: esObjeto(datos.logros) ? datos.logros : {},

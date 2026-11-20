@@ -12,6 +12,7 @@ import { PartidaSudoku } from '../game/sudoku/partida.js';
 import { CANTIDADES, FORMAS, lienzoDeForma } from '../game/multisudoku/formas.js';
 import { generarEnSegundoPlano } from '../game/multisudoku/en-segundo-plano.js';
 import { registrarSudokuGanado } from '../game/progreso.js';
+import { modoMulti } from '../game/estadisticas.js';
 import { leerPreferencias } from '../preferencias.js';
 import { crearJuegoSudoku } from '../ui/juego-sudoku.js';
 import { crearTarjetaVictoria } from '../ui/tarjeta-victoria.js';
@@ -64,7 +65,7 @@ export const pantallaMultiSudoku = {
       insignias: [DIFICULTADES[dificultad].nombre, `${cantidad} tableros`],
       alGanar: async (segundos) => {
         victoria.mostrar(segundos);
-        mostrarLogrosNuevos(await registrarSudokuGanado(dificultad));
+        mostrarLogrosNuevos(await registrarSudokuGanado(dificultad, { segundos, modo: modoMulti(cantidad) }));
       },
     });
 

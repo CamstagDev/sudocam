@@ -1,0 +1,43 @@
+/* ============================================================
+   SudoCam — pantalla de Estadísticas
+   ============================================================ */
+
+/* En el teléfono, si la tabla no cabe, se desplaza de lado ella sola
+   (la página no). */
+.tabla-estadisticas-marco {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.tabla-estadisticas {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(12px, 3.4vw, 15px);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabla-estadisticas th,
+.tabla-estadisticas td {
+  padding: clamp(6px, 1.6vw, 10px) clamp(6px, 2vw, 12px);
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabla-estadisticas th:first-child {
+  text-align: left;
+}
+
+.tabla-estadisticas thead th {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tabla-estadisticas tbody th {
+  font-weight: 700;
+}
+
+.tabla-estadisticas tbody tr:last-child > * {
+  border-bottom: none;
+}

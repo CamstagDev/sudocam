@@ -97,7 +97,7 @@ export const pantallaSudoku = {
       victoria.mostrar(segundos);
       // Una partida ganada ya no tiene sentido en pausa: libera el lugar.
       if (idEnPausa) await eliminarPartidaEnPausa(idEnPausa);
-      mostrarLogrosNuevos(await registrarSudokuGanado(partida.dificultad));
+      mostrarLogrosNuevos(await registrarSudokuGanado(partida.dificultad, { segundos }));
     }
 
     juego = crearJuegoSudoku(contenedor, {
