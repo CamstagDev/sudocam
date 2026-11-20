@@ -30,6 +30,14 @@ export const CAMPOS_PREFERENCIAS = [
     // No se muestra hasta desbloquear algún jefe (no delata que existen).
     soloConJefes: true,
   },
+  {
+    id: 'vibracion',
+    nombre: 'Vibración',
+    descripcion: 'El teléfono vibra al equivocarte, al ganar y cuando un jefe ataca.',
+    porDefecto: true,
+    // Solo se muestra donde hay con qué vibrar (Android, ver vibracion.js).
+    soloEnAndroid: true,
+  },
 ];
 
 // Las preferencias guardadas encima de las de por defecto.

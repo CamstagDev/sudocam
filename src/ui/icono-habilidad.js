@@ -6,7 +6,7 @@
 //   fila.appendChild(icono.elemento);
 //   icono.cargar(0.4);    0 a 1; con animación suave
 //   icono.reiniciar();    vuelve a 0 sin animación (se acaba de disparar)
-//   icono.destello();
+//   icono.destello();     con vibración (ver vibracion.js); { vibrar: false } sin ella
 //   icono.cambiar({ emoji, nombre });   otro aspecto (p. ej. al cambiar de fase)
 //   icono.ponerContador(7);             numerito en la esquina (null lo quita)
 //
@@ -21,6 +21,8 @@
 // El anillo es un <circle> de SVG cuyo trazo se "destapa" con
 // stroke-dashoffset (más nítido que un conic-gradient en algunos
 // navegadores).
+
+import { vibrar } from '../vibracion.js';
 
 const RADIO = 19; // en un viewBox de 42x42
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO;
@@ -84,8 +86,11 @@ export function crearIconoHabilidad({ emoji, nombre, imagen = null, silenciosa =
   }
 
   // Se quita y se vuelve a poner la clase para que el destello se repita
-  // aunque el anterior no haya terminado.
-  function destello() {
+  // aunque el anterior no haya terminado. Un destello es un ataque del
+  // jefe, así que el teléfono vibra, salvo que lo cause el jugador
+  // ({ vibrar: false }).
+  function destello({ vibrar: conVibracion = true } = {}) {
+    if (conVibracion) vibrar('ataque');
     elemento.classList.remove('disparada');
     void elemento.offsetWidth;
     elemento.classList.add('disparada');

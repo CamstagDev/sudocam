@@ -43,6 +43,7 @@ import { crearVistaTablero } from './vista-tablero.js';
 import { activarZoom } from './zoom-tablero.js';
 import { crearTecladoNumerico } from './teclado-numerico.js';
 import { crearCronometro, formatearSegundos } from './cronometro.js';
+import { vibrar } from '../vibracion.js';
 
 export function crearJuegoSudoku(contenedor, {
   partida,
@@ -164,6 +165,9 @@ export function crearJuegoSudoku(contenedor, {
       mostrarMensaje('El tablero está completo pero hay errores', 'error');
     }
     dibujar();
+    // Solo si el error queda a la vista: vibrar no puede delatar errores
+    // que la partida esconde hasta "Comprobar" o hasta el final.
+    if (!modoNotas && partida.erroresVisibles.has(seleccionada)) vibrar('error');
     if (!modoNotas) alJugar({ indice: seleccionada, valor: digito, correcto: digito === partida.solucion[seleccionada] });
     if (partida.resuelta) ganar();
   }
@@ -185,6 +189,7 @@ export function crearJuegoSudoku(contenedor, {
     partida.comprobar();
     if (partida.erroresVisibles.size > 0) {
       mostrarMensaje('Hay números que no van ahí', 'error');
+      vibrar('error');
     } else if (!partida.resuelta) {
       mostrarMensaje('Vas bien: no hay errores por ahora', 'exito');
     }
@@ -198,6 +203,7 @@ export function crearJuegoSudoku(contenedor, {
     seleccionada = null;
     botonesExtra.forEach((boton) => boton.classList.add('hidden'));
     dibujar();
+    vibrar('victoria');
     alGanar(cronometro.segundos);
   }
 

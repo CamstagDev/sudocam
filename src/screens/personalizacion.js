@@ -33,6 +33,7 @@ import {
 } from '../preferencias.js';
 import { obtenerGuardado } from '../save/guardado.js';
 import { hayJefesDesbloqueados } from '../game/jefes/registro.js';
+import { vibracionDisponible } from '../vibracion.js';
 
 const COLOR_DE_LOS_JEFES = 'jefe';
 
@@ -111,7 +112,9 @@ export const pantallaPersonalizacion = {
   render(contenedor) {
     const conJefes = hayJefesDesbloqueados();
     const temasDeJefes = temasDeJefesDisponibles();
-    const preferencias = CAMPOS_PREFERENCIAS.filter((campo) => !campo.soloConJefes || conJefes);
+    const preferencias = CAMPOS_PREFERENCIAS
+      .filter((campo) => !campo.soloConJefes || conJefes)
+      .filter((campo) => !campo.soloEnAndroid || vibracionDisponible());
     const camposColor = CAMPOS_TEMA.map((campo) => campoColor(campo, {
       oculto: campo.id === COLOR_DE_LOS_JEFES && !conJefes,
     }));

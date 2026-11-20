@@ -13,6 +13,10 @@ sube cuando cambia la forma del archivo de guardado.
   dedos ya no se corta cuando el teléfono empieza a desplazar el tablero,
   llega hasta 4 veces el tamaño y, al soltar, el último dedo no marca la
   celda que quedó debajo. Nuevo botón ↺ para volver al tamaño normal.
+- Vibración en Android: el teléfono vibra al equivocarte (solo si el error
+  se ve en el tablero), al ganar y cuando un jefe dispara una habilidad
+  (los uber que no telegrafían sus ataques tampoco vibran). Se apaga en
+  Personalización → Preferencias; en PC no aparece.
 
 ## 0.5.0 (2026-11-07)
 

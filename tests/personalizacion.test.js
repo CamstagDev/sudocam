@@ -94,6 +94,7 @@ describe('preferencias', () => {
       resaltarIguales: true,
       mostrarCronometro: true,
       sobrescribirTemasDeJefes: false,
+      vibracion: true,
     });
   });
 

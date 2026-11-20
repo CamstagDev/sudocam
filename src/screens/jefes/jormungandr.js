@@ -127,7 +127,7 @@ export const pantallaJormungandr = {
       const bocado = pelea.alimentar(juego.seleccionada);
       if (!bocado) return;
       registro.anotar(`🤫 Le diste de comer ${bocado.pista ? 'la pista' : 'el'} ${bocado.valor} a Ouroboros (+${bocado.pista ? 2 : 1} al vientre).`, 'neutro');
-      habilidades.ouroboros.destello();
+      habilidades.ouroboros.destello({ vibrar: false }); // lo hizo el jugador
       actualizarCabecera();
       juego.dibujar();
     });
