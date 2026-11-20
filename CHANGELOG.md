@@ -9,6 +9,11 @@ sube cuando cambia la forma del archivo de guardado.
 
 ## Sin publicar
 
+- Zoom de los tableros grandes (multi sudoku, Typhon): el pellizco con dos
+  dedos ya no se corta cuando el teléfono empieza a desplazar el tablero,
+  llega hasta 4 veces el tamaño y, al soltar, el último dedo no marca la
+  celda que quedó debajo. Nuevo botón ↺ para volver al tamaño normal.
+
 ## 0.5.0 (2026-11-07)
 
 - Primer paso del modo Duelo (teléfono contra teléfono, sin internet):

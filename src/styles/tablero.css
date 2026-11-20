@@ -114,6 +114,12 @@
   gap: 8px;
 }
 
+/* ↺ apagado mientras el tablero ya está en su tamaño normal. */
+.controles-zoom .icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* Celda que pertenece a dos grillas a la vez (la caja donde se unen). */
 .celda.compartida {
   background: color-mix(in srgb, var(--accent) 12%, var(--surface-solid));
